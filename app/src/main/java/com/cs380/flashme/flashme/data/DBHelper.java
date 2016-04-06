@@ -6,11 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.cs380.flashme.flashme.data.DBConstants.*;
 /**
  * Created by josh on 4/5/16.
+ * A class to handle the creation and upgrade of our database.
  */
 public class DBHelper extends SQLiteOpenHelper{
 
     //Database Versions correspond to schema changes
     private static final int DATABASE_VERSION = 1;
+
     static final String DATABASE_NAME = "cards.db";
 
     public DBHelper(Context context){
@@ -41,7 +43,7 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     @Override
-    // This will only be fire if we change the schema of the DB. Will
+    // This will only be fired if we change the version of the DB. Will
     // not implement unless we need to change schema.
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

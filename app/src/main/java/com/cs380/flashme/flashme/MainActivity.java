@@ -1,11 +1,9 @@
 package com.cs380.flashme.flashme;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import java.lang.reflect.Array;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,10 +13,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView listView = (ListView) findViewById(R.id.main_list);
+        //ListView listView = (ListView) findViewById(R.id.main_list);
 
         mMainListAdapter = new ArrayAdapter<>(this, R.layout.list_item_main, mainListItems);
 
-        listView.setAdapter(mMainListAdapter);
+       // listView.setAdapter(mMainListAdapter);
     }
+
+    public void createNotecardButton(View v) {
+        // do something when the button is clicked
+    }
+
+    public void viewCoursesButton(View v) {
+// do something when the button is clicked
+    }
+
+    public void previousSessionButton(View v) {
+// do something when the button is clicked
+    }
+
 }
