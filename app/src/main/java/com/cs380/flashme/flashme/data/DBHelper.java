@@ -39,7 +39,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 "  FOREIGN KEY (" + Cards.COLUMN_COURSE_ID + ") REFERENCES " + Courses.TABLE_NAME +
                 "(" + Courses.ID + ")" + " );";
 
-
+        db.execSQL(SQL_CREATE_CARDS_TABLE);
+        db.execSQL(SQL_CREATE_COURSES_TABLE);
     }
 
     @Override
