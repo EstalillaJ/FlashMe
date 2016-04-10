@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FlashMe</string>
+    <string name="new_card_prompt">Create a new card!</string>
 </resources>
