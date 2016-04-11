@@ -39,13 +39,30 @@ public class DBHelper extends SQLiteOpenHelper{
                 "  FOREIGN KEY (" + Cards.COLUMN_COURSE_ID + ") REFERENCES " + Courses.TABLE_NAME +
                 "(" + Courses.ID + ")" + " );";
 
+        db.execSQL(SQL_CREATE_CARDS_TABLE);
+        db.execSQL(SQL_CREATE_COURSES_TABLE);
+        insertSubjects(db);
+        insertDefaultCards(db);
+    }
 
+
+    public void insertSubjects(SQLiteDatabase db){
+
+    }
+
+    public void insertDefaultCards(SQLiteDatabase db){
+        
     }
 
     @Override
     // This will only be fired if we change the version of the DB. Will
     // not implement unless we need to change schema.
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+    protected long createCard(FlashCard card){
+        return 0;
 
     }
 
