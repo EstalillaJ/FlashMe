@@ -4,6 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
+import com.cs380.flashme.flashme.data.DBHelper;
+import com.cs380.flashme.flashme.data.FlashCard;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,11 +19,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //ListView listView = (ListView) findViewById(R.id.main_list);
+        TextView textView = (TextView) findViewById(R.id.cardView);
+        DBHelper dbHelper = new DBHelper(this);
+        dbHelper.insertSubjects();
+        dbHelper.insertDefaultCards();
+        ArrayList<String> subjects =  dbHelper.getSubjects();
 
-        mMainListAdapter = new ArrayAdapter<>(this, R.layout.list_item_main, mainListItems);
+        ArrayList<FlashCard> cards = dbHelper.getCardsInCourse("Computer Science", 457);
+        FlashCard card = cards.get(0);
+        if (subjects.size() == 2 && subjects.contains("Computer Science") && subjects.contains("Mathematics"))
+            textView.setText(card.front + "\n" + card.back);
 
-       // listView.setAdapter(mMainListAdapter);
+
+
     }
 
     public void createNotecardButton(View v) {
