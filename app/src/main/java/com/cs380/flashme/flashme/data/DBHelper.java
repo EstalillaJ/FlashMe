@@ -42,15 +42,13 @@ public class DBHelper extends SQLiteOpenHelper{
                 Cards.COLUMN_DATE_CREATED + " TEXT NOT NULL, " +
                 Cards.COLUMN_FRONT + " TEXT NOT NULL, " +
                 Cards.COLUMN_BACK + " TEXT NOT NULL, " +
-                Cards.COLUMN_USER_MADE + " INTEGER NOT NULL DEFAULT " + DBConstants.NOT_USER_MADE +
-                Cards.COLUMN_COURSE_ID + "INTEGER NOT NULL, " +
+                Cards.COLUMN_USER_MADE + " INTEGER NOT NULL DEFAULT " + DBConstants.NOT_USER_MADE + ", " +
+                Cards.COLUMN_COURSE_ID + " INTEGER NOT NULL, " +
                 "  FOREIGN KEY (" + Cards.COLUMN_COURSE_ID + ") REFERENCES " + Courses.TABLE_NAME +
                 "(" + Courses.ID + ")" + " );";
 
         db.execSQL(SQL_CREATE_CARDS_TABLE);
         db.execSQL(SQL_CREATE_COURSES_TABLE);
-        insertSubjects();
-        insertDefaultCards();
     }
 
     @Override
@@ -65,7 +63,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public void insertSubjects(){
         SQLiteDatabase db = getWritableDatabase();
         final String[][] defaultCourses = {
-                {"Computer Science","427"},
+                {"Computer Science","457"},
                 {"Mathematics", "330"},
                 {"Computer Science", "312"},
                 {"Mathematics", "260"},
@@ -77,12 +75,12 @@ public class DBHelper extends SQLiteOpenHelper{
         for (String[] course: defaultCourses){
             values = new ContentValues();
             values.put(Courses.COLUMN_SUBJECT, course[0]);
-            values.put(Courses.COLUMN_COURSE_NUM, Integer.parseInt(course[1]));
+            values.put(Courses.COLUMN_COURSE_NUM, course[1]);
             values.put(Courses.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
             db.insert(Courses.TABLE_NAME, null, values);
         }
 
-        db.close();
+
 
     }
 
@@ -90,7 +88,8 @@ public class DBHelper extends SQLiteOpenHelper{
 
     public void insertDefaultCards(){
 
-        int courseId = getCourseId("Computer Science", 330);
+        int courseId = getCourseId("Computer Science", 457);
+
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -105,32 +104,32 @@ public class DBHelper extends SQLiteOpenHelper{
 
         db.insert(Cards.TABLE_NAME, null, values);
 
-        db.close();
+
 
     }
 
     private int getCourseId(String subject, int courseNum){
         SQLiteDatabase db = getReadableDatabase();
-        String selection = Courses.COLUMN_SUBJECT + " = ? AND " + Courses.COLUMN_COURSE_NUM + " = ?";
+        String selection = Courses.COLUMN_SUBJECT + " = ? AND " + Courses.COLUMN_COURSE_NUM + " = ? ";
 
         Cursor cursor = db.query(true,
                 Courses.TABLE_NAME,
-                new String[] {Courses.ID},
+                null,
                 selection,
-                new String[] {subject, Integer.toString(courseNum)},
+                new String[]{subject, Integer.toString(courseNum)},
                 null,
                 null,
                 null,
                 null
-                );
+        );
 
         if (cursor.getCount() != 1){
             Log.d("DBHELPER","Count: "+cursor.getCount());
         }
 
         cursor.moveToNext();
-        int courseId = cursor.getInt(0);
-        db.close();
+        int courseId = cursor.getInt(cursor.getColumnIndex(Courses.ID));
+
         return courseId;
     }
 
@@ -159,7 +158,7 @@ public class DBHelper extends SQLiteOpenHelper{
             subjectList.add(cursor.getString(0));
         }
 
-        db.close();
+
         return subjectList;
     }
 
@@ -203,7 +202,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 );
         }
 
-        db.close();
+
         return cards;
     }
 
