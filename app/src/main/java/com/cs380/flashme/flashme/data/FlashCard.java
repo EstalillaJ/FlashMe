@@ -1,28 +1,29 @@
 package com.cs380.flashme.flashme.data;
 
-import android.content.Context;
-
 /**
  * Created by josh on 4/8/16.
  */
 public class FlashCard {
 
-    private final String subject;
-    private final int courseNum;
-    private final String front;
-    private final String back;
-    private final int userMade;
-    private final long CARD_ID;
+    public final String subject;
+    public final int courseNum;
+    public final String front;
+    public final String back;
+    public final int userMade;
+    private long CARD_ID;
 
-    public FlashCard(Context context, String subject, int courseNum, String front, String back,
+    public FlashCard(String subject, int courseNum, String front, String back,
                      int userMade){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
         this.back = back;
         this.userMade = userMade;
-        DBHelper dbHelper = new DBHelper(context);
-        CARD_ID = dbHelper.createCard(this);
+
+    }
+
+    public long getCARD_ID(){
+        return CARD_ID;
     }
 
     protected FlashCard(String subject, int courseNum, String front, String back,
@@ -35,29 +36,8 @@ public class FlashCard {
         this.CARD_ID = CARD_ID;
     }
 
-    public String getSubject(){
-        return subject;
-    }
 
-    public int getCourseNum(){
-        return courseNum;
-    }
 
-    public String getFront(){
-        return front;
-    }
-
-    public String getBack(){
-        return back;
-    }
-
-    public long getID(){
-        return CARD_ID;
-    }
-
-    public boolean isUserMade(){
-        return userMade != DBConstants.NOT_USER_MADE;
-    }
 
 
 

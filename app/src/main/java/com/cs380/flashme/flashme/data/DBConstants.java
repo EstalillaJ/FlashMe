@@ -7,7 +7,7 @@ package com.cs380.flashme.flashme.data;
 public class DBConstants {
 
     public static final int NOT_USER_MADE = 0;
-
+    public static final int USER_MADE = 1;
     public static final class Cards {
         public static final String TABLE_NAME = "Cards";
         public static final String ID = "id";
