@@ -10,7 +10,9 @@ import android.util.Log;
 import com.cs380.flashme.flashme.data.DBConstants.Cards;
 import com.cs380.flashme.flashme.data.DBConstants.Courses;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by josh on 4/5/16.
@@ -49,6 +51,8 @@ public class DBHelper extends SQLiteOpenHelper{
 
         db.execSQL(SQL_CREATE_CARDS_TABLE);
         db.execSQL(SQL_CREATE_COURSES_TABLE);
+        insertDefaultSubjects(db);
+        insertDefaultCards(db);
     }
 
     @Override
@@ -60,8 +64,8 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
 
-    public void insertSubjects(){
-        SQLiteDatabase db = getWritableDatabase();
+    public void insertDefaultSubjects(SQLiteDatabase db){
+
         final String[][] defaultCourses = {
                 {"Computer Science","457"},
                 {"Mathematics", "330"},
@@ -86,19 +90,17 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
 
-    public void insertDefaultCards(){
+    public void insertDefaultCards(SQLiteDatabase db){
 
-        int courseId = getCourseId("Computer Science", 457);
 
-        SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-
-        values.put(Cards.COLUMN_COURSE_ID, courseId);
+        values.put(Cards.COLUMN_COURSE_ID, 1);
         values.put(Cards.COLUMN_FRONT, "Describe the difference between classification and regression");
         values.put(Cards.COLUMN_BACK, "Classification is discrete, regresssion is continous");
-        values.put(Cards.COLUMN_DATE_CREATED, "2016-04-13");
+        values.put(Cards.COLUMN_DATE_CREATED, dateFormat.format(Calendar.getInstance().getTime()));
         values.put(Cards.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
 
 
@@ -108,13 +110,44 @@ public class DBHelper extends SQLiteOpenHelper{
 
     }
 
+    public void insertCourse(String subject, int courseNum){
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Courses.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
+        values.put(Courses.COLUMN_COURSE_NUM, courseNum);
+        values.put(Courses.COLUMN_SUBJECT, subject);
+
+        db.insert(Courses.TABLE_NAME, null, values);
+
+
+    }
+
+    public void insertCard(FlashCard card){
+        int courseId = getCourseId(card.subject, card.courseNum);
+
+        SQLiteDatabase db  = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+
+        values.put(Cards.COLUMN_COURSE_ID, courseId);
+        values.put(Cards.COLUMN_FRONT, card.front);
+        values.put(Cards.COLUMN_BACK, card.back);
+        values.put(Cards.COLUMN_DATE_CREATED, card.date_created);
+        values.put(Cards.COLUMN_USER_MADE, card.userMade);
+
+
+        db.insert(Cards.TABLE_NAME, null, values);
+    }
+
     private int getCourseId(String subject, int courseNum){
         SQLiteDatabase db = getReadableDatabase();
         String selection = Courses.COLUMN_SUBJECT + " = ? AND " + Courses.COLUMN_COURSE_NUM + " = ? ";
 
         Cursor cursor = db.query(true,
                 Courses.TABLE_NAME,
-                null,
+                new String[]{Courses.ID},
                 selection,
                 new String[]{subject, Integer.toString(courseNum)},
                 null,
@@ -158,8 +191,30 @@ public class DBHelper extends SQLiteOpenHelper{
             subjectList.add(cursor.getString(0));
         }
 
-
         return subjectList;
+    }
+
+    public ArrayList<Integer> getCoursesInSubject(String subject){
+        SQLiteDatabase db = getReadableDatabase();
+        String selection = Courses.COLUMN_SUBJECT + " = ? ";
+        Cursor cursor = db.query(true,
+                Courses.TABLE_NAME,
+                new String[] {Courses.COLUMN_COURSE_NUM},
+                selection,
+                new String[] {subject},
+                null,
+                null,
+                null,
+                null
+        );
+
+
+        ArrayList<Integer> courseNumbers = new ArrayList<>();
+        int courseNumberIndex = cursor.getColumnIndex(Courses.COLUMN_COURSE_NUM);
+        while (cursor.moveToNext()){
+            courseNumbers.add(cursor.getInt(courseNumberIndex));
+        }
+        return courseNumbers;
     }
 
     public ArrayList<FlashCard> getCardsInCourse(String subject, int courseNum){

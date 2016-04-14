@@ -1,5 +1,8 @@
 package com.cs380.flashme.flashme.data;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * Created by josh on 4/8/16.
  */
@@ -10,7 +13,9 @@ public class FlashCard {
     public final String front;
     public final String back;
     public final int userMade;
-    private long CARD_ID;
+    public final String date_created;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public FlashCard(String subject, int courseNum, String front, String back,
                      int userMade){
@@ -19,21 +24,19 @@ public class FlashCard {
         this.front = front;
         this.back = back;
         this.userMade = userMade;
-
+        this.date_created = dateFormat.format(Calendar.getInstance().getTime());
     }
 
-    public long getCARD_ID(){
-        return CARD_ID;
-    }
+
 
     protected FlashCard(String subject, int courseNum, String front, String back,
-                        int userMade, long CARD_ID){
+                        int userMade, String date_created){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
         this.back = back;
         this.userMade = userMade;
-        this.CARD_ID = CARD_ID;
+        this.date_created = date_created;
     }
 
 
