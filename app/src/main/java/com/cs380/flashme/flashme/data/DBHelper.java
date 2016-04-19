@@ -297,7 +297,10 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
 
-        return db.update(Cards.TABLE_NAME, values, whereClause, whereArgs);
+        int rowsAffected = db.update(Cards.TABLE_NAME, values, whereClause, whereArgs);
+        if (rowsAffected > 1)
+            throw new RuntimeException("Multiple cards modified by one call to modifyCard()");
+        return rowsAffected;
     }
 
     public long save(FlashCard card){
@@ -308,8 +311,6 @@ public class DBHelper extends SQLiteOpenHelper{
             modifyCard(card);
         }
         return card.id;
-
-
     }
 
 
