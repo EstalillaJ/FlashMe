@@ -7,12 +7,18 @@ import java.util.ArrayList;
  */
 public class Course {
 
-    private ArrayList<FlashCard> cards;
-    private double accuracy;
-    private String subject;
-    private int courseNum;
+    private  ArrayList<FlashCard> cards;
+    private  double accuracy;
+    private  String subject;
+    private  int courseNum;
 
-    public Course() {
-
+    public Course(ArrayList<FlashCard> cards, double accuracy, String subject, int courseNum) {
+        this.cards = cards;
+        this.accuracy = accuracy;
+        this.subject = subject;
+        this.courseNum = courseNum;
     }
+
+
+
 }

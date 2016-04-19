@@ -176,6 +176,10 @@ public class DBHelper extends SQLiteOpenHelper{
         return courseId;
     }
 
+    /**
+     *
+     * @return a list of all subjects in the database
+     */
 
     public ArrayList<String> getSubjects(){
 
@@ -205,7 +209,7 @@ public class DBHelper extends SQLiteOpenHelper{
         return subjectList;
     }
 
-    public ArrayList<Integer> getCoursesInSubject(String subject){
+    public ArrayList<Integer> getCoursesNumbersInSubject(String subject){
         SQLiteDatabase db = getReadableDatabase();
         String selection = Courses.COLUMN_SUBJECT + " = ? ";
         Cursor cursor = db.query(true,
@@ -228,17 +232,25 @@ public class DBHelper extends SQLiteOpenHelper{
         return courseNumbers;
     }
 
-    public ArrayList<FlashCard> getCardsInCourse(String subject, int courseNum){
+
+    /**
+     *
+     * @param subject - The subject of the course
+     * @param courseNum - The course number of the course
+     * @return - A course object with accuracy and flashcards, or null if there is no course for
+     * the given arguments.
+     */
+    public Course getCourse(String subject, int courseNum){
 
         int courseId = getCourseId(subject, courseNum);
-        final String selection = Cards.COLUMN_COURSE_ID + " = ?";
+        final String cardSelection = Cards.COLUMN_COURSE_ID + " = ?";
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(
+        Cursor cardCursor = db.query(
                 Cards.TABLE_NAME,
                 null,
-                selection,
+                cardSelection,
                 new String[]{Integer.toString(courseId)},
                 null,
                 null,
@@ -248,38 +260,61 @@ public class DBHelper extends SQLiteOpenHelper{
 
         ArrayList<FlashCard> cards = new ArrayList<>();
 
-        if (cursor.getCount() == 0){
-            Log.d("DBHELPER","CARDS_IN_COURSE");
-        }
+        if (cardCursor.getCount() != 0) {
 
-        int frontIndex = cursor.getColumnIndex(Cards.COLUMN_FRONT);
-        int backIndex = cursor.getColumnIndex(Cards.COLUMN_BACK);
-        int userCreatedIndex = cursor.getColumnIndex(Cards.COLUMN_USER_MADE);
-        int dateCreatedIndex = cursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
-        int accuracyIndex = cursor.getColumnIndex(Cards.COLUMN_ACCURACY);
-        int idIndex = cursor.getColumnIndex(Cards.ID);
 
-        while (cursor.moveToNext()){
+            int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
+            int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
+            int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_MADE);
+            int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
+            int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
+            int idIndex = cardCursor.getColumnIndex(Cards.ID);
+
+            while (cardCursor.moveToNext()) {
                 cards.add(
                         new FlashCard(
                                 subject,
                                 courseNum,
-                                cursor.getString(frontIndex),
-                                cursor.getString(backIndex),
-                                cursor.getInt(userCreatedIndex),
-                                cursor.getString(dateCreatedIndex),
-                                cursor.getDouble(accuracyIndex),
-                                cursor.getInt(idIndex)
+                                cardCursor.getString(frontIndex),
+                                cardCursor.getString(backIndex),
+                                cardCursor.getInt(userCreatedIndex),
+                                cardCursor.getString(dateCreatedIndex),
+                                cardCursor.getDouble(accuracyIndex),
+                                cardCursor.getInt(idIndex)
                         )
                 );
+            }
+        }
+
+        String courseSelection = Courses.ID + " = ?";
+        Cursor courseCursor = db.query(true,
+                Courses.TABLE_NAME,
+                new String[] {Courses.COLUMN_ACCURACY},
+                courseSelection,
+                new String[] {Integer.toString(courseId)},
+                null,
+                null,
+                null,
+                null
+        );
+
+        if (courseCursor.getCount() == 1){
+            courseCursor.moveToNext();
+            Course course = new Course(cards,courseCursor.getDouble(0),subject,courseNum);
+            return course;
         }
 
 
-        return cards;
+
+        return null;
     }
 
 
-
+    /**
+     *
+     * @param card - card to be modified
+     * @return returns the number of rows affected (1), or throws an exception if multiple rows affected
+     */
     public int modifyCard(FlashCard card){
         SQLiteDatabase db = getWritableDatabase();
 
@@ -303,13 +338,16 @@ public class DBHelper extends SQLiteOpenHelper{
         return rowsAffected;
     }
 
+    /**
+     *
+     * @param card - card to be saved to the database, new or modified
+     * @return the database id of the card that was saved.
+     */
     public long save(FlashCard card){
-        if (card.isNew){
+        if (card.isNew)
             return insertCard(card);
-        }
-        else if (card.isModified){
+        else if (card.isModified)
             modifyCard(card);
-        }
         return card.id;
     }
 
