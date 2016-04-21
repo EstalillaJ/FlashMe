@@ -17,6 +17,7 @@ public class Course {
     private Context context;
     protected long id;
 
+
     protected Course(List<FlashCard> cards, double accuracy, String subject, int courseNum,
                   int userMade, long id, Context context) {
         this.cards = cards;
@@ -39,9 +40,14 @@ public class Course {
     }
 
     private void updateAccuracy(FlashCard card){
-        accuracy *= (cards.size()+1);
-        accuracy -= card.getAccuracy();
-        accuracy /= cards.size();
+        if (cards.size() == 0){
+            accuracy = 100.00;
+        }
+        else {
+            accuracy *= (cards.size() + 1);
+            accuracy -= card.getAccuracy();
+            accuracy /= cards.size();
+        }
     }
 
     public void addCard(FlashCard card){
@@ -76,11 +82,9 @@ public class Course {
         this.subject = subject;
     }
 
-
-
-
-
-
+    public List<FlashCard> getCards(){
+        return cards;
+    }
 
 
 }

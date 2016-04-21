@@ -13,10 +13,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TestDB2 testDB2 = new TestDB2(this);
 
 
-
-
+        testDB2.testModifyCard();
+        testDB2.testRemoveCard();
     }
 
     public void createNotecardButton(View v) {

@@ -25,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static DBHelper sInstance;
     private Context mContext;
 
-    static final String DATABASE_NAME = "cards.db";
+    static final String DATABASE_NAME = "flashMe.db";
 
     private DBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -91,6 +91,7 @@ public class DBHelper extends SQLiteOpenHelper{
             values.put(Courses.COLUMN_SUBJECT, course[0]);
             values.put(Courses.COLUMN_COURSE_NUM, course[1]);
             values.put(Courses.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
+            values.put(Courses.COLUMN_ACCURACY, 100.00);
             db.insert(Courses.TABLE_NAME, null, values);
         }
 
@@ -112,7 +113,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_BACK, "Classification is discrete, regresssion is continous");
         values.put(Cards.COLUMN_DATE_CREATED, dateFormat.format(Calendar.getInstance().getTime()));
         values.put(Cards.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
-
+        values.put(Cards.COLUMN_ACCURACY, 100.00);
 
         db.insert(Cards.TABLE_NAME, null, values);
 
@@ -172,7 +173,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         cursor.moveToNext();
         int courseId = cursor.getInt(cursor.getColumnIndex(Courses.ID));
-
+        cursor.close();
         return courseId;
     }
 
@@ -205,7 +206,7 @@ public class DBHelper extends SQLiteOpenHelper{
         while (cursor.moveToNext()){
             subjectList.add(cursor.getString(0));
         }
-
+        cursor.close();
         return subjectList;
     }
 
@@ -229,7 +230,9 @@ public class DBHelper extends SQLiteOpenHelper{
         while (cursor.moveToNext()){
             courseNumbers.add(cursor.getInt(courseNumberIndex));
         }
+        cursor.close();
         return courseNumbers;
+
     }
 
 
@@ -310,8 +313,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     mContext);
             return course;
         }
-
-
+        courseCursor.close();
+        cardCursor.close();
 
         return null;
     }
