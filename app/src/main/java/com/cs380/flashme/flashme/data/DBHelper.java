@@ -120,12 +120,12 @@ public class DBHelper extends SQLiteOpenHelper{
 
     }
 
-    public void insertCourse(String subject, int courseNum){
+    public void insertCourse(String subject, int courseNum, int userMade){
 
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(Courses.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
+        values.put(Courses.COLUMN_USER_MADE, userMade);
         values.put(Courses.COLUMN_COURSE_NUM, courseNum);
         values.put(Courses.COLUMN_SUBJECT, subject);
 
@@ -144,7 +144,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_COURSE_ID, courseId);
         values.put(Cards.COLUMN_FRONT, card.getFront());
         values.put(Cards.COLUMN_BACK, card.getBack());
-        values.put(Cards.COLUMN_DATE_CREATED, card.getDate_created());
+        values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
         values.put(Cards.COLUMN_USER_MADE, card.getUserMade());
         values.put(Cards.COLUMN_ACCURACY, card.getAccuracy());
 
@@ -261,8 +261,6 @@ public class DBHelper extends SQLiteOpenHelper{
         ArrayList<FlashCard> cards = new ArrayList<>();
 
         if (cardCursor.getCount() != 0) {
-
-
             int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
             int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
             int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_MADE);
@@ -289,7 +287,7 @@ public class DBHelper extends SQLiteOpenHelper{
         String courseSelection = Courses.ID + " = ?";
         Cursor courseCursor = db.query(true,
                 Courses.TABLE_NAME,
-                new String[] {Courses.COLUMN_ACCURACY},
+                new String[] {Courses.COLUMN_ACCURACY, Courses.COLUMN_USER_MADE},
                 courseSelection,
                 new String[] {Integer.toString(courseId)},
                 null,
@@ -299,8 +297,17 @@ public class DBHelper extends SQLiteOpenHelper{
         );
 
         if (courseCursor.getCount() == 1){
+
+            int accuracyIndex = courseCursor.getColumnIndex(Courses.COLUMN_ACCURACY);
+            int userMadeIndex = courseCursor.getColumnIndex(Courses.COLUMN_USER_MADE);
             courseCursor.moveToNext();
-            Course course = new Course(cards,courseCursor.getDouble(0),subject,courseNum);
+            Course course = new Course(cards,
+                    courseCursor.getDouble(accuracyIndex),
+                    subject,
+                    courseNum,
+                    courseCursor.getInt(userMadeIndex),
+                    courseId,
+                    mContext);
             return course;
         }
 
@@ -327,7 +334,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_USER_MADE, card.getUserMade());
         values.put(Cards.COLUMN_BACK, card.getBack());
         values.put(Cards.COLUMN_COURSE_ID, courseId);
-        values.put(Cards.COLUMN_DATE_CREATED, card.getDate_created());
+        values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
         values.put(Cards.COLUMN_FRONT, card.getFront());
 
 
@@ -351,5 +358,31 @@ public class DBHelper extends SQLiteOpenHelper{
         return card.id;
     }
 
+    public void removeCard(FlashCard card){
 
+        SQLiteDatabase db = getWritableDatabase();
+        String deleteQuery = Cards.ID + " = ?";
+
+        db.delete(Cards.TABLE_NAME,
+                deleteQuery,
+                new String[] {Long.toString(card.id)}
+        );
+    }
+
+    public void updateCourse(Course course){
+        SQLiteDatabase db = getWritableDatabase();
+        String courseSelection = Courses.ID + " = ?";
+
+        ContentValues values = new ContentValues();
+
+        values.put(Courses.COLUMN_ACCURACY, course.getAccuracy());
+        values.put(Courses.COLUMN_COURSE_NUM, course.getCourseNum());
+        values.put(Courses.COLUMN_SUBJECT, course.getSubject());
+
+        db.update(Courses.TABLE_NAME,
+                values,
+                courseSelection,
+                new String[] {Long.toString(course.id)}
+        );
+    }
 }

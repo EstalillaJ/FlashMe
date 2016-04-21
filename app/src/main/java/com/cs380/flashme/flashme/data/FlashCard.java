@@ -102,7 +102,7 @@ public class FlashCard {
             isModified = true;
     }
 
-    public String getDate_created() {
+    public String getDateCreated() {
         return date_created;
     }
 
