@@ -33,6 +33,7 @@ public class FlashCard {
         this.date_created = dateFormat.format(Calendar.getInstance().getTime());
         this.isNew = true;
         this.isModified = false;
+        this.accuracy = 100.00;
         this.id = DBHelper.getInstance(context).save(this);
     }
 
@@ -50,8 +51,6 @@ public class FlashCard {
         this.accuracy = accuracy;
         this.id = id;
     }
-
-
 
     public String getSubject() {
         return subject;
@@ -103,7 +102,7 @@ public class FlashCard {
             isModified = true;
     }
 
-    public String getDate_created() {
+    public String getDateCreated() {
         return date_created;
     }
 
@@ -123,11 +122,4 @@ public class FlashCard {
         if (!isModified)
             isModified = true;
     }
-
-
-
-
-
-
-
 }

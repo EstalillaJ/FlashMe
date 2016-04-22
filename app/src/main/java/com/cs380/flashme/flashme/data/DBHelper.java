@@ -25,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static DBHelper sInstance;
     private Context mContext;
 
-    static final String DATABASE_NAME = "cards.db";
+    static final String DATABASE_NAME = "flashMe.db";
 
     private DBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -93,6 +93,7 @@ public class DBHelper extends SQLiteOpenHelper{
             values.put(Courses.COLUMN_SUBJECT, course[0]);
             values.put(Courses.COLUMN_COURSE_NUM, course[1]);
             values.put(Courses.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
+            values.put(Courses.COLUMN_ACCURACY, 100.00);
             db.insert(Courses.TABLE_NAME, null, values);
         }
 
@@ -114,7 +115,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_BACK, "Classification is discrete, regresssion is continous");
         values.put(Cards.COLUMN_DATE_CREATED, dateFormat.format(Calendar.getInstance().getTime()));
         values.put(Cards.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
-
+        values.put(Cards.COLUMN_ACCURACY, 100.00);
 
         db.insert(Cards.TABLE_NAME, null, values);
 
@@ -122,12 +123,12 @@ public class DBHelper extends SQLiteOpenHelper{
 
     }
 
-    public void insertCourse(String subject, int courseNum){
+    public void insertCourse(String subject, int courseNum, int userMade){
 
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(Courses.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
+        values.put(Courses.COLUMN_USER_MADE, userMade);
         values.put(Courses.COLUMN_COURSE_NUM, courseNum);
         values.put(Courses.COLUMN_SUBJECT, subject);
 
@@ -146,7 +147,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_COURSE_ID, courseId);
         values.put(Cards.COLUMN_FRONT, card.getFront());
         values.put(Cards.COLUMN_BACK, card.getBack());
-        values.put(Cards.COLUMN_DATE_CREATED, card.getDate_created());
+        values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
         values.put(Cards.COLUMN_USER_MADE, card.getUserMade());
         values.put(Cards.COLUMN_ACCURACY, card.getAccuracy());
 
@@ -174,10 +175,14 @@ public class DBHelper extends SQLiteOpenHelper{
 
         cursor.moveToNext();
         int courseId = cursor.getInt(cursor.getColumnIndex(Courses.ID));
-
+        cursor.close();
         return courseId;
     }
 
+    /**
+     *
+     * @return a list of all subjects in the database
+     */
 
     public ArrayList<String> getSubjects(){
 
@@ -203,11 +208,11 @@ public class DBHelper extends SQLiteOpenHelper{
         while (cursor.moveToNext()){
             subjectList.add(cursor.getString(0));
         }
-
+        cursor.close();
         return subjectList;
     }
 
-    public ArrayList<Integer> getCoursesInSubject(String subject){
+    public ArrayList<Integer> getCoursesNumbersInSubject(String subject){
         SQLiteDatabase db = getReadableDatabase();
         String selection = Courses.COLUMN_SUBJECT + " = ? ";
         Cursor cursor = db.query(true,
@@ -227,20 +232,30 @@ public class DBHelper extends SQLiteOpenHelper{
         while (cursor.moveToNext()){
             courseNumbers.add(cursor.getInt(courseNumberIndex));
         }
+        cursor.close();
         return courseNumbers;
+
     }
 
-    public ArrayList<FlashCard> getCardsInCourse(String subject, int courseNum){
+
+    /**
+     *
+     * @param subject - The subject of the course
+     * @param courseNum - The course number of the course
+     * @return - A course object with accuracy and flashcards, or null if there is no course for
+     * the given arguments.
+     */
+    public Course getCourse(String subject, int courseNum){
 
         int courseId = getCourseId(subject, courseNum);
-        final String selection = Cards.COLUMN_COURSE_ID + " = ?";
+        final String cardSelection = Cards.COLUMN_COURSE_ID + " = ?";
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(
+        Cursor cardCursor = db.query(
                 Cards.TABLE_NAME,
                 null,
-                selection,
+                cardSelection,
                 new String[]{Integer.toString(courseId)},
                 null,
                 null,
@@ -250,38 +265,68 @@ public class DBHelper extends SQLiteOpenHelper{
 
         ArrayList<FlashCard> cards = new ArrayList<>();
 
-        if (cursor.getCount() == 0){
-            Log.d("DBHELPER","CARDS_IN_COURSE");
-        }
+        if (cardCursor.getCount() != 0) {
+            int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
+            int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
+            int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_MADE);
+            int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
+            int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
+            int idIndex = cardCursor.getColumnIndex(Cards.ID);
 
-        int frontIndex = cursor.getColumnIndex(Cards.COLUMN_FRONT);
-        int backIndex = cursor.getColumnIndex(Cards.COLUMN_BACK);
-        int userCreatedIndex = cursor.getColumnIndex(Cards.COLUMN_USER_MADE);
-        int dateCreatedIndex = cursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
-        int accuracyIndex = cursor.getColumnIndex(Cards.COLUMN_ACCURACY);
-        int idIndex = cursor.getColumnIndex(Cards.ID);
-
-        while (cursor.moveToNext()){
+            while (cardCursor.moveToNext()) {
                 cards.add(
                         new FlashCard(
                                 subject,
                                 courseNum,
-                                cursor.getString(frontIndex),
-                                cursor.getString(backIndex),
-                                cursor.getInt(userCreatedIndex),
-                                cursor.getString(dateCreatedIndex),
-                                cursor.getDouble(accuracyIndex),
-                                cursor.getInt(idIndex)
+                                cardCursor.getString(frontIndex),
+                                cardCursor.getString(backIndex),
+                                cardCursor.getInt(userCreatedIndex),
+                                cardCursor.getString(dateCreatedIndex),
+                                cardCursor.getDouble(accuracyIndex),
+                                cardCursor.getInt(idIndex)
                         )
                 );
+            }
         }
 
+        String courseSelection = Courses.ID + " = ?";
+        Cursor courseCursor = db.query(true,
+                Courses.TABLE_NAME,
+                new String[] {Courses.COLUMN_ACCURACY, Courses.COLUMN_USER_MADE},
+                courseSelection,
+                new String[] {Integer.toString(courseId)},
+                null,
+                null,
+                null,
+                null
+        );
 
-        return cards;
+        if (courseCursor.getCount() == 1){
+
+            int accuracyIndex = courseCursor.getColumnIndex(Courses.COLUMN_ACCURACY);
+            int userMadeIndex = courseCursor.getColumnIndex(Courses.COLUMN_USER_MADE);
+            courseCursor.moveToNext();
+            Course course = new Course(cards,
+                    courseCursor.getDouble(accuracyIndex),
+                    subject,
+                    courseNum,
+                    courseCursor.getInt(userMadeIndex),
+                    courseId,
+                    mContext);
+            return course;
+        }
+        courseCursor.close();
+        cardCursor.close();
+
+        return null;
     }
 
 
-
+    /**
+     *
+     * @param card - card to be modified
+     * @return returns the number of rows affected (1), or throws an exception if multiple rows affected
+     */
     public int modifyCard(FlashCard card){
         SQLiteDatabase db = getWritableDatabase();
 
@@ -294,25 +339,55 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_USER_MADE, card.getUserMade());
         values.put(Cards.COLUMN_BACK, card.getBack());
         values.put(Cards.COLUMN_COURSE_ID, courseId);
-        values.put(Cards.COLUMN_DATE_CREATED, card.getDate_created());
+        values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
         values.put(Cards.COLUMN_FRONT, card.getFront());
 
 
 
-        return db.update(Cards.TABLE_NAME, values, whereClause, whereArgs);
+        int rowsAffected = db.update(Cards.TABLE_NAME, values, whereClause, whereArgs);
+        if (rowsAffected > 1)
+            throw new RuntimeException("Multiple cards modified by one call to modifyCard()");
+        return rowsAffected;
     }
 
+    /**
+     *
+     * @param card - card to be saved to the database, new or modified
+     * @return the database id of the card that was saved.
+     */
     public long save(FlashCard card){
-        if (card.isNew){
+        if (card.isNew)
             return insertCard(card);
-        }
-        else if (card.isModified){
+        else if (card.isModified)
             modifyCard(card);
-        }
         return card.id;
-
-
     }
 
+    public void removeCard(FlashCard card){
 
+        SQLiteDatabase db = getWritableDatabase();
+        String deleteQuery = Cards.ID + " = ?";
+
+        db.delete(Cards.TABLE_NAME,
+                deleteQuery,
+                new String[] {Long.toString(card.id)}
+        );
+    }
+
+    public void updateCourse(Course course){
+        SQLiteDatabase db = getWritableDatabase();
+        String courseSelection = Courses.ID + " = ?";
+
+        ContentValues values = new ContentValues();
+
+        values.put(Courses.COLUMN_ACCURACY, course.getAccuracy());
+        values.put(Courses.COLUMN_COURSE_NUM, course.getCourseNum());
+        values.put(Courses.COLUMN_SUBJECT, course.getSubject());
+
+        db.update(Courses.TABLE_NAME,
+                values,
+                courseSelection,
+                new String[] {Long.toString(course.id)}
+        );
+    }
 }
