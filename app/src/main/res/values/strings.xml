@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">FlashMe</string>
+    <string name="app_name">Flash Me</string>
+    <string name="create_notecard">Create Notecard</string>
+    <string name="view_subjects">View Subjects</string>
+    <string name="favorite_courses">Favorite Courses</string>
+    <string name="subjects">Subjects</string>
+    <string name="courses">Courses</string>
 </resources>
