@@ -7,16 +7,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cs380.flashme.flashme.data.Course;
+import com.cs380.flashme.flashme.data.DBHelper;
+import com.cs380.flashme.flashme.data.FlashCard;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class QuizMeActivity extends AppCompatActivity {
 
     //new card set
-    private Button startButton, nextButton, prevButton;
+    private Button startButton, nextButton, prevButton, correctButton, incorrectButton;
     private TextView cardQuestion;
-    private TextView cardAnswer;
     private int width,height;
     private String frontQuestion, backAnswer, dateCreated, id, courseID;
     private boolean isUserMade;
     private double accuracyStats;
+    private int cardIndex;
+    private DBHelper dbHelper;
+    private Course course;
+    private List<FlashCard> cards;
+    private boolean correct, incorrect;
     //private QuizMeCardFragment front;
     //private QuizMeCardFragmentBack back;
     //private Fragment Ffront, Fback;
@@ -42,8 +53,23 @@ public class QuizMeActivity extends AppCompatActivity {
         //fm = getFragmentManager();
         //ft = fm.beginTransaction();
 
+        correctButton = (Button) findViewById(R.id.correctButton);
+        correctButton.setVisibility(View.INVISIBLE);
+        correctButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                correctButtonClick();
+            }
+        });
 
-
+        incorrectButton = (Button) findViewById(R.id.incorrectButton);
+        incorrectButton.setVisibility(View.INVISIBLE);
+        incorrectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                incorrectButtonClick();
+            }
+        });
         //set up next button
         nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setVisibility(View.INVISIBLE);
@@ -53,13 +79,13 @@ public class QuizMeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //call next card and set as view
-                cardQuestion.setText("New Question");
+                nextButtonClick();
             }
         });
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cardQuestion.setText("Last Question");
+                prevButtonClick();
             }
         });
         //set up start button
@@ -68,16 +94,12 @@ public class QuizMeActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ft.attach(front);
-                //ft.commit();
-                //setContentView(findViewById(R.id.quizMeCardFragmentFront));
-                startButton.setVisibility(View.INVISIBLE);
-                nextButton.setVisibility(View.VISIBLE);
-                prevButton.setVisibility(View.VISIBLE);
-                cardQuestion.setVisibility(View.VISIBLE);
+                startButtonClick();
             }
         });
 
+
+        cardIndex = 0;
         //set up text views
         cardQuestion = (TextView) findViewById(R.id.cardQuestion);
         cardQuestion.setVisibility(View.INVISIBLE);
@@ -87,19 +109,89 @@ public class QuizMeActivity extends AppCompatActivity {
                 //ft.attach(back);
                 //ft.commit();
                 //setContentView(R.layout.quiz_me_back_fragment);
-                cardQuestion.setText("Test Question");
+                //cardQuestion.setText("Test Question");
             }
         });
 
     }
+    public ArrayList<String> getCourseInfo(){
+        ArrayList<String> courseInfo = new ArrayList<String>();
+        return courseInfo;
+    }
     public void setDBInfo(){
 
+        getCourseInfo();
+        dbHelper = DBHelper.getInstance(this);
+        course = dbHelper.getCourse("Computer Science", 457);
+        cards = course.getCards();
+        frontQuestion = cards.get(cardIndex).getFront();
+        backAnswer = cards.get(cardIndex).getBack();
         //frontQuestion =
         //backAnswer =
 
 
     }
+    public void correctButtonClick(){
+        correct = true;
+        checkUserAnswer();
+        correctButton.setVisibility(View.INVISIBLE);
+        incorrectButton.setVisibility(View.INVISIBLE);
+    }
+    public void incorrectButtonClick(){
+        incorrect = true;
+        checkUserAnswer();
+        correctButton.setVisibility(View.INVISIBLE);
+        incorrectButton.setVisibility(View.INVISIBLE);
+    }
+    public void setCardQuestion(){
+
+        cardQuestion.setText(frontQuestion);
+        //setDBInfo();
+    }
+    public void setCardAnswer(){
 
 
+        cardQuestion.setText(backAnswer);
+        //setDBInfo();
+    }
+    public void cardQuestionClick(){
+        if(cardQuestion.getText().equals(frontQuestion)){
+            cardQuestion.setText(backAnswer);
+            prevButton.setVisibility(View.VISIBLE);
+            correctButton.setVisibility(View.VISIBLE);
+        }else{
 
+        }
+    }
+    public void startButtonClick(){
+        startButton.setVisibility(View.INVISIBLE);
+        nextButton.setVisibility(View.VISIBLE);
+        cardQuestion.setVisibility(View.VISIBLE);
+    }
+    public void nextButtonClick(){
+
+        prevButton.setVisibility(View.VISIBLE);
+        if(cardIndex > cards.size()){
+            cardQuestion.setText("You have reached the end of this set...\n" + "You made it.");
+        }else{
+            cardIndex++;
+            setDBInfo();
+        }
+
+    }
+    public void prevButtonClick(){
+        if(!(cardIndex == 0)){
+            cardIndex--;
+            setDBInfo();
+        }else{
+            prevButton.setVisibility(View.INVISIBLE);
+        }
+    }
+    public void checkUserAnswer(){
+        if(correct = true){
+            cards.get(cardIndex).getAccuracy();
+        }else{
+            cards.get(cardIndex).getAccuracy();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.cs380.flashme.flashme;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void viewCoursesButton(View v) {
 // do something when the button is clicked
+        Intent intent = new Intent(MainActivity.this,QuizMeActivity.class);
+        startActivity(intent);
+
     }
 
     public void previousSessionButton(View v) {
