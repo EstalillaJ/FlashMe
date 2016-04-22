@@ -10,41 +10,37 @@
     tools:context="com.cs380.flashme.flashme.MainActivity"
     android:background="@drawable/background">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create Flash Card"
-        android:id="@+id/createCardButton"
-        android:onClick="createNotecardButton"
-        android:layout_above="@+id/button3"
-        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View Courses"
-        android:id="@+id/viewCoursesButton"
-        android:onClick="viewCoursesButton"
-        android:layout_above="@+id/createCardButton"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button3"
-        android:onClick="previousSessionButton"
+        android:text="@string/create_notecard"
+        android:id="@+id/createNotecardButton"
+        android:layout_marginBottom="168dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/viewCoursesButton"
-        android:layout_alignStart="@+id/viewCoursesButton"
-        android:layout_marginBottom="51dp" />
+        android:layout_centerHorizontal="true"
+        android:onClick="createNotecardButton"
+        android:nestedScrollingEnabled="true" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/cardView"
-        android:layout_above="@+id/viewCoursesButton"
+        android:text="@string/view_subjects"
+        android:id="@+id/viewSubjectsButton"
+        android:layout_marginTop="63dp"
+        android:layout_alignTop="@+id/createNotecardButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="94dp" />
+        android:onClick="viewSubjectsButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/favorite_courses"
+        android:id="@+id/favoriteCoursesButton"
+        android:layout_marginTop="385dp"
+        android:layout_alignRight="@+id/createNotecardButton"
+        android:layout_alignEnd="@+id/createNotecardButton"
+        android:onClick="favoriteCoursesButton"
+        android:nestedScrollingEnabled="true" />
+
 </RelativeLayout>
