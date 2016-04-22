@@ -13,11 +13,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //ListView listView = (ListView) findViewById(R.id.main_list);
+        TestDB2 testDB2 = new TestDB2(this);
 
-        mMainListAdapter = new ArrayAdapter<>(this, R.layout.list_item_main, mainListItems);
 
-       // listView.setAdapter(mMainListAdapter);
+        testDB2.testModifyCard();
+        testDB2.testRemoveCard();
     }
 
     public void createNotecardButton(View v) {
