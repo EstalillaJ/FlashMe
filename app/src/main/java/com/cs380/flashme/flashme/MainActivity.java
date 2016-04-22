@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.cs380.flashme.flashme.data.DBConstants;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
+import com.cs380.flashme.flashme.data.IntentConstants;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +31,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createNotecardButton(View v) {
-        // do something when the button is clicked
+        Button viewSubjectButton = (Button)findViewById(R.id.createNotecardButton);
+
+        viewSubjectButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), New_Card_Activity.class);
+                intent.putExtra(IntentConstants.SUBJECT_KEY, null);
+                intent.putExtra(IntentConstants.COURSE_NUM_KEY, null);
+                startActivity(intent);
+
+            }
+        });
     }
 
     public void subjectButton() {

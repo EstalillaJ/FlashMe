@@ -134,7 +134,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/Logo"
-        android:background="@drawable/fmlogo"
         android:layout_alignTop="@+id/Course_Subject"
         android:layout_alignRight="@+id/Side_Front_Text"
         android:layout_alignEnd="@+id/Side_Front_Text"

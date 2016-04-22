@@ -35,7 +35,6 @@ public class New_Card_Activity extends AppCompatActivity {
         String Front_Description = FRONT_DESCRIPTION.getText().toString();
         String Back_Description = BACK_DESCRIPTION.getText().toString();
 
-        FlashCard newCard = new FlashCard(Course_Subject, Course_Number, Front_Description, Back_Description, 1);
 
         Intent intent = new Intent(this, MainActivity.class);
 
@@ -45,8 +44,6 @@ public class New_Card_Activity extends AppCompatActivity {
 
     public void CardViewButton(View v){
 
-        Intent intent = new Intent(this, Card_Viewer.class);
-        startActivity(intent);
 
     }
 
