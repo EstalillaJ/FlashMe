@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.cs380.flashme.flashme.New_Card_Activity"
+    android:id="@+id/Screen_CreateNew"
+    android:background="#ffffff">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Number:"
+        android:id="@+id/Course"
+        android:textSize="15dp"
+        android:layout_below="@+id/Course_Subject_ID"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Course_Number_ID"
+        android:hint="Enter Number"
+        android:textSize="15dp"
+        android:maxLength="15"
+        android:singleLine="true"
+        android:inputType="numberDecimal"
+        android:transitionName="Course_Num"
+        android:layout_below="@+id/Course"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Front Description:"
+        android:id="@+id/Front_Description"
+        android:textSize="15dp"
+        android:layout_below="@+id/Course_Number_ID"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Side_Front_Text"
+        android:hint="Enter A Description"
+        android:inputType="text"
+        android:textSize="15dp"
+        android:singleLine="true"
+        android:maxLength="16"
+        android:layout_below="@+id/Front_Description"
+        android:layout_alignRight="@+id/Side_Back_Text"
+        android:layout_alignEnd="@+id/Side_Back_Text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back Description:"
+        android:id="@+id/Back_Description"
+        android:textSize="15dp"
+        android:layout_below="@+id/Side_Front_Text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        android:id="@+id/Submit_Button"
+        android:gravity="center"
+        android:onClick="CardSubmitButton"
+        android:layout_above="@+id/View_Card_Button"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/Side_Back_Text"
+        android:hint="Enter A Discription"
+        android:textSize="15dp"
+        android:scrollIndicators="right"
+        android:layout_below="@+id/Back_Description"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Subject:"
+        android:id="@+id/Course_Subject"
+        android:textSize="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Course_Subject_ID"
+        android:hint="Enter A Subject"
+        android:inputType="text"
+        android:textSize="15dp"
+        android:singleLine="true"
+        android:maxLength="16"
+        android:transitionName="Subject_ID"
+        android:layout_below="@+id/Course_Subject"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View FlashCard"
+        android:id="@+id/View_Card_Button"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/Course_Subject_ID"
+        android:layout_toEndOf="@+id/Course_Subject_ID"
+        android:onClick="CardViewButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Logo"
+        android:background="@drawable/fmlogo"
+        android:layout_alignTop="@+id/Course_Subject"
+        android:layout_alignRight="@+id/Side_Front_Text"
+        android:layout_alignEnd="@+id/Side_Front_Text"
+        android:layout_alignLeft="@+id/Submit_Button"
+        android:layout_alignStart="@+id/Submit_Button" />
+
+</RelativeLayout>
