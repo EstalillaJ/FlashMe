@@ -14,6 +14,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    /*
+    * passNum, passSubject as null
+    *
+     */
     private ArrayAdapter<String> mMainListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public void favoriteCoursesButton(View v) {
         // do something when the button is clicked
     }
