@@ -17,6 +17,11 @@ public class FlashCard {
     private int userMade;
     private String date_created;
     private double accuracy;
+
+
+    private int numAttempts;
+
+    //For database use
     protected boolean isModified;
     protected boolean isNew;
     protected long id;
@@ -34,12 +39,14 @@ public class FlashCard {
         this.isNew = true;
         this.isModified = false;
         this.accuracy = 100.00;
+        this.numAttempts = 0;
         this.id = DBHelper.getInstance(context).save(this);
     }
 
 
     protected FlashCard(String subject, int courseNum, String front, String back,
-                        int userMade, String date_created, double accuracy, int id){
+                        int userMade, String date_created, double accuracy, int numAttempts,
+                        int id){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
@@ -49,6 +56,7 @@ public class FlashCard {
         this.isModified = false;
         this.isNew = false;
         this.accuracy = accuracy;
+        this.numAttempts = numAttempts;
         this.id = id;
     }
 
@@ -122,4 +130,15 @@ public class FlashCard {
         if (!isModified)
             isModified = true;
     }
+
+    public int getNumAttempts() {
+        return numAttempts;
+    }
+
+    public void setNumAttempts(int numAttempts) {
+        this.numAttempts = numAttempts;
+        if (!isModified)
+            isModified = true;
+    }
+
 }

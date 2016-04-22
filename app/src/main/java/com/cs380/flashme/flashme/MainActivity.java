@@ -14,8 +14,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TestDB2 testDB2 = new TestDB2(this);
-
-
         testDB2.testModifyCard();
         testDB2.testRemoveCard();
     }
