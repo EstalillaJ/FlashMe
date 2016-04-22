@@ -1,0 +1,45 @@
+--- HOW TO MAKE A FLASHCARD ----
+
+Constructor parameters: String subject, int courseNumber, String frontOfCard, String backOfCard, int userMade
+
+NOTE: Probably all of the cards you make at this point will be user made. Use DBConstants.USER_MADE for the last constructor parameter.
+
+Example:
+
+	Flashcard card = new FlashCard("Computer Science", 457, "Blah Blah", "Blah", DBConstants.NOT_USER_MADE)
+
+CREATING A FLASHCARD DOES NOT STORE IT IN THE DATABASE
+
+---- HOW TO GET A DB HELPER -----
+
+Constructor parameters: Context context
+
+For those of your programming in a activity:
+
+	DBHelper dbHelper = new DBHelper(this);
+
+Or in a fragment:
+
+	DBHELPER dbHelper = new DBHelper(getActivity());
+
+---- SAVING A FLASHCARD ----
+
+	dbHelper.insertCard(card);
+
+---- SAVING A NEW COURSE ---
+	
+	dbHelper.insertCourse(subject,courseNum);
+
+--- GETTTING A LIST OF SUBJECTS IN THE DATABASE (FOR MAIN PAGE) -----
+
+	dbHelper.getSubjects();
+
+--- GETTING CARDS ASSOCIATED WITH A GIVEN COURSE ---- 
+	
+	dbHelper.getCardsInCourse(courseSubject,courseNum);
+
+---- GET COURSE NUMBERS IN A SUBJECT ----
+	
+	dbHelper.getCourseInSubject(subject);
+
+
