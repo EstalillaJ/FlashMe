@@ -18,16 +18,14 @@
         <activity
             android:name=".SubjectActivity"
             android:label="@string/subjects"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".New_Card_Activity"
             android:label="@string/create_notecard"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"></activity>
+        <activity android:name=".CourseActivity"></activity>
     </application>
 
 </manifest>
