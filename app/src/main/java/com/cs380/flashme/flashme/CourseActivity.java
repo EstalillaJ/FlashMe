@@ -26,9 +26,9 @@ public class CourseActivity extends AppCompatActivity {
         textview.setText(subject);
 
         ListView courseList = (ListView) findViewById(R.id.courseListView);
-        ArrayAdapter subjectAdapter = new ArrayAdapter<Integer>(this, R.layout.subject_layout, courseList); // not entirely sure if implementation is sound; will iterate further
-        courseList.setAdapter(subjectAdapter);
-        // method used to test; should set to name of subject on activity instantiation
+       // ArrayAdapter subjectAdapter = new ArrayAdapter<Integer>(this, R.layout.subject_layout, courseList); // not entirely sure if implementation is sound; will iterate further.
+                                                                                                                // commented out for now.
+        //courseList.setAdapter(subjectAdapter);
 
     }
 }
