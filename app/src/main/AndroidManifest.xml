@@ -18,9 +18,10 @@
         <activity
             android:name=".SubjectActivity"
             android:label="@string/subjects"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".UserAreaActivity"></activity>
     </application>
 
 </manifest>
