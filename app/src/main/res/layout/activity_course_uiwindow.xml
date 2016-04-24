@@ -19,22 +19,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="#eaeaea" /><![CDATA[
-
-
->>>>>> Stashed changes
-    ]]>
-
-    <![CDATA[
-=======
-        android:text="Class ID Here"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="24dp"
-        android:textColor="#000000" />
-
-    ]]>
+        android:background="#eaeaea" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -60,6 +45,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/courseTitle"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Course ID Here"
         android:textSize="24dp"
@@ -68,6 +54,4 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:background="#eeeeee" />
-    >>>>>>> Stashed changes
-
 </RelativeLayout>
