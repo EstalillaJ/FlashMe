@@ -21,6 +21,13 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".New_Card_Activity"
+            android:label="@string/create_notecard"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
     </application>
 
 </manifest>
