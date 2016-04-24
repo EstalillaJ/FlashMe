@@ -1,20 +1,16 @@
 package com.cs380.flashme.flashme;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
-import java.util.Arrays;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.cs380.flashme.flashme.data.DBConstants;
+
 import com.cs380.flashme.flashme.data.DBHelper;
-import com.cs380.flashme.flashme.data.FlashCard;
+import com.cs380.flashme.flashme.data.IntentConstants;
 
 import java.util.ArrayList;
 
@@ -40,7 +36,6 @@ public class SubjectActivity extends Activity {
      * are stored in the database, and not list the courses until
      * the user clicks on the subject.
      *
-     * THIS DOES NOT WORK WITH THE DATABASE YET
      */
     private void populateSubjectListView() {
 
@@ -62,7 +57,7 @@ public class SubjectActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // testing to make sure clickable works
                 Toast.makeText(SubjectActivity.this, "List item was clicked at " + position, Toast.LENGTH_SHORT).show();
-                String subjectString = (String)parent.getItemAtPosition(position);
+                String subjectString = (String) parent.getItemAtPosition(position);
                 populateCourseListView(subjectString);
             }
         });
@@ -72,9 +67,8 @@ public class SubjectActivity extends Activity {
      * Populates the course listView whenever the user clicks on the subject
      * and populates that subject with course list views.
      *
-     * THIS IS MADE FOR TESTING, I HAVE NOT GOTTEN IT TO WORK WITH THE DATABASE YET.
      */
-    private void populateCourseListView(String subject) {
+    private void populateCourseListView(final String subject) {
 
         // invoking courses to populate the correct subjects
         ArrayList<Integer> courselist = database.getCoursesNumbersInSubject(subject);
@@ -88,6 +82,19 @@ public class SubjectActivity extends Activity {
 
         // setting courseView adapter
         courseView.setAdapter(subjectAdapter);
+
+        courseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(view.getContext(), CourseActivity.class);
+                Integer courseInt = (Integer) parent.getItemAtPosition(position);
+                String courseString = Integer.toString(courseInt);
+                intent.putExtra(IntentConstants.SUBJECT_KEY, subject);
+                intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseString);
+                startActivity(intent);
+            }
+        });
     }
+
 
 }
