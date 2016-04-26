@@ -26,7 +26,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create Card"
-        android:id="@+id/button"
+        android:id="@+id/createCardFromCourse"
+        android:onClick="createCardFromCourse"
         android:layout_row="16"
         android:layout_column="11"
         android:layout_alignParentBottom="true"
@@ -37,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Quiz Me"
-        android:id="@+id/button2"
+        android:id="@+id/quizMeButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
