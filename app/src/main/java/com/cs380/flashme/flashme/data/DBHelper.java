@@ -54,6 +54,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 Cards.COLUMN_FRONT + " TEXT NOT NULL, " +
                 Cards.COLUMN_BACK + " TEXT NOT NULL, " +
                 Cards.COLUMN_ACCURACY + " REAL NOT NULL DEFAULT 100.00, " +
+                Cards.COLUMN_NUMBER_OF_ATTEMPTS + " INTEGER NOT NULL DEFAULT 0, " +
                 Cards.COLUMN_USER_MADE + " INTEGER NOT NULL DEFAULT " + DBConstants.NOT_USER_MADE + ", " +
                 Cards.COLUMN_COURSE_ID + " INTEGER NOT NULL, " +
                 "  FOREIGN KEY (" + Cards.COLUMN_COURSE_ID + ") REFERENCES " + Courses.TABLE_NAME +
@@ -114,6 +115,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_DATE_CREATED, dateFormat.format(Calendar.getInstance().getTime()));
         values.put(Cards.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
         values.put(Cards.COLUMN_ACCURACY, 100.00);
+        values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, 0);
 
         db.insert(Cards.TABLE_NAME, null, values);
 
@@ -148,6 +150,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
         values.put(Cards.COLUMN_USER_MADE, card.getUserMade());
         values.put(Cards.COLUMN_ACCURACY, card.getAccuracy());
+        values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, card.getNumAttempts());
 
         return db.insert(Cards.TABLE_NAME, null, values);
     }
@@ -269,6 +272,7 @@ public class DBHelper extends SQLiteOpenHelper{
             int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_MADE);
             int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
             int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
+            int attemptsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
             int idIndex = cardCursor.getColumnIndex(Cards.ID);
 
             while (cardCursor.moveToNext()) {
@@ -281,6 +285,7 @@ public class DBHelper extends SQLiteOpenHelper{
                                 cardCursor.getInt(userCreatedIndex),
                                 cardCursor.getString(dateCreatedIndex),
                                 cardCursor.getDouble(accuracyIndex),
+                                cardCursor.getInt(attemptsIndex),
                                 cardCursor.getInt(idIndex)
                         )
                 );
@@ -339,7 +344,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_COURSE_ID, courseId);
         values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
         values.put(Cards.COLUMN_FRONT, card.getFront());
-
+        values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, card.getNumAttempts());
 
 
         int rowsAffected = db.update(Cards.TABLE_NAME, values, whereClause, whereArgs);
