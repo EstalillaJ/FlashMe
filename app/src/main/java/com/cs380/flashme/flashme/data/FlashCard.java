@@ -39,7 +39,7 @@ public class FlashCard {
 
 
     protected FlashCard(String subject, int courseNum, String front, String back,
-                        int userMade, String date_created, double accuracy, int id){
+                        int userMade, String date_created, double accuracy, long id){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
@@ -121,5 +121,9 @@ public class FlashCard {
         this.accuracy = accuracy;
         if (!isModified)
             isModified = true;
+    }
+
+    public long getId(){
+        return id;
     }
 }

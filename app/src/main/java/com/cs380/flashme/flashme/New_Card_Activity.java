@@ -10,6 +10,10 @@ import com.cs380.flashme.flashme.data.Course;
 import com.cs380.flashme.flashme.data.DBConstants;
 import com.cs380.flashme.flashme.data.FlashCard;
 
+/*Updated by Ryan, 4/26/16
+*
+*/
+
 public class New_Card_Activity extends AppCompatActivity {
 
     private EditText SUBJECT;
@@ -31,6 +35,8 @@ public class New_Card_Activity extends AppCompatActivity {
         FRONT_DESCRIPTION = (EditText) findViewById(R.id.Side_Front_Text);
 
         BACK_DESCRIPTION = (EditText) findViewById(R.id.Side_Back_Text);
+
+
 
     }
 

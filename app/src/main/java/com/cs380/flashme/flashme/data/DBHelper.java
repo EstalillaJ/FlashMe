@@ -215,9 +215,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selection = Courses.COLUMN_SUBJECT + " = ? ";
         Cursor cursor = db.query(true,
                 Courses.TABLE_NAME,
-                new String[] {Courses.COLUMN_COURSE_NUM},
+                new String[]{Courses.COLUMN_COURSE_NUM},
                 selection,
-                new String[] {subject},
+                new String[]{subject},
                 null,
                 null,
                 null,
@@ -385,7 +385,44 @@ public class DBHelper extends SQLiteOpenHelper{
         db.update(Courses.TABLE_NAME,
                 values,
                 courseSelection,
-                new String[] {Long.toString(course.id)}
+                new String[]{Long.toString(course.id)}
         );
+    }
+
+    public FlashCard getCard(long id, String subject, int courseNum){
+        SQLiteDatabase db = getReadableDatabase();
+        String cardSelection = Cards.ID +" = ? ";
+
+
+
+        Cursor cursor = db.query(true,
+                Cards.TABLE_NAME,
+                null,
+                cardSelection,
+                new String[] {Long.toString(id)},
+                null,
+                null,
+                null,
+                null
+            );
+
+
+        int frontIndex = cursor.getColumnIndex(Cards.COLUMN_FRONT);
+        int backIndex = cursor.getColumnIndex(Cards.COLUMN_BACK);
+        int dateCreatedIndex = cursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
+        int userMadeIndex = cursor.getColumnIndex(Cards.COLUMN_USER_MADE);
+        int accuracyIndex = cursor.getColumnIndex(Cards.COLUMN_ACCURACY);
+        cursor.moveToFirst();
+        FlashCard card = new FlashCard(
+                subject,
+                courseNum,
+                cursor.getString(frontIndex),
+                cursor.getString(backIndex),
+                Integer.parseInt(cursor.getString(userMadeIndex)),
+                cursor.getString(dateCreatedIndex),
+                Double.parseDouble(cursor.getString(accuracyIndex)),
+                        id);
+
+        return card;
     }
 }
