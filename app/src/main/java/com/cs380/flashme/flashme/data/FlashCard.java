@@ -46,7 +46,7 @@ public class FlashCard {
 
     protected FlashCard(String subject, int courseNum, String front, String back,
                         int userMade, String date_created, double accuracy, int numAttempts,
-                        int id){
+                        long id){
 
         this.subject = subject;
         this.courseNum = courseNum;
