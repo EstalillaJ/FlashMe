@@ -43,6 +43,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Button skipLoginButton = (Button)findViewById(R.id.skipLogin);
+
+        skipLoginButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
         BUTTON_LOGIN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
