@@ -13,7 +13,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="324dp"
-        android:id="@+id/listView"
+        android:id="@+id/cardList"
         android:layout_row="15"
         android:layout_column="11"
         android:layout_centerVertical="true"
@@ -39,6 +39,7 @@
         android:layout_height="wrap_content"
         android:text="Quiz Me"
         android:id="@+id/quizMeButton"
+        android:onClick="QuizMe"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

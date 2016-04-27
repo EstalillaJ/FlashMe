@@ -112,13 +112,12 @@ public class DBHelper extends SQLiteOpenHelper{
 
         values.put(Cards.COLUMN_COURSE_ID, 1);
         values.put(Cards.COLUMN_FRONT, "Describe the difference between classification and regression");
-        values.put(Cards.COLUMN_BACK, "Classification is discrete, regresssion is continous");
+        values.put(Cards.COLUMN_BACK, "Classification is discrete, regression is continous");
         values.put(Cards.COLUMN_DATE_CREATED, dateFormat.format(Calendar.getInstance().getTime()));
         values.put(Cards.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
         values.put(Cards.COLUMN_ACCURACY, 100.00);
 
         db.insert(Cards.TABLE_NAME, null, values);
-
 
 
     }
@@ -138,7 +137,7 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public long insertCard(FlashCard card){
-        int courseId = getCourseId(card.getSubject(), card.getCourseNum());
+        long courseId = getCourseId(card.getSubject(), card.getCourseNum());
 
         SQLiteDatabase db  = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -154,7 +153,7 @@ public class DBHelper extends SQLiteOpenHelper{
         return db.insert(Cards.TABLE_NAME, null, values);
     }
 
-    private int getCourseId(String subject, int courseNum){
+    private long getCourseId(String subject, int courseNum){
         SQLiteDatabase db = getReadableDatabase();
         String selection = Courses.COLUMN_SUBJECT + " = ? AND " + Courses.COLUMN_COURSE_NUM + " = ? ";
 
@@ -174,7 +173,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.moveToNext();
-        int courseId = cursor.getInt(cursor.getColumnIndex(Courses.ID));
+        long courseId = cursor.getInt(cursor.getColumnIndex(Courses.ID));
         cursor.close();
         return courseId;
     }
@@ -247,7 +246,7 @@ public class DBHelper extends SQLiteOpenHelper{
      */
     public Course getCourse(String subject, int courseNum){
 
-        int courseId = getCourseId(subject, courseNum);
+        long courseId = getCourseId(subject, courseNum);
         final String cardSelection = Cards.COLUMN_COURSE_ID + " = ?";
 
         SQLiteDatabase db = getReadableDatabase();
@@ -256,7 +255,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 Cards.TABLE_NAME,
                 null,
                 cardSelection,
-                new String[]{Integer.toString(courseId)},
+                new String[]{Long.toString(courseId)},
                 null,
                 null,
                 null,
@@ -265,36 +264,36 @@ public class DBHelper extends SQLiteOpenHelper{
 
         ArrayList<FlashCard> cards = new ArrayList<>();
 
-        if (cardCursor.getCount() != 0) {
-            int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
-            int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
-            int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_MADE);
-            int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
-            int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
-            int idIndex = cardCursor.getColumnIndex(Cards.ID);
 
-            while (cardCursor.moveToNext()) {
-                cards.add(
-                        new FlashCard(
-                                subject,
-                                courseNum,
-                                cardCursor.getString(frontIndex),
-                                cardCursor.getString(backIndex),
-                                cardCursor.getInt(userCreatedIndex),
-                                cardCursor.getString(dateCreatedIndex),
-                                cardCursor.getDouble(accuracyIndex),
-                                cardCursor.getInt(idIndex)
-                        )
-                );
-            }
+        int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
+        int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
+        int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_MADE);
+        int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
+        int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
+        int idIndex = cardCursor.getColumnIndex(Cards.ID);
+
+        while (cardCursor.moveToNext()) {
+            cards.add(
+                    new FlashCard(
+                            subject,
+                            courseNum,
+                            cardCursor.getString(frontIndex),
+                            cardCursor.getString(backIndex),
+                            cardCursor.getInt(userCreatedIndex),
+                            cardCursor.getString(dateCreatedIndex),
+                            cardCursor.getDouble(accuracyIndex),
+                            cardCursor.getInt(idIndex)
+                    )
+            );
         }
+
 
         String courseSelection = Courses.ID + " = ?";
         Cursor courseCursor = db.query(true,
                 Courses.TABLE_NAME,
                 new String[] {Courses.COLUMN_ACCURACY, Courses.COLUMN_USER_MADE},
                 courseSelection,
-                new String[] {Integer.toString(courseId)},
+                new String[] {Long.toString(courseId)},
                 null,
                 null,
                 null,
@@ -303,20 +302,21 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (courseCursor.getCount() == 1){
 
-            int accuracyIndex = courseCursor.getColumnIndex(Courses.COLUMN_ACCURACY);
+            int accIndex = courseCursor.getColumnIndex(Courses.COLUMN_ACCURACY);
             int userMadeIndex = courseCursor.getColumnIndex(Courses.COLUMN_USER_MADE);
             courseCursor.moveToNext();
             Course course = new Course(cards,
-                    courseCursor.getDouble(accuracyIndex),
+                    courseCursor.getDouble(accIndex),
                     subject,
                     courseNum,
                     courseCursor.getInt(userMadeIndex),
                     courseId,
                     mContext);
+            courseCursor.close();
+            cardCursor.close();
             return course;
         }
-        courseCursor.close();
-        cardCursor.close();
+
 
         return null;
     }
@@ -330,7 +330,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public int modifyCard(FlashCard card){
         SQLiteDatabase db = getWritableDatabase();
 
-        int courseId = getCourseId(card.getSubject(),card.getCourseNum());
+        long courseId = getCourseId(card.getSubject(),card.getCourseNum());
         ContentValues values = new ContentValues();
         String whereClause = Cards.ID + " = ?";
         String[] whereArgs = {Long.toString(card.id)};

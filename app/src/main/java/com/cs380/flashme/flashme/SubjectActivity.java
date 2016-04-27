@@ -18,7 +18,7 @@ public class SubjectActivity extends Activity {
 
     // Fields
     private DBHelper database;
-
+    private String sub;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,11 +68,11 @@ public class SubjectActivity extends Activity {
      * and populates that subject with course list views.
      *
      */
-    private void populateCourseListView(final String subject) {
+    private void populateCourseListView(String subject) {
 
         // invoking courses to populate the correct subjects
         ArrayList<Integer> courselist = database.getCoursesNumbersInSubject(subject);
-
+        sub =  subject;
 
         // Finding the listView resource.
         ListView courseView = (ListView) findViewById(R.id.courseListView);
@@ -86,10 +86,10 @@ public class SubjectActivity extends Activity {
         courseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(view.getContext(), CourseActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CourseActivity.class);
                 Integer courseInt = (Integer) parent.getItemAtPosition(position);
                 String courseString = Integer.toString(courseInt);
-                intent.putExtra(IntentConstants.SUBJECT_KEY, subject);
+                intent.putExtra(IntentConstants.SUBJECT_KEY, sub);
                 intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseString);
                 startActivity(intent);
             }

@@ -5,8 +5,9 @@ package com.cs380.flashme.flashme.data;
  */
 public class IntentConstants
 {
-    public static final String SUBJECT_KEY = "passSubject";
-    public static final String COURSE_NUM_KEY = "passCourseNum";
-    public static final String EXISTING_CARD_KEY = "existingCard";
-    public static final String CARD_ID_KEY = "cardId";
+    public static final String PACKAGE = "com.cs380.flashme.flashme.";
+    public static final String SUBJECT_KEY = PACKAGE + "passSubject";
+    public static final String COURSE_NUM_KEY = PACKAGE + "passCourseNum";
+    public static final String EXISTING_CARD_KEY = PACKAGE + "existingCard";
+    public static final String CARD_ID_KEY = PACKAGE + "cardId";
 }

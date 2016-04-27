@@ -85,6 +85,6 @@ public class Course {
     public List<FlashCard> getCards(){
         return cards;
     }
-
+    public long getId() {return id;}
 
 }
