@@ -62,8 +62,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void favoriteCoursesButton(View v) {
-        // do something when the button is clicked
-    }
-
 }

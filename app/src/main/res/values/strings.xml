@@ -6,4 +6,5 @@
     <string name="subjects">Subjects</string>
     <string name="courses">Courses</string>
     <string name="start">Start</string>
+    <string name="loginMsg">Welcome to FlashMe</string>
 </resources>
