@@ -16,31 +16,20 @@
         android:layout_height="wrap_content"
         android:text="@string/create_notecard"
         android:id="@+id/createNotecardButton"
-        android:layout_marginBottom="168dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:onClick="createNotecardButton"
-        android:nestedScrollingEnabled="true" />
+        android:nestedScrollingEnabled="true"
+        android:layout_marginBottom="131dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/view_subjects"
         android:id="@+id/viewSubjectsButton"
-        android:layout_marginTop="63dp"
-        android:layout_alignTop="@+id/createNotecardButton"
+        android:onClick="viewSubjectsButton"
+        android:layout_above="@+id/createNotecardButton"
         android:layout_centerHorizontal="true"
-        android:onClick="viewSubjectsButton" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/favorite_courses"
-        android:id="@+id/favoriteCoursesButton"
-        android:layout_marginTop="385dp"
-        android:layout_alignRight="@+id/createNotecardButton"
-        android:layout_alignEnd="@+id/createNotecardButton"
-        android:onClick="favoriteCoursesButton"
-        android:nestedScrollingEnabled="true" />
+        android:layout_marginBottom="25dp"/>
 
 </RelativeLayout>
