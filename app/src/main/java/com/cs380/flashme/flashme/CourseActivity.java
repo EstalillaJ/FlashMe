@@ -10,7 +10,10 @@ import android.widget.TextView;
 
 import com.cs380.flashme.flashme.data.Course;
 import com.cs380.flashme.flashme.data.DBHelper;
+import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
+
+import java.util.List;
 
 public class CourseActivity extends AppCompatActivity {
     private  String subject;
@@ -25,6 +28,7 @@ public class CourseActivity extends AppCompatActivity {
         DBHelper dbHelper = DBHelper.getInstance(this);
 
         Course course = dbHelper.getCourse(subject, Integer.parseInt(courseNum));
+        List<FlashCard> cards = course.getCards();
 
         TextView textview = (TextView) findViewById(R.id.courseTitle);
         textview.setText(subject);
@@ -47,4 +51,8 @@ public class CourseActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+   // public void QuizMe() {
+     //   Intent intent = new Intent(this, )
+    //}
 }
