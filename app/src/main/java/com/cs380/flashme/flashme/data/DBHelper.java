@@ -267,29 +267,11 @@ public class DBHelper extends SQLiteOpenHelper{
 
         ArrayList<FlashCard> cards = new ArrayList<>();
 
-<<<<<<< HEAD
 
-        int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
-        int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
-        int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_MADE);
-        int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
-        int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
-        int idIndex = cardCursor.getColumnIndex(Cards.ID);
 
-        while (cardCursor.moveToNext()) {
-            cards.add(
-                    new FlashCard(
-                            subject,
-                            courseNum,
-                            cardCursor.getString(frontIndex),
-                            cardCursor.getString(backIndex),
-                            cardCursor.getInt(userCreatedIndex),
-                            cardCursor.getString(dateCreatedIndex),
-                            cardCursor.getDouble(accuracyIndex),
-                            cardCursor.getInt(idIndex)
-                    )
-            );
-=======
+
+
+
         if (cardCursor.getCount() != 0) {
             int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
             int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
@@ -314,7 +296,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         )
                 );
             }
->>>>>>> master
+
         }
 
 
