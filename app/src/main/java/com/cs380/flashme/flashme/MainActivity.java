@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FlashCard card = new FlashCard(this,"Computer Science", 457, "f","b", DBConstants.NOT_USER_MADE);
-
         subjectButton();
 
 

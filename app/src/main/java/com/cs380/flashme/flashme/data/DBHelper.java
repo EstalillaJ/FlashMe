@@ -21,7 +21,7 @@ import java.util.Calendar;
 public class DBHelper extends SQLiteOpenHelper{
 
     //Database Versions correspond to schema changes
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static DBHelper sInstance;
     private Context mContext;
 
@@ -72,7 +72,9 @@ public class DBHelper extends SQLiteOpenHelper{
     // This will only be fired if we change the version of the DB. Will
     // not implement unless we need to change schema.
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + Cards.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Courses.TABLE_NAME);
+        onCreate(db);
     }
 
 
@@ -266,10 +268,6 @@ public class DBHelper extends SQLiteOpenHelper{
         );
 
         ArrayList<FlashCard> cards = new ArrayList<>();
-
-
-
-
 
 
         if (cardCursor.getCount() != 0) {
