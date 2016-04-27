@@ -61,8 +61,10 @@ public class DBHelper extends SQLiteOpenHelper{
 
         db.execSQL(SQL_CREATE_CARDS_TABLE);
         db.execSQL(SQL_CREATE_COURSES_TABLE);
+
         insertDefaultSubjects(db);
         insertDefaultCards(db);
+
     }
 
     @Override
