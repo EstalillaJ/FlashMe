@@ -1,11 +1,13 @@
 package com.cs380.flashme.flashme;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ public class QuizMeActivity extends AppCompatActivity {
     private boolean correct, incorrect;
     private FlashCard currentCard;
     private boolean frontDisplayed = true;
+    private Resources resources;
 
 
 
@@ -40,6 +43,8 @@ public class QuizMeActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_me);
+
+        resources = getResources();
 
         dbHelper = DBHelper.getInstance(this);
         Intent intent = getIntent();
@@ -78,27 +83,10 @@ public class QuizMeActivity extends AppCompatActivity {
                 incorrectButtonClick();
             }
         });
-        //set up next button
-        nextButton = (Button) findViewById(R.id.nextButton);
-
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //call next card and set as view
-                nextButtonClick();
-            }
-        });
 
 
-        prevButton = (Button) findViewById(R.id.prevButton);
-        prevButton.setVisibility(View.INVISIBLE);
 
-        prevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                prevButtonClick();
-            }
-        });
+
 
 
 
@@ -109,12 +97,17 @@ public class QuizMeActivity extends AppCompatActivity {
         cardQuestion = (TextView) findViewById(R.id.cardQuestion);
         cardQuestion.setText(currentCard.getFront());
 
-        cardQuestion.setOnTouchListener(new OnSwipeTouchListener(QuizMeActivity.this){
+        FrameLayout cardFrame = (FrameLayout) findViewById(R.id.cardFrame);
+
+        cardFrame.setOnTouchListener(new OnSwipeTouchListener(QuizMeActivity.this){
             public void onSwipeLeft(){
-                Toast.makeText(QuizMeActivity.this,"left",Toast.LENGTH_SHORT).show();
+                displayNextCard();
             }
             public void onClick(){
                 cardClicked();
+            }
+            public void onSwipeRight(){
+                displayPreviousCard();
             }
         });
 
@@ -152,22 +145,37 @@ public class QuizMeActivity extends AppCompatActivity {
         }
     }
 
-    public void nextButtonClick(){
-
-        prevButton.setVisibility(View.VISIBLE);
-        if(currentCardIndex > cards.size()-1){
-            cardQuestion.setText("You have reached the end of this set...\n" + "You made it.");
-        }else{
-            currentCardIndex++;
+    public void displayNextCard(){
+        currentCardIndex++;
+        if (currentCardIndex < cards.size()){
+            currentCard = cards.get(currentCardIndex);
+            cardQuestion.setText(currentCard.getFront());
         }
-
+        else{
+            currentCard = null;
+            cardQuestion.setText(resources.getString(R.string.endOfSet));
+        }
+        //In case they swipe left while the back was displayed
+        frontDisplayed = true;
+        correctButton.setVisibility(View.INVISIBLE);
+        incorrectButton.setVisibility(View.INVISIBLE);
     }
-    public void prevButtonClick(){
-        if(!(currentCardIndex == 0)){
+
+    public void displayPreviousCard(){
+        if (currentCardIndex > 0){
             currentCardIndex--;
-        }else{
-            prevButton.setVisibility(View.INVISIBLE);
+            currentCard = cards.get(0);
+            cardQuestion.setText(currentCard.getFront());
+
+
+            //If they swiped right on the first card
+            //we don't want to change any of these values
+            frontDisplayed = true;
+            correctButton.setVisibility(View.INVISIBLE);
+            incorrectButton.setVisibility(View.INVISIBLE);
         }
+
+
     }
 
     public void checkUserAnswer(){

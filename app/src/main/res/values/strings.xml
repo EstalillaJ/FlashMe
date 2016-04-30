@@ -7,4 +7,5 @@
     <string name="courses">Courses</string>
     <string name="start">Start</string>
     <string name="loginMsg">Welcome to FlashMe</string>
+    <string name="endOfSet">You have reached the end of this set! Good job!</string>
 </resources>
