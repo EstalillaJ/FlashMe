@@ -48,6 +48,21 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=""
+            android:id="@+id/cardIndexView"
+            android:layout_gravity="left|top" />
+
+        <Chronometer
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/quizTimer"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="right|top" />
+
     </FrameLayout>
 
 </RelativeLayout>
