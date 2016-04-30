@@ -1,15 +1,19 @@
 package com.cs380.flashme.flashme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.cs380.flashme.flashme.Util.OnSwipeTouchListener;
 import com.cs380.flashme.flashme.data.Course;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
+import com.cs380.flashme.flashme.data.IntentConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +24,15 @@ public class QuizMeActivity extends AppCompatActivity {
     private Button startButton, nextButton, prevButton, correctButton, incorrectButton;
     private TextView cardQuestion;
     private int width,height;
-    private String frontQuestion, backAnswer, dateCreated, id, courseID;
-    private boolean isUserMade;
     private double accuracyStats;
-    private int cardIndex;
+    private int currentCardIndex;
     private DBHelper dbHelper;
     private Course course;
     private List<FlashCard> cards;
     private boolean correct, incorrect;
-    //private QuizMeCardFragment front;
-    //private QuizMeCardFragmentBack back;
-    //private Fragment Ffront, Fback;
-    //private FragmentManager fm;
-    //private FragmentTransaction ft;
+    private FlashCard currentCard;
+    private boolean frontDisplayed = true;
+
 
 
     //new
@@ -41,6 +41,14 @@ public class QuizMeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_me);
 
+        dbHelper = DBHelper.getInstance(this);
+        Intent intent = getIntent();
+
+        course = dbHelper.getCourse(
+                intent.getStringExtra(IntentConstants.SUBJECT_KEY),
+                Integer.parseInt(intent.getStringExtra(IntentConstants.COURSE_NUM_KEY))
+        );
+        cards = course.getCards();
 
         //get screen dimensions
         Display display = getWindowManager().getDefaultDisplay();
@@ -72,9 +80,7 @@ public class QuizMeActivity extends AppCompatActivity {
         });
         //set up next button
         nextButton = (Button) findViewById(R.id.nextButton);
-        nextButton.setVisibility(View.INVISIBLE);
-        prevButton = (Button) findViewById(R.id.prevButton);
-        prevButton.setVisibility(View.INVISIBLE);
+
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,58 +88,42 @@ public class QuizMeActivity extends AppCompatActivity {
                 nextButtonClick();
             }
         });
+
+
+        prevButton = (Button) findViewById(R.id.prevButton);
+        prevButton.setVisibility(View.INVISIBLE);
+
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 prevButtonClick();
             }
         });
-        //set up start button
-        startButton = (Button) findViewById(R.id.startButton);
-        startButton.setText(getString(R.string.start));
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startButtonClick();
-            }
-        });
 
 
-        cardIndex = 0;
+
+        currentCardIndex = 0;
+        currentCard = cards.get(currentCardIndex);
+
         //set up text views
         cardQuestion = (TextView) findViewById(R.id.cardQuestion);
-        cardQuestion.setVisibility(View.INVISIBLE);
-        cardQuestion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //ft.attach(back);
-                //ft.commit();
-                //setContentView(R.layout.quiz_me_back_fragment);
-                //cardQuestion.setText("Test Question");
+        cardQuestion.setText(currentCard.getFront());
+
+        cardQuestion.setOnTouchListener(new OnSwipeTouchListener(QuizMeActivity.this){
+            public void onSwipeLeft(){
+                Toast.makeText(QuizMeActivity.this,"left",Toast.LENGTH_SHORT).show();
+            }
+            public void onClick(){
+                cardClicked();
             }
         });
 
     }
-    public ArrayList<String> getCourseInfo(){
-        ArrayList<String> courseInfo = new ArrayList<String>();
-        return courseInfo;
-    }
-    public void setDBInfo(){
-
-        getCourseInfo();
-        dbHelper = DBHelper.getInstance(this);
-        course = dbHelper.getCourse("Computer Science", 457);
-        cards = course.getCards();
-        frontQuestion = cards.get(cardIndex).getFront();
-        backAnswer = cards.get(cardIndex).getBack();
-        //frontQuestion =
-        //backAnswer =
 
 
-    }
     public void correctButtonClick(){
         correct = true;
-        checkUserAnswer();
+        //updateAccuracy()
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
     }
@@ -143,55 +133,49 @@ public class QuizMeActivity extends AppCompatActivity {
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
     }
-    public void setCardQuestion(){
-
-        cardQuestion.setText(frontQuestion);
-        //setDBInfo();
-    }
-    public void setCardAnswer(){
 
 
-        cardQuestion.setText(backAnswer);
-        //setDBInfo();
-    }
-    public void cardQuestionClick(){
-        if(cardQuestion.getText().equals(frontQuestion)){
-            cardQuestion.setText(backAnswer);
-            prevButton.setVisibility(View.VISIBLE);
+
+    public void cardClicked(){
+        TextView textView = (TextView) findViewById(R.id.cardQuestion);
+        if (frontDisplayed) {
+            textView.setText(currentCard.getBack());
             correctButton.setVisibility(View.VISIBLE);
-        }else{
-
+            incorrectButton.setVisibility(View.VISIBLE);
+            frontDisplayed = false;
+        }
+        else {
+            textView.setText(currentCard.getFront());
+            correctButton.setVisibility(View.INVISIBLE);
+            incorrectButton.setVisibility(View.INVISIBLE);
+            frontDisplayed = true;
         }
     }
-    public void startButtonClick(){
-        startButton.setVisibility(View.INVISIBLE);
-        nextButton.setVisibility(View.VISIBLE);
-        cardQuestion.setVisibility(View.VISIBLE);
-    }
+
     public void nextButtonClick(){
 
         prevButton.setVisibility(View.VISIBLE);
-        if(cardIndex > cards.size()){
+        if(currentCardIndex > cards.size()-1){
             cardQuestion.setText("You have reached the end of this set...\n" + "You made it.");
         }else{
-            cardIndex++;
-            setDBInfo();
+            currentCardIndex++;
         }
 
     }
     public void prevButtonClick(){
-        if(!(cardIndex == 0)){
-            cardIndex--;
-            setDBInfo();
+        if(!(currentCardIndex == 0)){
+            currentCardIndex--;
         }else{
             prevButton.setVisibility(View.INVISIBLE);
         }
     }
+
     public void checkUserAnswer(){
         if(correct = true){
-            cards.get(cardIndex).getAccuracy();
+            cards.get(currentCardIndex).getAccuracy();
+           // currentCard.
         }else{
-            cards.get(cardIndex).getAccuracy();
+            cards.get(currentCardIndex).getAccuracy();
         }
     }
 }
