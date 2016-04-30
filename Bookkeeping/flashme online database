@@ -17,3 +17,9 @@ database name : a9055519_flashme
 username :  a9055519_flashme
 password : teamjoshcs380
 mySQL host : mysql8.000webhost.com
+
+VARCHAR(254) for emails
+TIMESTAMP for dates, tracking creation or changes
+DECIMAL(3,2) (unsigned) for 5-star rating value
+VARCHAR(255) for filenames
+TINYTEXT for description
