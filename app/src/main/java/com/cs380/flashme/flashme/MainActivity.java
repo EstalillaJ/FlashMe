@@ -25,13 +25,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        subjectButton();
-    }
+        Button createNoteCard = (Button)findViewById(R.id.createNotecardButton);
 
-    public void createNotecardButton(View v) {
-        Button viewSubjectButton = (Button)findViewById(R.id.createNotecardButton);
-
-        viewSubjectButton.setOnClickListener(new View.OnClickListener() {
+        createNoteCard.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -42,9 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
 
-    public void subjectButton() {
         Button viewSubjectButton = (Button)findViewById(R.id.viewSubjectsButton);
 
         viewSubjectButton.setOnClickListener(new View.OnClickListener() {
@@ -56,5 +50,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 }

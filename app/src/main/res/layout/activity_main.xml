@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:text="@string/create_notecard"
         android:id="@+id/createNotecardButton"
-        android:onClick="createNotecardButton"
         android:nestedScrollingEnabled="true"
         android:layout_marginBottom="131dp"
         android:layout_alignParentBottom="true"
@@ -27,7 +26,6 @@
         android:layout_height="wrap_content"
         android:text="@string/view_subjects"
         android:id="@+id/viewSubjectsButton"
-        android:onClick="viewSubjectsButton"
         android:layout_above="@+id/createNotecardButton"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"/>
