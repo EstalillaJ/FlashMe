@@ -34,9 +34,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/cardFrame"
-        android:layout_above="@+id/correctButton"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/swipeHint">
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,6 +63,15 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_gravity="right|top" />
 
+
+
     </FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/swipeHint"
+        android:id="@+id/swipeHint"
+        android:layout_above = "@+id/correctButton"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

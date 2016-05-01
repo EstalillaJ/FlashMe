@@ -10,4 +10,5 @@
     <string name="endOfSet">You have reached the end of this set! Good job!</string>
     <string name="getNewCards">Get New Cards!</string>
     <string name="skipLogin"><u>Skip Login</u></string>
+    <string name="swipeHint">Swipe to switch cards. \n Tap to switch sides.</string>
 </resources>

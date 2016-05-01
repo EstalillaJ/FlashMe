@@ -6,13 +6,13 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cs380.flashme.flashme.Util.OnSwipeTouchListener;
 import com.cs380.flashme.flashme.data.Course;
@@ -20,7 +20,6 @@ import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -89,7 +88,7 @@ public class QuizMeActivity extends AppCompatActivity {
         cardIndexView = (TextView) findViewById(R.id.cardIndexView);
 
 
-
+        final TextView swipeHint = (TextView) findViewById(R.id.swipeHint);
 
         new CountDownTimer(3000,100) {
             public void onTick(long millisUntilFinished){
@@ -120,15 +119,27 @@ public class QuizMeActivity extends AppCompatActivity {
                 Chronometer chronometer = (Chronometer) findViewById(R.id.quizTimer);
                 chronometer.setBase(SystemClock.elapsedRealtime());
                 chronometer.start();
+                AlphaAnimation fadeOut = new AlphaAnimation(1.0f,0.0f);
+                fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
 
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        swipeHint.setText("");
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                fadeOut.setDuration(1000);
+                swipeHint.startAnimation(fadeOut);
             }
         }.start();
-
-
-
-
-
-
     }
 
 
@@ -168,9 +179,11 @@ public class QuizMeActivity extends AppCompatActivity {
         if (currentCardIndex < cards.size()){
             currentCard = cards.get(currentCardIndex);
             cardQuestion.setText(currentCard.getFront());
+            cardIndexView.setText("On card " + (currentCardIndex+1) + " of "  + cards.size() );
         }
         else{
             currentCard = null;
+            cardIndexView.setText("No More Cards");
             cardQuestion.setText(resources.getString(R.string.endOfSet));
         }
         //In case they swipe left while the back was displayed
@@ -184,7 +197,7 @@ public class QuizMeActivity extends AppCompatActivity {
             currentCardIndex--;
             currentCard = cards.get(currentCardIndex);
             cardQuestion.setText(currentCard.getFront());
-
+            cardIndexView.setText("On card " + (currentCardIndex+1) + " of " + cards.size());
 
             //If they swiped right on the first card
             //we don't want to change any of these values
