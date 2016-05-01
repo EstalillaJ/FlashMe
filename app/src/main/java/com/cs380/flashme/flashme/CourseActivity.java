@@ -97,12 +97,16 @@ public class CourseActivity extends AppCompatActivity {
 
     }
 
-    public void QuizMe(View view) {
+    public void FlashMeClicked(View view) {
        Intent intent = new Intent(this, QuizMeActivity.class);
 
         intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseNum);
         intent.putExtra(IntentConstants.SUBJECT_KEY, subject);
 
         startActivity(intent);
+    }
+
+    public void viewCourseStatistics(View v){
+        //TODO launch stats acvtivity
     }
 }
