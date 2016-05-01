@@ -1,22 +1,19 @@
 package com.cs380.flashme.flashme;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cs380.flashme.flashme.data.Course;
-import com.cs380.flashme.flashme.data.DBConstants;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,7 @@ public class CourseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //set main ui
-        setContentView(R.layout.activity_course_uiwindow);
+        setContentView(R.layout.activity_course);
         //get what was passed to me
         subject = getIntent().getStringExtra(IntentConstants.SUBJECT_KEY);
         courseNum =  getIntent().getStringExtra(IntentConstants.COURSE_NUM_KEY);
@@ -54,12 +51,14 @@ public class CourseActivity extends AppCompatActivity {
         for (FlashCard card: cards)
             cardFronts.add(card.getFront());
         //use the cardFronts list to populate our listview in the ui
-        ListView cardList = (ListView)   findViewById(R.id.cardList);
+        ListView cardListView = (ListView)   findViewById(R.id.cardList);
         cardListAdapter = new ArrayAdapter<>(this, R.layout.subject_layout, cardFronts);
-        cardList.setAdapter(cardListAdapter);
+        AlphaInAnimationAdapter animationAdapter = new AlphaInAnimationAdapter(cardListAdapter);
+        animationAdapter.setAbsListView(cardListView);
+        cardListView.setAdapter(animationAdapter);
 
         //set on click listener for cardList
-        cardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        cardListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FlashCard card = cards.get(position);

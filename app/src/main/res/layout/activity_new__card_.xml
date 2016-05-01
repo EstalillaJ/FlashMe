@@ -17,17 +17,17 @@
         android:text="Course Subject:"
         android:id="@+id/Course_Subject"
         android:textSize="15dp"
+        android:textStyle="bold"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
 
     <Spinner
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/subjectSpinner"
         android:textSize="15dp"
-        android:maxLength="15"
         android:singleLine="true"
         android:inputType="numberDecimal"
         android:layout_below="@+id/Course_Subject"
@@ -39,17 +39,17 @@
         android:text="Course Number:"
         android:id="@+id/Course"
         android:textSize="15dp"
+        android:textStyle="bold"
         android:layout_below="@+id/subjectSpinner"
         />
 
 
 
     <Spinner
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/courseNumberSpinner"
         android:textSize="15dp"
-        android:maxLength="15"
         android:singleLine="true"
         android:inputType="numberDecimal"
         android:layout_below="@+id/Course"
@@ -59,7 +59,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Front Description:"
+        android:text="Front of card:"
+        android:textStyle="bold"
         android:id="@+id/Front_Description"
         android:textSize="15dp"
         android:layout_below="@+id/courseNumberSpinner"
@@ -78,7 +79,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Back Description:"
+        android:text="Back of card:"
+        android:textStyle="bold"
         android:id="@+id/Back_Description"
         android:textSize="15dp"
         android:layout_below="@+id/Side_Front_Text"

@@ -91,9 +91,12 @@ public class QuizMeActivity extends AppCompatActivity {
 
 
 
-        new CountDownTimer(5000,100) {
+        new CountDownTimer(3000,100) {
             public void onTick(long millisUntilFinished){
-                cardQuestion.setText("Start in " + TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished));
+                if (millisUntilFinished < 1000)
+                    cardQuestion.setText("Flash Me!");
+                else
+                    cardQuestion.setText("Start in " + TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished));
             }
 
             public void onFinish(){

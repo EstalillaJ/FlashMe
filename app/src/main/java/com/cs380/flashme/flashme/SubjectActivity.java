@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.IntentConstants;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 
 import java.util.ArrayList;
 
@@ -47,9 +48,11 @@ public class SubjectActivity extends Activity {
 
         // Creating ArrayAdapter
         ArrayAdapter subjectAdapter = new ArrayAdapter<String>(this, R.layout.subject_layout, subjectList);
+        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(subjectAdapter);
 
+        animationAdapter.setAbsListView(subjectView);
         // set array adapter as the listviews adapter
-        subjectView.setAdapter(subjectAdapter);
+        subjectView.setAdapter(animationAdapter);
 
         // Listener for when an subject is clicked
         subjectView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -78,10 +81,11 @@ public class SubjectActivity extends Activity {
         ListView courseView = (ListView) findViewById(R.id.courseListView);
 
         // Creating ArrayAdapter
-        ArrayAdapter subjectAdapter = new ArrayAdapter<Integer>(this, R.layout.subject_layout, courselist);
-
+        ArrayAdapter courseNumAdapter = new ArrayAdapter<Integer>(this, R.layout.subject_layout, courselist);
+        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(courseNumAdapter);
+        animationAdapter.setAbsListView(courseView);
         // setting courseView adapter
-        courseView.setAdapter(subjectAdapter);
+        courseView.setAdapter(animationAdapter);
 
         courseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
