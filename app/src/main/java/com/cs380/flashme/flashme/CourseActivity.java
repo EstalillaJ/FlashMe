@@ -27,8 +27,8 @@ public class CourseActivity extends AppCompatActivity {
     private Course course;
     private List<FlashCard> cards;
     private String courseTitle;
-
-
+    private DBHelper dbHelper;
+    private ArrayAdapter<String> cardListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class CourseActivity extends AppCompatActivity {
         courseNum =  getIntent().getStringExtra(IntentConstants.COURSE_NUM_KEY);
 
         //get a course object, and its cards
-        DBHelper dbHelper = DBHelper.getInstance(this);
+        dbHelper = DBHelper.getInstance(this);
         course = dbHelper.getCourse(subject, Integer.parseInt(courseNum));
         cards = course.getCards();
 
@@ -55,8 +55,8 @@ public class CourseActivity extends AppCompatActivity {
             cardFronts.add(card.getFront());
         //use the cardFronts list to populate our listview in the ui
         ListView cardList = (ListView)   findViewById(R.id.cardList);
-        ArrayAdapter subjectAdapter = new ArrayAdapter<>(this, R.layout.subject_layout, cardFronts);
-        cardList.setAdapter(subjectAdapter);
+        cardListAdapter = new ArrayAdapter<>(this, R.layout.subject_layout, cardFronts);
+        cardList.setAdapter(cardListAdapter);
 
         //set on click listener for cardList
         cardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -73,6 +73,19 @@ public class CourseActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public void onResume(){
+        super.onResume();
+        course = dbHelper.getCourse(subject, Integer.parseInt(courseNum));
+        cards = course.getCards();
+
+        ArrayList<String> cardFronts = new ArrayList<>();
+        for (FlashCard card: cards)
+            cardFronts.add(card.getFront());
+
+        cardListAdapter.clear();
+        cardListAdapter.addAll(cardFronts);
     }
 
     public void createCardFromCourse(View view) {

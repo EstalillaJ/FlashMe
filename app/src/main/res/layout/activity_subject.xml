@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.cs380.flashme.flashme.SubjectActivity">
+    tools:context="com.cs380.flashme.flashme.SubjectActivity"
+    >
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <ListView
             android:id="@+id/subjectListView"

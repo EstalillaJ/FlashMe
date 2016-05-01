@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.cs380.flashme.flashme.MainActivity"
-    android:background="@color/colorPrimary"
     >
 
     <include layout="@layout/toolbar" />
@@ -22,7 +21,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.cs380.flashme.flashme.MainActivity"
-    android:background="@color/colorPrimary"
     >
 
     <ImageView

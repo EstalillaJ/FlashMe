@@ -14,23 +14,44 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Course Number:"
-        android:id="@+id/Course"
+        android:text="Course Subject:"
+        android:id="@+id/Course_Subject"
         android:textSize="15dp"
-        android:layout_below="@+id/Course_Subject_ID"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <EditText
+
+    <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/Course_Number_ID"
-        android:hint="Enter Number"
+        android:id="@+id/subjectSpinner"
         android:textSize="15dp"
         android:maxLength="15"
         android:singleLine="true"
         android:inputType="numberDecimal"
-        android:transitionName="Course_Num"
+        android:layout_below="@+id/Course_Subject"
+  />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Number:"
+        android:id="@+id/Course"
+        android:textSize="15dp"
+        android:layout_below="@+id/subjectSpinner"
+        />
+
+
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/courseNumberSpinner"
+        android:textSize="15dp"
+        android:maxLength="15"
+        android:singleLine="true"
+        android:inputType="numberDecimal"
         android:layout_below="@+id/Course"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -41,103 +62,56 @@
         android:text="Front Description:"
         android:id="@+id/Front_Description"
         android:textSize="15dp"
-        android:layout_below="@+id/Course_Number_ID"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/courseNumberSpinner"
+        />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minLines="1"
         android:id="@+id/Side_Front_Text"
         android:hint="Enter A Description"
-        android:inputType="text"
         android:textSize="15dp"
-        android:singleLine="true"
-        android:maxLength="16"
         android:layout_below="@+id/Front_Description"
-        android:layout_alignRight="@+id/Side_Back_Text"
-        android:layout_alignEnd="@+id/Side_Back_Text"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+         />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Back Description:"
         android:id="@+id/Back_Description"
         android:textSize="15dp"
         android:layout_below="@+id/Side_Front_Text"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+         />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create"
-        android:id="@+id/Submit_Button"
-        android:gravity="center"
-        android:onClick="CardSubmitButton"
-        android:layout_above="@+id/View_Card_Button"
-        android:layout_centerHorizontal="true" />
+
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:ems="10"
         android:id="@+id/Side_Back_Text"
-        android:hint="Enter A Discription"
+        android:minLines="1"
+        android:hint="Enter A Description"
         android:textSize="15dp"
         android:scrollIndicators="right"
         android:layout_below="@+id/Back_Description"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Course Subject:"
-        android:id="@+id/Course_Subject"
-        android:textSize="15dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Course_Subject_ID"
-        android:hint="Enter A Subject"
-        android:inputType="text"
-        android:textSize="15dp"
-        android:singleLine="true"
-        android:maxLength="16"
-        android:transitionName="Subject_ID"
-        android:layout_below="@+id/Course_Subject"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+
+
 
     <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View FlashCard"
-        android:id="@+id/View_Card_Button"
+        android:textAlignment="center"
+        android:text="Create"
+        android:id="@+id/Submit_Button"
+        android:gravity="bottom"
+        android:onClick="CardSubmitButton"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/Course_Subject_ID"
-        android:layout_toEndOf="@+id/Course_Subject_ID"
-        android:onClick="CardViewButton" />
+        android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Logo"
-        android:layout_alignTop="@+id/Course_Subject"
-        android:layout_alignRight="@+id/Side_Front_Text"
-        android:layout_alignEnd="@+id/Side_Front_Text"
-        android:layout_alignLeft="@+id/Submit_Button"
-        android:layout_alignStart="@+id/Submit_Button" />
 
 </RelativeLayout>
