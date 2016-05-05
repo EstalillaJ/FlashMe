@@ -1,6 +1,5 @@
 package com.cs380.flashme.flashme;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +14,6 @@ import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
 
 import java.util.ArrayList;
-
-import javax.security.auth.Subject;
 
 /*Updated by Ryan, 4/26/16
 *
@@ -36,7 +33,7 @@ public class New_Card_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new__card_);
+        setContentView(R.layout.activity_new_card);
         String subjectFromIntent = getIntent().getStringExtra(IntentConstants.SUBJECT_KEY);
         String courseNumFromIntent = getIntent().getStringExtra(IntentConstants.COURSE_NUM_KEY);
 

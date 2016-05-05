@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.cs380.flashme.flashme.New_Card_Activity"
+    android:id="@+id/Screen_CreateNew"
+    android:background="#ffffff">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Subject:"
+        android:id="@+id/Course_Subject"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/subjectSpinner"
+        android:textSize="15dp"
+        android:singleLine="true"
+        android:inputType="numberDecimal"
+        android:layout_below="@+id/Course_Subject"
+  />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Number:"
+        android:id="@+id/Course"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/subjectSpinner"
+        />
+
+
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/courseNumberSpinner"
+        android:textSize="15dp"
+        android:singleLine="true"
+        android:inputType="numberDecimal"
+        android:layout_below="@+id/Course"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Front of card:"
+        android:textStyle="bold"
+        android:id="@+id/Front_Description"
+        android:textSize="15dp"
+        android:layout_below="@+id/courseNumberSpinner"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="1"
+        android:id="@+id/Side_Front_Text"
+        android:hint="Enter A Description"
+        android:textSize="15dp"
+        android:layout_below="@+id/Front_Description"
+         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Back of card:"
+        android:textStyle="bold"
+        android:id="@+id/Back_Description"
+        android:textSize="15dp"
+        android:layout_below="@+id/Side_Front_Text"
+         />
+
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:id="@+id/Side_Back_Text"
+        android:minLines="1"
+        android:hint="Enter A Description"
+        android:textSize="15dp"
+        android:scrollIndicators="right"
+        android:layout_below="@+id/Back_Description"
+        />
+
+
+
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Create"
+        android:id="@+id/Submit_Button"
+        android:gravity="bottom"
+        android:onClick="CardSubmitButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>
