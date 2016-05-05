@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.cs380.flashme.flashme.Util.ProgressGenerator;
+import com.dd.processbutton.iml.ActionProcessButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +22,7 @@ import org.json.JSONObject;
  * Created by Christian on 4/23/16.
  */
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ProgressGenerator.OnCompleteListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +31,11 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText EDIT_USERNAME = (EditText) findViewById(R.id.username);
         final EditText EDIT_PASSWORD = (EditText) findViewById(R.id.password);
-        final Button BUTTON_LOGIN = (Button) findViewById(R.id.loginButton);
+        final ActionProcessButton BUTTON_LOGIN = (ActionProcessButton) findViewById(R.id.loginButton);
         final TextView REGISTER_LINK = (TextView) findViewById(R.id.registerLink);
+        final ProgressGenerator progressGenerator = new ProgressGenerator(this);
 
+        BUTTON_LOGIN.setMode(ActionProcessButton.Mode.ENDLESS);
         REGISTER_LINK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         BUTTON_LOGIN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressGenerator.start(BUTTON_LOGIN);
                 final String username = EDIT_USERNAME.getText().toString();
                 final String password = EDIT_PASSWORD.getText().toString();
 
@@ -94,5 +99,9 @@ public class LoginActivity extends AppCompatActivity {
                 queue.add(loginRequest);
             }
         });
+    }
+
+    public void onComplete(){
+
     }
 }
