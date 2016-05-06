@@ -1,4 +1,4 @@
-package com.cs380.flashme.flashme;
+package com.cs380.flashme.flashme.network;
 
 /**
  * Created by Christian on 4/26/16.
@@ -8,6 +8,7 @@ import android.content.res.Resources;
 
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
+import com.cs380.flashme.flashme.R;
 
 import java.util.HashMap;
 import java.util.Map;

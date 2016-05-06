@@ -1,4 +1,4 @@
-package com.cs380.flashme.flashme;
+package com.cs380.flashme.flashme.network;
 
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;

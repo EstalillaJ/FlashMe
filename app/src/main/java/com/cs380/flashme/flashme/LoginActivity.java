@@ -12,6 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.cs380.flashme.flashme.Util.ProgressGenerator;
+import com.cs380.flashme.flashme.network.LoginRequest;
 import com.dd.processbutton.iml.ActionProcessButton;
 
 import org.json.JSONException;
