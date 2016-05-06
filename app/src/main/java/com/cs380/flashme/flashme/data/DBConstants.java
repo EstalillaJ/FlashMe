@@ -6,8 +6,8 @@ package com.cs380.flashme.flashme.data;
  */
 public class DBConstants {
 
-    public static final int NOT_USER_MADE = 0;
-    public static final int USER_MADE = 1;
+    public static final int NO_USER = -1;
+    public static final int USER_ID = 1;
     public static final class Cards {
         public static final String TABLE_NAME = "Cards";
         public static final String ID = "id";
@@ -15,7 +15,8 @@ public class DBConstants {
         public static final String COLUMN_BACK = "back";
         public static final String COLUMN_DATE_CREATED = "date_created";
         public static final String COLUMN_COURSE_ID = "course_id";
-        public static final String COLUMN_USER_MADE = "user_made";
+        public static final String USER_ID = "user_id";
+        public static final String ONLINE_ID = "online_id";
         public static final String COLUMN_ACCURACY = "accuracy";
         public static final String COLUMN_NUMBER_OF_ATTEMPTS = "attempts";
 

@@ -3,13 +3,17 @@ package com.cs380.flashme.flashme;
 /**
  * Created by Christian on 4/26/16.
  */
+
+import android.content.res.Resources;
+
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterRequest extends StringRequest {
+public class RegisterRequest extends StringRequest{
+
     private static final String REGISTER_REQUEST_URL = "http://flashmedatabase.netne.net/Register.php";
     private Map<String, String> params;
 
@@ -20,6 +24,7 @@ public class RegisterRequest extends StringRequest {
         params.put("username", username);
         params.put("password", password);
         params.put("email", email);
+        Resources resources = Resources.getSystem();
     }
 
     @Override
