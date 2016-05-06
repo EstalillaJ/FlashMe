@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText nameEditText, usernameEditText, passwordEditText;
+    private EditText nameEditText, usernameEditText, passwordEditText, emailEditText, confirmPasswordEditText;
     private Button registerButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +30,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         // Create variable, of type EditText, and then makes that of type edit text
         // and goes back to being assigned to textName
+        emailEditText = (EditText) findViewById(R.id.email);
         nameEditText = (EditText) findViewById(R.id.textName);
         usernameEditText = (EditText) findViewById(R.id.editUsername);
         passwordEditText = (EditText) findViewById(R.id.editPassword);
+        confirmPasswordEditText = (EditText) findViewById(R.id.confirmPassword);
+
         registerButton = (Button) findViewById(R.id.registerButton);
-        registerButton.setOnClickListener(this);
+        registerButton.setOnClickListener(this );
     }
 
 
@@ -43,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         final String name = nameEditText.getText().toString();
         final String username = usernameEditText.getText().toString();
         final String password = passwordEditText.getText().toString();
-
+        final String email = emailEditText.getText().toString();
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -66,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         };
 
-        RegisterRequest registerRequest = new RegisterRequest(name, username, password, responseListener);
+        RegisterRequest registerRequest = new RegisterRequest(name, username, password, email, responseListener);
         RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
         queue.add(registerRequest);
     }

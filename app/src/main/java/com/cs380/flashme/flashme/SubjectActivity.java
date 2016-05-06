@@ -27,7 +27,6 @@ public class SubjectActivity extends Activity implements AdapterView.OnItemClick
 
         // This is the method that makes all of the populating work
         populateSubjectListView();
-
     }
 
     /**
@@ -90,6 +89,7 @@ public class SubjectActivity extends Activity implements AdapterView.OnItemClick
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
         switch (parent.getId()){
             case R.id.subjectListView:
                 String subjectString = (String) parent.getItemAtPosition(position);
