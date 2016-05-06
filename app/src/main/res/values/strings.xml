@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Flash Me</string>
+    <string name="app_name">Flash Me!</string>
     <string name="create_notecard">Create Notecard</string>
     <string name="view_subjects">View Subjects</string>
     <string name="favorite_courses">Favorite Courses</string>
@@ -11,4 +11,8 @@
     <string name="getNewCards">Get New Cards!</string>
     <string name="skipLogin"><u>Skip Login</u></string>
     <string name="swipeHint">Swipe to switch cards. \n Tap to switch sides.</string>
+    <string name="timerCountDown">Start in %1d</string>
+    <string name="emptyString"></string>
+    <string name="cardIndexString">On card %1d of %2d</string>
+    <string name="cardIndexEnd">No More Cards!</string>
 </resources>

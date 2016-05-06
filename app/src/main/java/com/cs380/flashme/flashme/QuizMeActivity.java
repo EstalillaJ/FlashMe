@@ -23,11 +23,11 @@ import com.cs380.flashme.flashme.data.IntentConstants;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class QuizMeActivity extends AppCompatActivity {
+public class QuizMeActivity extends AppCompatActivity implements View.OnClickListener {
 
     //new card set
     private Button correctButton, incorrectButton;
-    private TextView cardQuestion,cardIndexView;
+    private TextView cardQuestion,cardIndexView, swipeHint;
     private double accuracyStats;
     private int currentCardIndex;
     private DBHelper dbHelper;
@@ -56,25 +56,16 @@ public class QuizMeActivity extends AppCompatActivity {
                 intent.getStringExtra(IntentConstants.SUBJECT_KEY),
                 Integer.parseInt(intent.getStringExtra(IntentConstants.COURSE_NUM_KEY))
         );
+
         cards = course.getCards();
 
         correctButton = (Button) findViewById(R.id.correctButton);
         correctButton.setVisibility(View.INVISIBLE);
-        correctButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                correctButtonClick();
-            }
-        });
+        correctButton.setOnClickListener(this);
 
         incorrectButton = (Button) findViewById(R.id.incorrectButton);
         incorrectButton.setVisibility(View.INVISIBLE);
-        incorrectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                incorrectButtonClick();
-            }
-        });
+        incorrectButton.setOnClickListener(this);
 
 
         currentCardIndex = 0;
@@ -88,64 +79,26 @@ public class QuizMeActivity extends AppCompatActivity {
         cardIndexView = (TextView) findViewById(R.id.cardIndexView);
 
 
-        final TextView swipeHint = (TextView) findViewById(R.id.swipeHint);
+        swipeHint = (TextView) findViewById(R.id.swipeHint);
 
-        new CountDownTimer(3000,100) {
-            public void onTick(long millisUntilFinished){
-                if (millisUntilFinished < 1000)
-                    cardQuestion.setText("Flash Me!");
-                else
-                    cardQuestion.setText("Start in " + TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished));
-            }
+        new QuizMeCountDown(3000,100).start();
+    }
 
-            public void onFinish(){
-                cardQuestion.setText(currentCard.getFront());
-                //We don't set this until the timer is done. Otherwise they could swipe left
-                //before the start
-                cardFrame.setOnTouchListener(new OnSwipeTouchListener(QuizMeActivity.this){
-                    public void onSwipeLeft(){
-                        displayNextCard();
-                    }
-                    public void onClick(){
-                        cardClicked();
-                    }
-                    public void onSwipeRight(){
-                        displayPreviousCard();
-                    }
-                });
-
-                //Start timer and let them know what card they are on
-                cardIndexView.setText("On card 1 of " + cards.size());
-                Chronometer chronometer = (Chronometer) findViewById(R.id.quizTimer);
-                chronometer.setBase(SystemClock.elapsedRealtime());
-                chronometer.start();
-                AlphaAnimation fadeOut = new AlphaAnimation(1.0f,0.0f);
-                fadeOut.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        swipeHint.setText("");
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                fadeOut.setDuration(1000);
-                swipeHint.startAnimation(fadeOut);
-            }
-        }.start();
+    public void onClick(View view){
+        switch (view.getId()) {
+            case R.id.incorrectButton:
+                incorrectButtonClick();
+                break;
+            case R.id.correctButton:
+                correctButtonClick();
+                break;
+        }
     }
 
 
     public void correctButtonClick(){
         correct = true;
-        //updateAccuracy()
+        //TODO updateAccuracy()
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
     }
@@ -155,8 +108,6 @@ public class QuizMeActivity extends AppCompatActivity {
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
     }
-
-
 
     public void cardClicked(){
         TextView textView = (TextView) findViewById(R.id.cardQuestion);
@@ -179,11 +130,14 @@ public class QuizMeActivity extends AppCompatActivity {
         if (currentCardIndex < cards.size()){
             currentCard = cards.get(currentCardIndex);
             cardQuestion.setText(currentCard.getFront());
-            cardIndexView.setText("On card " + (currentCardIndex+1) + " of "  + cards.size() );
+            cardIndexView.setText(String.format(
+                    getString(R.string.cardIndexString),
+                    currentCardIndex+1,
+                    cards.size()) );
         }
         else{
             currentCard = null;
-            cardIndexView.setText("No More Cards");
+            cardIndexView.setText(getString(R.string.cardIndexEnd));
             cardQuestion.setText(resources.getString(R.string.endOfSet));
         }
         //In case they swipe left while the back was displayed
@@ -197,7 +151,10 @@ public class QuizMeActivity extends AppCompatActivity {
             currentCardIndex--;
             currentCard = cards.get(currentCardIndex);
             cardQuestion.setText(currentCard.getFront());
-            cardIndexView.setText("On card " + (currentCardIndex+1) + " of " + cards.size());
+            cardIndexView.setText(String.format(
+                    getString(R.string.cardIndexString),
+                    currentCardIndex+1,
+                    cards.size()));
 
             //If they swiped right on the first card
             //we don't want to change any of these values
@@ -215,6 +172,70 @@ public class QuizMeActivity extends AppCompatActivity {
            // currentCard.
         }else{
             cards.get(currentCardIndex).getAccuracy();
+        }
+    }
+
+    private class QuizMeCountDown extends CountDownTimer implements Animation.AnimationListener {
+
+        public QuizMeCountDown(long time, long update){
+            super(time,update);
+        }
+
+        public void onTick(long millisUntilFinished){
+            if (millisUntilFinished < 1000)
+                cardQuestion.setText(R.string.app_name);
+            else
+                cardQuestion.setText(String.format(
+                        getString(R.string.timerCountDown),
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)
+                ));
+        }
+
+        public void onFinish(){
+            cardQuestion.setText(currentCard.getFront());
+            // We don't set this until the timer is done. Otherwise they could swipe left
+            // before the start
+            cardFrame.setOnTouchListener(new OnSwipeTouchListener(QuizMeActivity.this){
+                public void onSwipeLeft(){
+                    displayNextCard();
+                }
+                public void onClick(){
+                    cardClicked();
+                }
+                public void onSwipeRight(){
+                    displayPreviousCard();
+                }
+            });
+
+            //Start timer and let them know what card they are on
+            cardIndexView.setText(String.format(
+                    getString(R.string.cardIndexString),
+                    currentCardIndex+1,
+                    cards.size()));
+
+            Chronometer chronometer = (Chronometer) findViewById(R.id.quizTimer);
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+
+            AlphaAnimation fadeOut = new AlphaAnimation(1.0f,0.0f);
+            fadeOut.setAnimationListener(this);
+            fadeOut.setDuration(1000);
+            swipeHint.startAnimation(fadeOut);
+        }
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            swipeHint.setText(getString(R.string.emptyString));
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
         }
     }
 }
