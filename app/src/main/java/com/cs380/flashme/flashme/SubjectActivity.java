@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.IntentConstants;
@@ -15,7 +14,7 @@ import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationA
 
 import java.util.ArrayList;
 
-public class SubjectActivity extends Activity {
+public class SubjectActivity extends Activity implements AdapterView.OnItemClickListener {
 
     // Fields
     private DBHelper database;
@@ -54,16 +53,7 @@ public class SubjectActivity extends Activity {
         // set array adapter as the listviews adapter
         subjectView.setAdapter(animationAdapter);
 
-        // Listener for when an subject is clicked
-        subjectView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // testing to make sure clickable works
-                Toast.makeText(SubjectActivity.this, "List item was clicked at " + position, Toast.LENGTH_SHORT).show();
-                String subjectString = (String) parent.getItemAtPosition(position);
-                populateCourseListView(subjectString);
-            }
-        });
+        subjectView.setOnItemClickListener(this);
     }
 
     /**
@@ -87,17 +77,31 @@ public class SubjectActivity extends Activity {
         // setting courseView adapter
         courseView.setAdapter(animationAdapter);
 
-        courseView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), CourseActivity.class);
-                Integer courseInt = (Integer) parent.getItemAtPosition(position);
-                String courseString = Integer.toString(courseInt);
-                intent.putExtra(IntentConstants.SUBJECT_KEY, sub);
-                intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseString);
-                startActivity(intent);
-            }
-        });
+        //TODO maybe move this to onCreate()
+        courseView.setOnItemClickListener(this);
+    }
+
+    public void onCourseClick(int courseNum){
+        Intent intent = new Intent(getApplicationContext(), CourseActivity.class);
+        String courseString = Integer.toString(courseNum);
+        intent.putExtra(IntentConstants.SUBJECT_KEY, sub);
+        intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseString);
+        startActivity(intent);
+    }
+
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getId()){
+            case R.id.subjectListView:
+                String subjectString = (String) parent.getItemAtPosition(position);
+                populateCourseListView(subjectString);
+                break;
+            case R.id.courseListView:
+                Integer courseNum = (Integer) parent.getItemAtPosition(position);
+                onCourseClick(courseNum);
+                break;
+
+        }
+
     }
 
 
