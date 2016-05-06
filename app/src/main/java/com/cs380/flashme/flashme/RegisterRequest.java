@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class RegisterRequest extends StringRequest{
 
-    private static final String REGISTER_REQUEST_URL = "http://flashmedatabase.netne.net/Register.php";
+    private static final String REGISTER_REQUEST_URL = Resources.getSystem().getString(R.string.registerPHP);
     private Map<String, String> params;
 
     public RegisterRequest(String name, String username, String password, String email, Response.Listener<String> listener) {
@@ -24,7 +24,7 @@ public class RegisterRequest extends StringRequest{
         params.put("username", username);
         params.put("password", password);
         params.put("email", email);
-        Resources resources = Resources.getSystem();
+
     }
 
     @Override

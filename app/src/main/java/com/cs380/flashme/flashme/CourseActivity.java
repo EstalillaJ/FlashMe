@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cs380.flashme.flashme.data.Course;
 import com.cs380.flashme.flashme.data.DBHelper;
@@ -72,12 +73,18 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void FlashMeClicked(View view) {
-       Intent intent = new Intent(this, QuizMeActivity.class);
 
-        intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseNum);
-        intent.putExtra(IntentConstants.SUBJECT_KEY, subject);
+        if (cards.size() > 0) {
+            Intent intent = new Intent(this, QuizMeActivity.class);
 
-        startActivity(intent);
+            intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseNum);
+            intent.putExtra(IntentConstants.SUBJECT_KEY, subject);
+
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(this, getString(R.string.noCardsForQuiz),Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void viewCourseStatistics(View v){
