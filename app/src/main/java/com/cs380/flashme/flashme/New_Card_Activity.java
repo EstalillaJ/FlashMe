@@ -107,7 +107,7 @@ public class New_Card_Activity extends AppCompatActivity {
                                 courseNum,
                                 frontText,
                                 backText,
-                                DBConstants.USER_MADE);
+                                DBConstants.NO_USER);
         }
 
         finish();

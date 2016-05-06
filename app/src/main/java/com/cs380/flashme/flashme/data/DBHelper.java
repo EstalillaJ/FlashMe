@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper{
 
     //Database Versions correspond to schema changes
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 5;
     private static DBHelper sInstance;
     private Context mContext;
 
@@ -92,7 +92,6 @@ public class DBHelper extends SQLiteOpenHelper{
             values = new ContentValues();
             values.put(Courses.COLUMN_SUBJECT, course[0]);
             values.put(Courses.COLUMN_COURSE_NUM, course[1]);
-            values.put(Courses.COLUMN_USER_MADE, DBConstants.NO_USER);
             values.put(Courses.COLUMN_ACCURACY, 100.00);
             db.insert(Courses.TABLE_NAME, null, values);
         }
@@ -276,7 +275,7 @@ public class DBHelper extends SQLiteOpenHelper{
         String courseSelection = Courses.ID + " = ?";
         Cursor courseCursor = db.query(true,
                 Courses.TABLE_NAME,
-                new String[] {Courses.COLUMN_ACCURACY, Courses.COLUMN_USER_MADE},
+                new String[] {Courses.COLUMN_ACCURACY},
                 courseSelection,
                 new String[] {Long.toString(courseId)},
                 null,
@@ -288,13 +287,12 @@ public class DBHelper extends SQLiteOpenHelper{
         if (courseCursor.getCount() == 1){
 
             int accIndex = courseCursor.getColumnIndex(Courses.COLUMN_ACCURACY);
-            int userMadeIndex = courseCursor.getColumnIndex(Courses.COLUMN_USER_MADE);
             courseCursor.moveToNext();
             Course course = new Course(cards,
                     courseCursor.getDouble(accIndex),
                     subject,
                     courseNum,
-                    courseCursor.getInt(userMadeIndex),
+                    DBConstants.NO_USER,
                     courseId,
                     mContext);
             courseCursor.close();

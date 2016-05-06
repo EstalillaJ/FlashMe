@@ -105,16 +105,10 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
         //set on click listener for cardList
         cardListView.setOnItemClickListener(this);
 
-        //Allow users to swipe and remove cards
-        SimpleSwipeUndoAdapter swipeUndoAdapter = new SimpleSwipeUndoAdapter(
-                                                                            cardListAdapter,
-                                                                            this,
-                                                                            this
-                                                                            );
 
-        swipeUndoAdapter.setAbsListView(cardListView);
-        cardListView.setAdapter(swipeUndoAdapter);
-        cardListView.enableSimpleSwipeUndo();
+
+        cardListView.enableSwipeToDismiss(this);
+        cardListView.setAdapter(cardListAdapter);
     }
 
     public void setCourseTitle(){
