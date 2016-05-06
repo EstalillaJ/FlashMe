@@ -1,6 +1,6 @@
 --- HOW TO MAKE A FLASHCARD ----
 
-Constructor parameters: String subject, int courseNumber, String frontOfCard, String backOfCard, int userMade
+Constructor parameters: String subject, int courseNumber, String frontOfCard, String backOfCard, int userId
 
 NOTE: Probably all of the cards you make at this point will be user made. Use DBConstants.USER_MADE for the last constructor parameter.
 

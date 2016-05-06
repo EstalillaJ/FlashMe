@@ -10,9 +10,7 @@ import android.util.Log;
 import com.cs380.flashme.flashme.data.DBConstants.Cards;
 import com.cs380.flashme.flashme.data.DBConstants.Courses;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by josh on 4/5/16.
@@ -44,9 +42,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 Courses.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 Courses.COLUMN_COURSE_NUM + " INTEGER NOT NULL, " +
                 Courses.COLUMN_SUBJECT + " TEXT NOT NULL, " +
-                Courses.COLUMN_ACCURACY + " REAL NOT NULL DEFAULT 100.00, " +
-                Courses.COLUMN_USER_MADE + " INTEGER NOT NULL DEFAULT " + DBConstants.NOT_USER_MADE
-                + " );";
+                Courses.COLUMN_ACCURACY + " REAL NOT NULL DEFAULT 100.00" +
+                " );";
 
         final String SQL_CREATE_CARDS_TABLE = "CREATE TABLE " + Cards.TABLE_NAME + " (" +
                 Cards.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -55,7 +52,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 Cards.COLUMN_BACK + " TEXT NOT NULL, " +
                 Cards.COLUMN_ACCURACY + " REAL NOT NULL DEFAULT 100.00, " +
                 Cards.COLUMN_NUMBER_OF_ATTEMPTS + " INTEGER NOT NULL DEFAULT 0, " +
-                Cards.COLUMN_USER_MADE + " INTEGER NOT NULL DEFAULT " + DBConstants.NOT_USER_MADE + ", " +
+                Cards.USER_ID + " INTEGER NOT NULL DEFAULT " + DBConstants.NO_USER + ", " +
+                Cards.ONLINE_ID + " INTEGER NOT NULL DEFAULT " + DBConstants.NO_USER + ", " +
                 Cards.COLUMN_COURSE_ID + " INTEGER NOT NULL, " +
                 "  FOREIGN KEY (" + Cards.COLUMN_COURSE_ID + ") REFERENCES " + Courses.TABLE_NAME +
                 "(" + Courses.ID + ")" + " );";
@@ -64,7 +62,6 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL(SQL_CREATE_COURSES_TABLE);
 
         insertDefaultSubjects(db);
-        insertDefaultCards(db);
 
     }
 
@@ -95,36 +92,14 @@ public class DBHelper extends SQLiteOpenHelper{
             values = new ContentValues();
             values.put(Courses.COLUMN_SUBJECT, course[0]);
             values.put(Courses.COLUMN_COURSE_NUM, course[1]);
-            values.put(Courses.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
+            values.put(Courses.COLUMN_USER_MADE, DBConstants.NO_USER);
             values.put(Courses.COLUMN_ACCURACY, 100.00);
             db.insert(Courses.TABLE_NAME, null, values);
         }
 
-
-
     }
 
 
-
-    public void insertDefaultCards(SQLiteDatabase db){
-
-
-
-        ContentValues values = new ContentValues();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        values.put(Cards.COLUMN_COURSE_ID, 1);
-        values.put(Cards.COLUMN_FRONT, "Describe the difference between classification and regression");
-        values.put(Cards.COLUMN_BACK, "Classification is discrete, regression is continous");
-        values.put(Cards.COLUMN_DATE_CREATED, dateFormat.format(Calendar.getInstance().getTime()));
-        values.put(Cards.COLUMN_USER_MADE, DBConstants.NOT_USER_MADE);
-        values.put(Cards.COLUMN_ACCURACY, 100.00);
-        values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, 0);
-
-        db.insert(Cards.TABLE_NAME, null, values);
-
-
-    }
 
     public void insertCourse(String subject, int courseNum, int userMade){
 
@@ -151,7 +126,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_FRONT, card.getFront());
         values.put(Cards.COLUMN_BACK, card.getBack());
         values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
-        values.put(Cards.COLUMN_USER_MADE, card.getUserMade());
+        values.put(Cards.USER_ID, card.getUserId());
         values.put(Cards.COLUMN_ACCURACY, card.getAccuracy());
         values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, card.getNumAttempts());
 
@@ -273,7 +248,7 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cardCursor.getCount() != 0) {
             int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
             int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
-            int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_MADE);
+            int userCreatedIndex = cardCursor.getColumnIndex(Cards.USER_ID);
             int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
             int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
             int attemptsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
@@ -346,7 +321,7 @@ public class DBHelper extends SQLiteOpenHelper{
         String[] whereArgs = {Long.toString(card.id)};
 
         values.put(Cards.COLUMN_ACCURACY, card.getAccuracy());
-        values.put(Cards.COLUMN_USER_MADE, card.getUserMade());
+        values.put(Cards.USER_ID, card.getUserId());
         values.put(Cards.COLUMN_BACK, card.getBack());
         values.put(Cards.COLUMN_COURSE_ID, courseId);
         values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
@@ -422,7 +397,7 @@ public class DBHelper extends SQLiteOpenHelper{
         int frontIndex = cursor.getColumnIndex(Cards.COLUMN_FRONT);
         int backIndex = cursor.getColumnIndex(Cards.COLUMN_BACK);
         int dateCreatedIndex = cursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
-        int userMadeIndex = cursor.getColumnIndex(Cards.COLUMN_USER_MADE);
+        int userMadeIndex = cursor.getColumnIndex(Cards.USER_ID);
         int accuracyIndex = cursor.getColumnIndex(Cards.COLUMN_ACCURACY);
         int numAttempstIndex = cursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
         cursor.moveToNext();

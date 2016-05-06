@@ -14,7 +14,7 @@ public class FlashCard {
     private int courseNum;
     private String front;
     private String back;
-    private int userMade;
+    private int userId;
     private String date_created;
     private double accuracy;
 
@@ -29,12 +29,12 @@ public class FlashCard {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public FlashCard(Context context, String subject, int courseNum, String front, String back,
-                     int userMade){
+                     int userId){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
         this.back = back;
-        this.userMade = userMade;
+        this.userId = userId;
         this.date_created = dateFormat.format(Calendar.getInstance().getTime());
         this.isNew = true;
         this.isModified = false;
@@ -45,14 +45,14 @@ public class FlashCard {
 
 
     protected FlashCard(String subject, int courseNum, String front, String back,
-                        int userMade, String date_created, double accuracy, int numAttempts,
+                        int userId, String date_created, double accuracy, int numAttempts,
                         long id){
 
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
         this.back = back;
-        this.userMade = userMade;
+        this.userId = userId;
         this.date_created = date_created;
         this.isModified = false;
         this.isNew = false;
@@ -101,15 +101,11 @@ public class FlashCard {
             isModified = true;
     }
 
-    public int getUserMade() {
-        return userMade;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserMade(int userMade) {
-        this.userMade = userMade;
-        if (!isModified)
-            isModified = true;
-    }
+
 
     public String getDateCreated() {
         return date_created;
