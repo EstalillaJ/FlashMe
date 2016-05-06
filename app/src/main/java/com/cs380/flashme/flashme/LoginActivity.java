@@ -42,10 +42,6 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
         BUTTON_LOGIN.setOnClickListener(this);
         REGISTER_LINK.setOnClickListener(this);
         SKIP_LOGIN_BUTTON.setOnClickListener(this);
-
-
-
-
     }
 
 
@@ -60,7 +56,6 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
             case R.id.skipLogin:
                 skipLogin();
                 break;
-
         }
     }
 
