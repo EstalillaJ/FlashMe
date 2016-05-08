@@ -15,6 +15,5 @@
     <string name="emptyString"></string>
     <string name="cardIndexString">On card %1$d of %2$d</string>
     <string name="cardIndexEnd">No More Cards!</string>
-    <string name="registerPHP">"http://flashmedatabase.netne.net/Register.php"</string>
     <string name="noCardsForQuiz">You haven\'t made any cards to quiz yourself with!</string>
 </resources>

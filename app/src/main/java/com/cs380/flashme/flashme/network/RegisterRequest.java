@@ -4,18 +4,15 @@ package com.cs380.flashme.flashme.network;
  * Created by Christian on 4/26/16.
  */
 
-import android.content.res.Resources;
-
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
-import com.cs380.flashme.flashme.R;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterRequest extends StringRequest{
 
-    private static final String REGISTER_REQUEST_URL = Resources.getSystem().getString(R.string.registerPHP);
+    private static final String REGISTER_REQUEST_URL = "http://flashmedatabase.netne.net/Register.php";
     private Map<String, String> params;
 
     public RegisterRequest(String name, String username, String password, String email, Response.Listener<String> listener) {

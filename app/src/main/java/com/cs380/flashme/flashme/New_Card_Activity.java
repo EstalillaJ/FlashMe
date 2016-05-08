@@ -1,17 +1,26 @@
 package com.cs380.flashme.flashme;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.cs380.flashme.flashme.data.DBConstants;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
+import com.cs380.flashme.flashme.network.CreateFlashCardRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -19,7 +28,14 @@ import java.util.ArrayList;
 *
 */
 
-public class New_Card_Activity extends AppCompatActivity {
+
+
+public class New_Card_Activity extends AppCompatActivity implements  Response.Listener<String> {
+
+    private String frontText;
+    private String backText;
+    private String subject;
+    private int courseNum;
 
     private Spinner subjectSpinner;
     private Spinner courseNumSpinner;
@@ -29,7 +45,7 @@ public class New_Card_Activity extends AppCompatActivity {
     private ArrayList<Integer> courseNums;
     private ArrayAdapter<Integer> courseNumAdapter;
     private FlashCard card;
-
+    private int onlineId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,12 +104,35 @@ public class New_Card_Activity extends AppCompatActivity {
 
     }
 
+    public void testSending () {
+
+    }
 
     public void CardSubmitButton(View v){
-        String frontText = frontDescription.getText().toString();
-        String backText = backDescription.getText().toString();
-        String subject = (String) subjectSpinner.getSelectedItem();
-        int courseNum = (int) courseNumSpinner.getSelectedItem();
+        frontText = frontDescription.getText().toString();
+        backText = backDescription.getText().toString();
+        subject = (String) subjectSpinner.getSelectedItem();
+        courseNum = (int) courseNumSpinner.getSelectedItem();
+
+
+        CreateFlashCardRequest createFlashCardRequest = new CreateFlashCardRequest(frontText,
+                backText,
+                card.getDateCreated(),
+                courseNum, card.getUserId(),
+                card.getAccuracy(),
+                card.getNumAttempts(),
+                this);
+
+        RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
+        queue.add(createFlashCardRequest);
+
+
+    }
+
+    public void saveCard(int onlineId){
+
+
+
         if (card != null) {
             card.setFront(frontText);
             card.setBack(backText);
@@ -103,15 +142,35 @@ public class New_Card_Activity extends AppCompatActivity {
         }
         else {
             card = new FlashCard(this,
-                                subject,
-                                courseNum,
-                                frontText,
-                                backText,
-                                DBConstants.NO_USER,
+                    subject,
+                    courseNum,
+                    frontText,
+                    backText,
                     DBConstants.NO_USER);
         }
 
         finish();
+    }
+
+    public void onResponse(String response) {
+        try {
+            JSONObject jsonResponse = new JSONObject(response);
+            boolean success = jsonResponse.getBoolean("success");
+            onlineId = jsonResponse.getInt("id");
+            if (success) {
+                Intent intent = new Intent(New_Card_Activity.this, LoginActivity.class);
+                New_Card_Activity.this.startActivity(intent);
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(New_Card_Activity.this);
+                builder.setMessage("You failed to create a notecard")
+                        .setNegativeButton("Try again", null)
+                        .create()
+                        .show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        saveCard(onlineId);
     }
 
 
