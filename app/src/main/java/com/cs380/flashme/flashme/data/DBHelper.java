@@ -264,6 +264,7 @@ public class DBHelper extends SQLiteOpenHelper{
                                 cardCursor.getString(dateCreatedIndex),
                                 cardCursor.getDouble(accuracyIndex),
                                 cardCursor.getInt(attemptsIndex),
+                                DBConstants.NO_USER,
                                 cardCursor.getInt(idIndex)
                         )
                 );
@@ -397,7 +398,8 @@ public class DBHelper extends SQLiteOpenHelper{
         int dateCreatedIndex = cursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
         int userMadeIndex = cursor.getColumnIndex(Cards.USER_ID);
         int accuracyIndex = cursor.getColumnIndex(Cards.COLUMN_ACCURACY);
-        int numAttempstIndex = cursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
+        int numAttemptsIndex = cursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
+        int onlineId = cursor.getColumnIndex(Cards.ONLINE_ID);
         cursor.moveToNext();
         FlashCard card = new FlashCard(
                 subject,
@@ -407,8 +409,9 @@ public class DBHelper extends SQLiteOpenHelper{
                 Integer.parseInt(cursor.getString(userMadeIndex)),
                 cursor.getString(dateCreatedIndex),
                 Double.parseDouble(cursor.getString(accuracyIndex)),
-                Integer.parseInt(cursor.getString(numAttempstIndex)),
-                        id);
+                Integer.parseInt(cursor.getString(numAttemptsIndex)),
+                Integer.parseInt(cursor.getString(onlineId))
+                ,id);
 
         return card;
     }

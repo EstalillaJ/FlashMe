@@ -18,18 +18,19 @@ public class FlashCard {
     private String date_created;
     private double accuracy;
 
-
     private int numAttempts;
 
     //For database use
     protected boolean isModified;
     protected boolean isNew;
     protected long id;
+    private int onlineId;
+
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public FlashCard(Context context, String subject, int courseNum, String front, String back,
-                     int userId){
+                     int userId, int onlineId){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
@@ -40,13 +41,14 @@ public class FlashCard {
         this.isModified = false;
         this.accuracy = 100.00;
         this.numAttempts = 0;
+        this.onlineId = onlineId;
         this.id = DBHelper.getInstance(context).save(this);
     }
 
 
     protected FlashCard(String subject, int courseNum, String front, String back,
                         int userId, String date_created, double accuracy, int numAttempts,
-                        long id){
+                        int onlineId, long id){
 
         this.subject = subject;
         this.courseNum = courseNum;
@@ -57,6 +59,7 @@ public class FlashCard {
         this.isModified = false;
         this.isNew = false;
         this.accuracy = accuracy;
+        this.onlineId = onlineId;
         this.numAttempts = numAttempts;
         this.id = id;
     }
@@ -140,6 +143,14 @@ public class FlashCard {
         this.numAttempts = numAttempts;
         if (!isModified)
             isModified = true;
+    }
+
+    public int getOnlineId(){
+        return onlineId;
+    }
+
+    public void setOnlineId(int onlineId){
+        this.onlineId = onlineId;
     }
 
 
