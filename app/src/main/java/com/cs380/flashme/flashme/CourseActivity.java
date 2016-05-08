@@ -123,6 +123,7 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
         for (int i: reverseSortedPositions) {
             cardFronts.remove(i);
             dbHelper.removeCard(cards.get(i));
+            cards.remove(i);
         }
         cardListAdapter.notifyDataSetChanged();
     }
