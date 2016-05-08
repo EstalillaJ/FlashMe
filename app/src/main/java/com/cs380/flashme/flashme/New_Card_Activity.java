@@ -114,7 +114,23 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
         subject = (String) subjectSpinner.getSelectedItem();
         courseNum = (int) courseNumSpinner.getSelectedItem();
 
-
+        if (card != null) {
+            card.setFront(frontText);
+            card.setBack(backText);
+            card.setCourseNum(courseNum);
+            card.setSubject(subject);
+            dbHelper.save(card);
+        }
+        else {
+            card = new FlashCard(this,
+                    subject,
+                    courseNum,
+                    frontText,
+                    backText,
+                    DBConstants.NO_USER,
+                    DBConstants.NO_USER
+            );
+        }
         CreateFlashCardRequest createFlashCardRequest = new CreateFlashCardRequest(frontText,
                 backText,
                 card.getDateCreated(),
