@@ -128,7 +128,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.USER_ID, card.getUserId());
         values.put(Cards.COLUMN_ACCURACY, card.getAccuracy());
         values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, card.getNumAttempts());
-
+        values.put(Cards.ONLINE_ID, card.getOnlineId());
         return db.insert(Cards.TABLE_NAME, null, values);
     }
 
@@ -326,7 +326,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
         values.put(Cards.COLUMN_FRONT, card.getFront());
         values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, card.getNumAttempts());
-
+        values.put(Cards.ONLINE_ID, card.getOnlineId());
 
         int rowsAffected = db.update(Cards.TABLE_NAME, values, whereClause, whereArgs);
         if (rowsAffected > 1)

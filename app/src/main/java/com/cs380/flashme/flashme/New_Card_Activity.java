@@ -138,6 +138,7 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
             card.setBack(backText);
             card.setCourseNum(courseNum);
             card.setSubject(subject);
+            card.setOnlineId(onlineId);
             dbHelper.save(card);
         }
         else {
@@ -146,7 +147,9 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
                     courseNum,
                     frontText,
                     backText,
-                    DBConstants.NO_USER);
+                    onlineId,
+                    DBConstants.NO_USER
+                    );
         }
 
         finish();

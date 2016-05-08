@@ -30,7 +30,7 @@ public class FlashCard {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public FlashCard(Context context, String subject, int courseNum, String front, String back,
-                     int userId, int onlineId){
+                     int onlineId, int userId){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
