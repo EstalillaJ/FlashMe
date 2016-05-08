@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
             case R.id.loginButton:
                 login();
                 break;
-            case R.id.registerButton:
+            case R.id.registerLink:
                 register();
                 break;
             case R.id.skipLogin:
