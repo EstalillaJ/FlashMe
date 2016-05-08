@@ -132,7 +132,7 @@ public class DBHelper extends SQLiteOpenHelper{
         return db.insert(Cards.TABLE_NAME, null, values);
     }
 
-    private long getCourseId(String subject, int courseNum){
+    public long getCourseId(String subject, int courseNum){
         SQLiteDatabase db = getReadableDatabase();
         String selection = Courses.COLUMN_SUBJECT + " = ? AND " + Courses.COLUMN_COURSE_NUM + " = ? ";
 

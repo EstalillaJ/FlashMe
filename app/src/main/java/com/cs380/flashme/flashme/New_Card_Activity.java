@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -36,6 +37,7 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
     private String backText;
     private String subject;
     private int courseNum;
+    private int courseId;
 
     private Spinner subjectSpinner;
     private Spinner courseNumSpinner;
@@ -113,6 +115,7 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
         backText = backDescription.getText().toString();
         subject = (String) subjectSpinner.getSelectedItem();
         courseNum = (int) courseNumSpinner.getSelectedItem();
+        courseId = (int) dbHelper.getCourseId(subject,courseNum);
 
         if (card != null) {
             card.setFront(frontText);
@@ -134,7 +137,7 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
         CreateFlashCardRequest createFlashCardRequest = new CreateFlashCardRequest(frontText,
                 backText,
                 card.getDateCreated(),
-                courseNum, card.getUserId(),
+                courseId, card.getUserId(),
                 card.getAccuracy(),
                 card.getNumAttempts(),
                 this);
@@ -167,8 +170,8 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
                     DBConstants.NO_USER
                     );
         }
-
-        finish();
+        Toast.makeText(this, ""+onlineId, Toast.LENGTH_LONG).show();
+        //finish();
     }
 
     public void onResponse(String response) {
