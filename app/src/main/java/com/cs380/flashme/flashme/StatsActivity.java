@@ -32,7 +32,7 @@ public class StatsActivity extends AppCompatActivity {
         textView.setText(courseTitle);
 
         // Sets accuracy
-        courseAccuracy = "Accuracy: " +course.getAccuracy();
+        courseAccuracy = "Accuracy: " +course.getAccuracy() +"%";
         TextView textView2 =(TextView) findViewById(R.id.GlobalAccuracy);
         textView.setText(courseAccuracy);
 
