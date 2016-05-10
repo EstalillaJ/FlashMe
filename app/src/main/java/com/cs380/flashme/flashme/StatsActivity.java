@@ -23,9 +23,18 @@ public class StatsActivity extends AppCompatActivity {
 
         subject = getIntent().getStringExtra(IntentConstants.SUBJECT_KEY);
         courseNum =  getIntent().getStringExtra(IntentConstants.COURSE_NUM_KEY);
+        DBHelper dbHelper = DBHelper.getInstance(this);
+        course = dbHelper.getCourse(subject, Integer.parseInt(courseNum));
 
+        // Sets course title
         courseTitle = subject + " " + courseNum + " Statistics:";
-        TextView textView = (TextView) findViewById()
+        TextView textView = (TextView) findViewById(R.id.MyStats);
+        textView.setText(courseTitle);
+
+        // Sets accuracy
+        courseAccuracy = "Accuracy: " +course.getAccuracy();
+        TextView textView2 =(TextView) findViewById(R.id.GlobalAccuracy);
+        textView.setText(courseAccuracy);
 
 
 
