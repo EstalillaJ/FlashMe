@@ -14,7 +14,7 @@ public class FlashCard {
     private int courseNum;
     private String front;
     private String back;
-    private int userId;
+    private long userId;
     private String date_created;
     private double accuracy;
 
@@ -30,7 +30,7 @@ public class FlashCard {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public FlashCard(Context context, String subject, int courseNum, String front, String back,
-                     int onlineId, int userId){
+                     int onlineId, long userId){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
@@ -42,7 +42,21 @@ public class FlashCard {
         this.accuracy = 100.00;
         this.numAttempts = 0;
         this.onlineId = onlineId;
-        this.id = DBHelper.getInstance(context).save(this);
+        //TODO return user id from login
+        this.id =  -1;
+    }
+
+    public FlashCard(String subject, int courseNum, String front, String back, String date_created, int onlineId, int userId){
+        this.subject = subject;
+        this.courseNum = courseNum;
+        this.front = front;
+        this.back = back;
+        this.onlineId = onlineId;
+        this.date_created = date_created;
+        this.userId = userId;
+        this.accuracy = 100.00;
+        this.numAttempts = 0;
+        this.isNew = true;
     }
 
 
@@ -104,7 +118,7 @@ public class FlashCard {
             isModified = true;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
@@ -153,6 +167,9 @@ public class FlashCard {
         this.onlineId = onlineId;
     }
 
+    protected void setId(long id) {
+
+    }
 
 
 

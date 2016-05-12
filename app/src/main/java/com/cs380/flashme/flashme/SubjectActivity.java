@@ -45,7 +45,7 @@ public class SubjectActivity extends Activity implements AdapterView.OnItemClick
         ArrayList<String> subjectList = database.getSubjects();
 
         // Creating ArrayAdapter
-        ArrayAdapter subjectAdapter = new ArrayAdapter<String>(this, R.layout.subject_layout, subjectList);
+        ArrayAdapter subjectAdapter = new ArrayAdapter<String>(this, R.layout.plaintext_layout, subjectList);
         SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(subjectAdapter);
 
         animationAdapter.setAbsListView(subjectView);
@@ -70,7 +70,7 @@ public class SubjectActivity extends Activity implements AdapterView.OnItemClick
         ListView courseView = (ListView) findViewById(R.id.courseListView);
 
         // Creating ArrayAdapter
-        ArrayAdapter courseNumAdapter = new ArrayAdapter<Integer>(this, R.layout.subject_layout, courselist);
+        ArrayAdapter courseNumAdapter = new ArrayAdapter<Integer>(this, R.layout.plaintext_layout, courselist);
         SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(courseNumAdapter);
         animationAdapter.setAbsListView(courseView);
         // setting courseView adapter

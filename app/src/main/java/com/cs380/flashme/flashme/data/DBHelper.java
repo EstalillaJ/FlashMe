@@ -10,6 +10,11 @@ import android.util.Log;
 import com.cs380.flashme.flashme.data.DBConstants.Cards;
 import com.cs380.flashme.flashme.data.DBConstants.Courses;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +24,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper{
 
     //Database Versions correspond to schema changes
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 7;
     private static DBHelper sInstance;
     private Context mContext;
 
@@ -27,6 +32,8 @@ public class DBHelper extends SQLiteOpenHelper{
 
     private DBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.mContext = context;
+
     }
 
     public static synchronized DBHelper getInstance(Context context){
@@ -77,42 +84,27 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
     public void insertDefaultSubjects(SQLiteDatabase db){
+        try {
+            InputStream is = mContext.getAssets().open("insertCourses.txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String line;
 
-        final String[][] defaultCourses = {
-                {"Computer Science","457"},
-                {"Mathematics", "330"},
-                {"Computer Science", "312"},
-                {"Mathematics", "260"},
-                {"Computer Science", "380"}
-        };
+            db.beginTransaction();
 
-        ContentValues values;
-
-        for (String[] course: defaultCourses){
-            values = new ContentValues();
-            values.put(Courses.COLUMN_SUBJECT, course[0]);
-            values.put(Courses.COLUMN_COURSE_NUM, course[1]);
-            values.put(Courses.COLUMN_ACCURACY, 100.00);
-            db.insert(Courses.TABLE_NAME, null, values);
+            while ((line = br.readLine())!= null){
+                db.execSQL(line);
+            }
+            db.setTransactionSuccessful();
         }
+        catch (IOException e){
 
+        }
+        db.endTransaction();
     }
 
 
 
-    public void insertCourse(String subject, int courseNum, int userMade){
 
-        SQLiteDatabase db = getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(Courses.COLUMN_USER_MADE, userMade);
-        values.put(Courses.COLUMN_COURSE_NUM, courseNum);
-        values.put(Courses.COLUMN_SUBJECT, subject);
-
-        db.insert(Courses.TABLE_NAME, null, values);
-
-
-    }
 
     public long insertCard(FlashCard card){
         long courseId = getCourseId(card.getSubject(), card.getCourseNum());
@@ -129,7 +121,9 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_ACCURACY, card.getAccuracy());
         values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, card.getNumAttempts());
         values.put(Cards.ONLINE_ID, card.getOnlineId());
-        return db.insert(Cards.TABLE_NAME, null, values);
+
+        card.setId(db.insert(Cards.TABLE_NAME, null, values));
+        return card.getId();
     }
 
     public long getCourseId(String subject, int courseNum){

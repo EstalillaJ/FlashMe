@@ -14,7 +14,7 @@ public class CreateFlashCardRequest extends StringRequest{
     private static final String CREATEFLASHCARD_REQUEST_URL = "http://flashmedatabase.netne.net/flashcard.php";
     private Map<String, String> params;
 
-    public CreateFlashCardRequest(String front, String back, String date_created, int course_id, int user_id, double accuracy, int attempts, Response.Listener<String> listener) {
+    public CreateFlashCardRequest(String front, String back, String date_created, int course_id, long user_id, double accuracy, int attempts, Response.Listener<String> listener) {
         super(Method.POST, CREATEFLASHCARD_REQUEST_URL, listener, null);
         params = new HashMap<>();
         params.put("front", front);

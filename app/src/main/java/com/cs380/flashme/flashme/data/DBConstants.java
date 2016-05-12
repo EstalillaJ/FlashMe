@@ -27,7 +27,6 @@ public class DBConstants {
         public static final String ID = "id";
         public static final String COLUMN_SUBJECT = "subject";
         public static final String COLUMN_COURSE_NUM = "course_num";
-        public static final String COLUMN_USER_MADE = "user_made";
         public static final String COLUMN_ACCURACY = "accuracy";
 
     }

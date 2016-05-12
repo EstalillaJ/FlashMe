@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         Button viewSubjectButton = (Button) findViewById(R.id.viewSubjectsButton);
 
         viewSubjectButton.setOnClickListener(this);
+
+        Button getNewCardsButton = (Button) findViewById(R.id.getNewCardsButton);
+        getNewCardsButton.setOnClickListener(this);
     }
 
 

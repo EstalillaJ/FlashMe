@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -73,9 +72,9 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
         }
 
         ArrayList<String> subjectList = dbHelper.getSubjects();
-        ArrayAdapter<String> subjectAdapter = new ArrayAdapter<String>(this, R.layout.subject_layout, subjectList);
+        ArrayAdapter<String> subjectAdapter = new ArrayAdapter<String>(this, R.layout.plaintext_layout, subjectList);
 
-        subjectAdapter.setDropDownViewResource(R.layout.subject_layout);
+        subjectAdapter.setDropDownViewResource(R.layout.plaintext_layout);
         subjectSpinner.setAdapter(subjectAdapter);
 
         if (!subjectFromIntent.equals(""))
@@ -83,8 +82,8 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
 
 
         courseNums = dbHelper.getCoursesNumbersInSubject((String) subjectSpinner.getSelectedItem());
-        courseNumAdapter = new ArrayAdapter<Integer>(this, R.layout.subject_layout, courseNums);
-        courseNumAdapter.setDropDownViewResource(R.layout.subject_layout);
+        courseNumAdapter = new ArrayAdapter<Integer>(this, R.layout.plaintext_layout, courseNums);
+        courseNumAdapter.setDropDownViewResource(R.layout.plaintext_layout);
         courseNumSpinner.setAdapter(courseNumAdapter);
 
         if (!courseNumFromIntent.equals(""))
@@ -133,7 +132,9 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
                     DBConstants.NO_USER,
                     DBConstants.NO_USER
             );
+            dbHelper.save(card);
         }
+        //TODO define a modify card request too
         CreateFlashCardRequest createFlashCardRequest = new CreateFlashCardRequest(frontText,
                 backText,
                 card.getDateCreated(),
@@ -150,28 +151,9 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
 
     public void saveCard(int onlineId){
 
-
-
-        if (card != null) {
-            card.setFront(frontText);
-            card.setBack(backText);
-            card.setCourseNum(courseNum);
-            card.setSubject(subject);
-            card.setOnlineId(onlineId);
-            dbHelper.save(card);
-        }
-        else {
-            card = new FlashCard(this,
-                    subject,
-                    courseNum,
-                    frontText,
-                    backText,
-                    onlineId,
-                    DBConstants.NO_USER
-                    );
-        }
-        Toast.makeText(this, ""+onlineId, Toast.LENGTH_LONG).show();
-        //finish();
+        card.setOnlineId(onlineId);
+        dbHelper.save(card);
+        finish();
     }
 
     public void onResponse(String response) {

@@ -17,7 +17,6 @@ import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +99,7 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
 
         //use the cardFronts list to populate our listview in the ui
         DynamicListView cardListView = (DynamicListView)   findViewById(R.id.cardList);
-        cardListAdapter = new ArrayAdapter<>(this, R.layout.subject_layout, cardFronts);
+        cardListAdapter = new ArrayAdapter<>(this, R.layout.plaintext_layout, cardFronts);
 
         //set on click listener for cardList
         cardListView.setOnItemClickListener(this);
