@@ -42,4 +42,5 @@ dependencies {
     compile 'com.nhaarman.listviewanimations:lib-core-slh:3.1.0@aar'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'com.github.paolorotolo:appintro:3.4.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

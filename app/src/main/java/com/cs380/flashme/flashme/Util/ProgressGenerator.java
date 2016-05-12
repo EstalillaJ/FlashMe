@@ -39,6 +39,9 @@ public class ProgressGenerator {
         }, generateDelay());
     }
 
+    public void success(){
+        mListener.onComplete();
+    }
     private Random random = new Random();
 
     private int generateDelay() {

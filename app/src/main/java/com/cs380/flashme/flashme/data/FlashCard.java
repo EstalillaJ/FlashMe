@@ -94,6 +94,8 @@ public class FlashCard {
 
     public void setCourseNum(int courseNum) {
         this.courseNum = courseNum;
+        this.isNew = false;
+
         if (!isModified)
             isModified = true;
     }
@@ -104,6 +106,8 @@ public class FlashCard {
 
     public void setFront(String front) {
         this.front = front;
+        this.isNew = false;
+
         if (!isModified)
             isModified = true;
     }
@@ -114,6 +118,8 @@ public class FlashCard {
 
     public void setBack(String back) {
         this.back = back;
+        this.isNew = false;
+
         if (!isModified)
             isModified = true;
     }
@@ -130,6 +136,8 @@ public class FlashCard {
 
     public void setDate_created(String date_created) {
         this.date_created = date_created;
+        this.isNew = false;
+
         if (!isModified)
             isModified = true;
     }
@@ -141,6 +149,8 @@ public class FlashCard {
 
     public void setAccuracy(double accuracy) {
         this.accuracy = accuracy;
+        this.isNew = false;
+
         if (!isModified)
             isModified = true;
     }
@@ -154,6 +164,7 @@ public class FlashCard {
     }
 
     public void setNumAttempts(int numAttempts) {
+        this.isNew = false;
         this.numAttempts = numAttempts;
         if (!isModified)
             isModified = true;
@@ -164,6 +175,8 @@ public class FlashCard {
     }
 
     public void setOnlineId(int onlineId){
+        this.isNew = false;
+        this.isModified = true;
         this.onlineId = onlineId;
     }
 

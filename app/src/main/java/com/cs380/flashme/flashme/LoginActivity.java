@@ -2,6 +2,7 @@ package com.cs380.flashme.flashme;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,9 +15,14 @@ import com.android.volley.toolbox.Volley;
 import com.cs380.flashme.flashme.Util.ProgressGenerator;
 import com.cs380.flashme.flashme.network.LoginRequest;
 import com.dd.processbutton.iml.ActionProcessButton;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Timer;
 
 /**
  * Created by Christian on 4/23/16.
@@ -24,11 +30,17 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity implements ProgressGenerator.OnCompleteListener, View.OnClickListener {
 
-    private  EditText EDIT_USERNAME;
-    private  EditText EDIT_PASSWORD;
-    private  ActionProcessButton BUTTON_LOGIN;
-    private  TextView REGISTER_LINK;
-    private  TextView SKIP_LOGIN_BUTTON;
+    private EditText EDIT_USERNAME;
+    private EditText EDIT_PASSWORD;
+    private ActionProcessButton BUTTON_LOGIN;
+    private TextView REGISTER_LINK;
+    private TextView SKIP_LOGIN_BUTTON;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +55,14 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
         BUTTON_LOGIN.setOnClickListener(this);
         REGISTER_LINK.setOnClickListener(this);
         SKIP_LOGIN_BUTTON.setOnClickListener(this);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.loginButton:
                 login();
                 break;
@@ -60,7 +75,7 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
         }
     }
 
-    public void login(){
+    public void login() {
         final ProgressGenerator PROGRESS_GENERATOR = new ProgressGenerator(this);
         BUTTON_LOGIN.setMode(ActionProcessButton.Mode.ENDLESS);
 
@@ -78,6 +93,7 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
                     boolean success = jsonResponse.getBoolean("success");
 
                     if (success) {
+                        PROGRESS_GENERATOR.success();
                         String name = jsonResponse.getString("name");
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -104,18 +120,58 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
 
     }
 
-    public void register(){
+    public void register() {
         Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
         LoginActivity.this.startActivity(registerIntent);
     }
 
-    public void skipLogin(){
+    public void skipLogin() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
 
 
-    public void onComplete(){
+    public void onComplete() {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.cs380.flashme.flashme/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.cs380.flashme.flashme/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 }
