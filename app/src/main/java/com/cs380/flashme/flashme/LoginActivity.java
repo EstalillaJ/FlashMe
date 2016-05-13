@@ -8,11 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.cs380.flashme.flashme.Util.ProgressGenerator;
+import com.cs380.flashme.flashme.Util.Session;
 import com.cs380.flashme.flashme.network.LoginRequest;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.appindexing.Action;
@@ -95,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
                     if (success) {
                         PROGRESS_GENERATOR.success();
                         String name = jsonResponse.getString("name");
-
+                        Session.logIn(jsonResponse.getLong("userid"));
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra("name", name);
                         intent.putExtra("username", username);

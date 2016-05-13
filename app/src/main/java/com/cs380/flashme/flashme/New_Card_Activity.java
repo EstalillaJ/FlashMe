@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.cs380.flashme.flashme.Util.Session;
 import com.cs380.flashme.flashme.data.DBConstants;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
@@ -130,7 +131,7 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
                     frontText,
                     backText,
                     DBConstants.NO_USER,
-                    DBConstants.NO_USER
+                    Session.userId
             );
             dbHelper.save(card);
         }

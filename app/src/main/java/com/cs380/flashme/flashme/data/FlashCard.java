@@ -1,6 +1,7 @@
 package com.cs380.flashme.flashme.data;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,7 +47,7 @@ public class FlashCard {
         this.id =  -1;
     }
 
-    public FlashCard(String subject, int courseNum, String front, String back, String date_created, int onlineId, int userId){
+    public FlashCard(String subject, int courseNum, String front, String back, String date_created,  int onlineId, int userId){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;

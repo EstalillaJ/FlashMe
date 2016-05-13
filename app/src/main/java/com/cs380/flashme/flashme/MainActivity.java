@@ -8,8 +8,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import com.cs380.flashme.flashme.Util.Session;
 import com.cs380.flashme.flashme.data.IntentConstants;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -27,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int width = size.x;
         int height = size.y;
 
         double percentImageView = .50;
@@ -52,6 +55,30 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         getNewCardsButton.getLayoutParams().height = (int) (height*percentButton);
 
         getNewCardsButton.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        if (Session.loggedIn)
+            getMenuInflater().inflate(R.menu.main, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.action_logout:
+                Session.logout();
+                startActivity(new Intent(this, LoginActivity.class));
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -88,6 +115,12 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     public void launchGetNewCards(){
         Intent intent = new Intent(getApplicationContext(), CardsFromDatabase.class);
         startActivity(intent);
+    }
+
+    public void onBackPressed(){
+        if (!Session.loggedIn)
+            super.onBackPressed();
+
     }
 
 
