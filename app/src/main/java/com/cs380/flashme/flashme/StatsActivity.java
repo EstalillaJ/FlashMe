@@ -23,7 +23,6 @@ public class StatsActivity extends AppCompatActivity {
 
         subject = getIntent().getStringExtra(IntentConstants.SUBJECT_KEY);
         courseNum =  getIntent().getStringExtra(IntentConstants.COURSE_NUM_KEY);
-        DBHelper dbHelper = DBHelper.getInstance(this);
         course = dbHelper.getCourse(subject, Integer.parseInt(courseNum));
 
         // Sets course title

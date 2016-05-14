@@ -13,6 +13,10 @@
         android:theme="@style/AppTheme">
         <activity android:name=".QuizMeActivity" />
         <activity android:name=".MainActivity"></activity>
+        <activity android:name=".StatsActivity"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".AppTutorial"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".SubjectActivity"
             android:label="@string/subjects"

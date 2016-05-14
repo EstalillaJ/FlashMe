@@ -8,6 +8,7 @@ public class DBConstants {
 
     public static final int NO_USER = -1;
     public static final int USER_ID = 1;
+
     public static final class Cards {
         public static final String TABLE_NAME = "Cards";
         public static final String ID = "id";
@@ -29,5 +30,12 @@ public class DBConstants {
         public static final String COLUMN_COURSE_NUM = "course_num";
         public static final String COLUMN_ACCURACY = "accuracy";
 
+    }
+
+    public static final class Tutorial{
+        public static final String TABLE_NAME = "tutorial";
+        public static final String COLUMN_VIEWED = "viewed";
+        public static final int NOT_VIEWED = 0;
+        public static final int VIEWED = 1;
     }
 }

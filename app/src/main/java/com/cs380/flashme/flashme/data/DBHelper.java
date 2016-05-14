@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
+import com.cs380.flashme.flashme.data.DBConstants.Tutorial;
 /**
  * Created by josh on 4/5/16.
  * A class to handle the creation and upgrade of our database.
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper{
 
     //Database Versions correspond to schema changes
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 9;
     private static DBHelper sInstance;
     private Context mContext;
 
@@ -65,8 +65,17 @@ public class DBHelper extends SQLiteOpenHelper{
                 "  FOREIGN KEY (" + Cards.COLUMN_COURSE_ID + ") REFERENCES " + Courses.TABLE_NAME +
                 "(" + Courses.ID + ")" + " );";
 
+        final String SQL_CREATE_TUTORIAL_TABLE = "CREATE TABLE " + Tutorial.TABLE_NAME +  " (" +
+                Tutorial.COLUMN_VIEWED + " INTEGER NOT NULL DEFAULT " + Tutorial.NOT_VIEWED + ");";
+
         db.execSQL(SQL_CREATE_CARDS_TABLE);
         db.execSQL(SQL_CREATE_COURSES_TABLE);
+        db.execSQL(SQL_CREATE_TUTORIAL_TABLE);
+
+
+        ContentValues values = new ContentValues();
+        values.put(Tutorial.COLUMN_VIEWED, Tutorial.NOT_VIEWED);
+        db.insert(Tutorial.TABLE_NAME, null, values );
 
         insertDefaultSubjects(db);
 
@@ -78,6 +87,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + Cards.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + Courses.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Tutorial.TABLE_NAME);
         onCreate(db);
     }
 
@@ -339,6 +349,23 @@ public class DBHelper extends SQLiteOpenHelper{
         else if (card.isModified)
             modifyCard(card);
         return card.id;
+    }
+
+    public boolean tutorialNotViewed(){
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.query(true, DBConstants.Tutorial.TABLE_NAME, null, null, null, null, null,null,null);
+        cursor.moveToNext();
+        int columnIndex = cursor.getColumnIndex(Tutorial.COLUMN_VIEWED);
+        return cursor.getInt(columnIndex) == DBConstants.Tutorial.NOT_VIEWED;
+    }
+    public void setTutorialViewed(){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Tutorial.COLUMN_VIEWED, Tutorial.VIEWED);
+        //Null for where updates all rows
+        db.update(Tutorial.TABLE_NAME,values, null, null);
     }
 
     public void removeCard(FlashCard card){
