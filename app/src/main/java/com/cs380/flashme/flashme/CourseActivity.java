@@ -43,7 +43,6 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
 
         //get a database helper
         dbHelper = DBHelper.getInstance(this);
-
         retrieveCourse();
         setCourseTitle();
         setUpCardList();
@@ -88,6 +87,10 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
 
     public void viewCourseStatistics(View v){
         //TODO launch stats acvtivity
+        Intent intent = new Intent(this, StatsActivity.class);
+        intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseNum);
+        intent.putExtra(IntentConstants.SUBJECT_KEY, subject);
+        startActivity(intent);
     }
 
 

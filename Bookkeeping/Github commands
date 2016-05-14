@@ -1,9 +1,0 @@
-ls - list
-cd - change directory, use \ if space, .. to go back, ~ to go home
-git clone <link> - Add repository
-git status - Check to see what you have to update to master
-git commit - m “Text here“ - Ready to be uploaded to git hub repository
-git push - pushes updates to online repository
-git pull - pulls all latest changes in the repository
-git add - do git status first to see modification, -A add all files created or changed, green means good to commit
-git push - pushes to repository
