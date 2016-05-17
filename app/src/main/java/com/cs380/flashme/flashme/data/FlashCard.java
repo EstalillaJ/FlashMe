@@ -47,7 +47,7 @@ public class FlashCard {
         this.id =  -1;
     }
 
-    public FlashCard(String subject, int courseNum, String front, String back, String date_created,  int onlineId, int userId){
+    public FlashCard( String subject, int courseNum, String front, String back, String date_created,  int onlineId, int userId){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
@@ -58,6 +58,7 @@ public class FlashCard {
         this.accuracy = 100.00;
         this.numAttempts = 0;
         this.isNew = true;
+
     }
 
 
@@ -148,8 +149,16 @@ public class FlashCard {
     }
 
 
-    public void setAccuracy(double accuracy) {
-        this.accuracy = accuracy;
+    public void setAccuracy(boolean guessWasCorrect) {
+
+        numAttempts++;
+        if (guessWasCorrect){
+            this.accuracy = (this.accuracy*(numAttempts-1))/(numAttempts);
+        }
+        else{
+            this.accuracy = (this.accuracy*numAttempts)/(numAttempts);
+        }
+
         this.isNew = false;
 
         if (!isModified)
@@ -182,7 +191,7 @@ public class FlashCard {
     }
 
     protected void setId(long id) {
-
+        this.id = id;
     }
 
 

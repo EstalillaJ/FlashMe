@@ -10,4 +10,5 @@ public class IntentConstants
     public static final String COURSE_NUM_KEY = PACKAGE + "passCourseNum";
     public static final String EXISTING_CARD_KEY = PACKAGE + "existingCard";
     public static final String CARD_ID_KEY = PACKAGE + "cardId";
+    public static final String ONLINE_CARD = "online_card";
 }

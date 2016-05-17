@@ -344,8 +344,9 @@ public class DBHelper extends SQLiteOpenHelper{
      * @return the database id of the card that was saved.
      */
     public long save(FlashCard card){
-        if (card.isNew)
+        if (card.isNew) {
             return insertCard(card);
+        }
         else if (card.isModified)
             modifyCard(card);
         return card.id;

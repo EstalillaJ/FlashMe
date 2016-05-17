@@ -48,10 +48,18 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
     private ArrayAdapter<Integer> courseNumAdapter;
     private FlashCard card;
     private int onlineId;
+    private boolean cardFromOnlineDatabase = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_card);
+
+        if (getIntent().getBooleanExtra(IntentConstants.ONLINE_CARD, false)){
+            cardFromOnlineDatabase = true;
+        }
+
+
         String subjectFromIntent = getIntent().getStringExtra(IntentConstants.SUBJECT_KEY);
         String courseNumFromIntent = getIntent().getStringExtra(IntentConstants.COURSE_NUM_KEY);
 
@@ -62,7 +70,8 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
         frontDescription = (EditText) findViewById(R.id.Side_Front_Text);
         backDescription = (EditText) findViewById(R.id.Side_Back_Text);
 
-        if (getIntent().getBooleanExtra(IntentConstants.EXISTING_CARD_KEY, false)) {
+        if (getIntent().getBooleanExtra(IntentConstants.EXISTING_CARD_KEY, false)
+                ) {
             card = dbHelper.getCard(
                     getIntent().getLongExtra(IntentConstants.CARD_ID_KEY, 0L),
                     subjectFromIntent,
@@ -83,7 +92,7 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
 
 
         courseNums = dbHelper.getCoursesNumbersInSubject((String) subjectSpinner.getSelectedItem());
-        courseNumAdapter = new ArrayAdapter<Integer>(this, R.layout.plaintext_layout, courseNums);
+        courseNumAdapter = new ArrayAdapter<>(this, R.layout.plaintext_layout, courseNums);
         courseNumAdapter.setDropDownViewResource(R.layout.plaintext_layout);
         courseNumSpinner.setAdapter(courseNumAdapter);
 
@@ -106,8 +115,10 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
 
     }
 
-    public void testSending () {
-
+    public void onBackPressed () {
+        if (cardFromOnlineDatabase)
+            dbHelper.removeCard(card);
+        super.onBackPressed();
     }
 
     public void CardSubmitButton(View v){
@@ -135,27 +146,26 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
             );
             dbHelper.save(card);
         }
-        //TODO define a modify card request too
-        CreateFlashCardRequest createFlashCardRequest = new CreateFlashCardRequest(frontText,
-                backText,
-                card.getDateCreated(),
-                courseId, card.getUserId(),
-                card.getAccuracy(),
-                card.getNumAttempts(),
-                this);
 
-        RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
-        queue.add(createFlashCardRequest);
+        if (!cardFromOnlineDatabase) {
+            //TODO define a modify card request too
+            CreateFlashCardRequest createFlashCardRequest = new CreateFlashCardRequest(frontText,
+                    backText,
+                    card.getDateCreated(),
+                    courseId, card.getUserId(),
+                    card.getAccuracy(),
+                    card.getNumAttempts(),
+                    this);
 
-
+            RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
+            queue.add(createFlashCardRequest);
+        }
+        else{
+            finish();
+        }
     }
 
-    public void saveCard(int onlineId){
 
-        card.setOnlineId(onlineId);
-        dbHelper.save(card);
-        finish();
-    }
 
     public void onResponse(String response) {
         try {
@@ -175,7 +185,9 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        saveCard(onlineId);
+        card.setOnlineId(onlineId);
+        dbHelper.save(card);
+        finish();
     }
 
 
