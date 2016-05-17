@@ -1,6 +1,7 @@
 package com.cs380.flashme.flashme;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -173,13 +174,15 @@ AdapterView.OnItemClickListener, OnDismissCallback {
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        FlashCard card = pulledCards.get(position);
         //TODO card has no id yet. Decide on how we want to pass this to new card activity.
+        FlashCard card = pulledCards.get(position);
+
         Intent intent = new Intent(getApplicationContext(), New_Card_Activity.class);
         intent.putExtra(IntentConstants.COURSE_NUM_KEY, Integer.toString(card.getCourseNum()));
         intent.putExtra(IntentConstants.SUBJECT_KEY, card.getSubject());
         intent.putExtra(IntentConstants.EXISTING_CARD_KEY, true);
-        intent.putExtra(IntentConstants.CARD_ID_KEY, card.getId());
+        intent.putExtra(IntentConstants.CARD_ID_KEY, dbHelper.save(card));
+        intent.putExtra(IntentConstants.ONLINE_CARD, true);
         startActivity(intent);
 
     }
@@ -188,4 +191,6 @@ AdapterView.OnItemClickListener, OnDismissCallback {
 
 
     }
+
+
 }

@@ -97,31 +97,30 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
 
 
     public void correctButtonClick(){
-        correct = true;
-        //TODO updateAccuracy()
+        cards.get(currentCardIndex).setAccuracy(true);
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
     }
     public void incorrectButtonClick(){
-        incorrect = true;
-        checkUserAnswer();
+        cards.get(currentCardIndex).setAccuracy(false);
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
     }
 
     public void cardClicked(){
-        TextView textView = (TextView) findViewById(R.id.cardQuestion);
-        if (frontDisplayed) {
-            textView.setText(currentCard.getBack());
-            correctButton.setVisibility(View.VISIBLE);
-            incorrectButton.setVisibility(View.VISIBLE);
-            frontDisplayed = false;
-        }
-        else {
-            textView.setText(currentCard.getFront());
-            correctButton.setVisibility(View.INVISIBLE);
-            incorrectButton.setVisibility(View.INVISIBLE);
-            frontDisplayed = true;
+        if (currentCardIndex < cards.size()) {
+            TextView textView = (TextView) findViewById(R.id.cardQuestion);
+            if (frontDisplayed) {
+                textView.setText(currentCard.getBack());
+                correctButton.setVisibility(View.VISIBLE);
+                incorrectButton.setVisibility(View.VISIBLE);
+                frontDisplayed = false;
+            } else {
+                textView.setText(currentCard.getFront());
+                correctButton.setVisibility(View.INVISIBLE);
+                incorrectButton.setVisibility(View.INVISIBLE);
+                frontDisplayed = true;
+            }
         }
     }
 
@@ -166,14 +165,6 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    public void checkUserAnswer(){
-        if(correct = true){
-            cards.get(currentCardIndex).getAccuracy();
-           // currentCard.
-        }else{
-            cards.get(currentCardIndex).getAccuracy();
-        }
-    }
 
     private class QuizMeCountDown extends CountDownTimer implements Animation.AnimationListener {
 
