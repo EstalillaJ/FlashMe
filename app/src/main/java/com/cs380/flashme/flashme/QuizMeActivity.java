@@ -14,16 +14,22 @@ import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.cs380.flashme.flashme.Util.OnSwipeTouchListener;
+import com.cs380.flashme.flashme.Util.Session;
 import com.cs380.flashme.flashme.data.Course;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
+import com.cs380.flashme.flashme.network.LoginRequest;
+import com.cs380.flashme.flashme.network.PushHighScore;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class QuizMeActivity extends AppCompatActivity implements View.OnClickListener {
+public class QuizMeActivity extends AppCompatActivity implements View.OnClickListener, Response.Listener<String>{
 
     //new card set
     private Button correctButton, incorrectButton;
@@ -34,6 +40,7 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
     private Course course;
     private List<FlashCard> cards;
     private boolean correct, incorrect;
+    private boolean accuracyChanged = false;
     private FlashCard currentCard;
     private boolean frontDisplayed = true;
     private Resources resources;
@@ -46,7 +53,6 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_me);
-
         resources = getResources();
 
         dbHelper = DBHelper.getInstance(this);
@@ -56,6 +62,7 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
                 intent.getStringExtra(IntentConstants.SUBJECT_KEY),
                 Integer.parseInt(intent.getStringExtra(IntentConstants.COURSE_NUM_KEY))
         );
+        accuracyStats = course.getAccuracy();
 
         cards = course.getCards();
 
@@ -100,11 +107,13 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
         cards.get(currentCardIndex).setAccuracy(true);
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
+        accuracyChanged = true;
     }
     public void incorrectButtonClick(){
         cards.get(currentCardIndex).setAccuracy(false);
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
+        accuracyChanged = true;
     }
 
     public void cardClicked(){
@@ -162,6 +171,21 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
             incorrectButton.setVisibility(View.INVISIBLE);
         }
 
+
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (this.accuracyChanged && Session.loggedIn) {
+            PushHighScore highScore = new PushHighScore(course.getId(), Session.userId, course.getAccuracy(), this);
+            RequestQueue queue = Volley.newRequestQueue(QuizMeActivity.this);
+            queue.add(highScore);
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onResponse(String response) {
 
     }
 
