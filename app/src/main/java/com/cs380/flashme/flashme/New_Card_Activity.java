@@ -1,7 +1,5 @@
 package com.cs380.flashme.flashme;
 
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -144,8 +142,9 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
                     DBConstants.NO_USER,
                     Session.userId
             );
-            dbHelper.save(card);
         }
+        dbHelper.save(card);
+
 
         if (!cardFromOnlineDatabase) {
             //TODO define a modify card request too
@@ -160,9 +159,7 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
             RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
             queue.add(createFlashCardRequest);
         }
-        else{
-            finish();
-        }
+        onBackPressed();
     }
 
 
@@ -170,24 +167,13 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
     public void onResponse(String response) {
         try {
             JSONObject jsonResponse = new JSONObject(response);
-            boolean success = jsonResponse.getBoolean("success");
             onlineId = jsonResponse.getInt("id");
-            if (success) {
-                Intent intent = new Intent(New_Card_Activity.this, LoginActivity.class);
-                New_Card_Activity.this.startActivity(intent);
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(New_Card_Activity.this);
-                builder.setMessage("You failed to create a notecard")
-                        .setNegativeButton("Try again", null)
-                        .create()
-                        .show();
-            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
         card.setOnlineId(onlineId);
         dbHelper.save(card);
-        finish();
     }
 
 
