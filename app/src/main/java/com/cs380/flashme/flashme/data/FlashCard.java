@@ -1,8 +1,5 @@
 package com.cs380.flashme.flashme.data;
 
-import android.content.Context;
-import android.support.annotation.Nullable;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -18,7 +15,9 @@ public class FlashCard {
     private long userId;
     private String date_created;
     private double accuracy;
-
+    private int numRatings;
+    private double rating;
+    private int localRating;
     private int numAttempts;
 
     //For database use
@@ -30,7 +29,11 @@ public class FlashCard {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public FlashCard(Context context, String subject, int courseNum, String front, String back,
+
+    /**
+     * This is the constructor used for new local cards.
+     */
+    public FlashCard(String subject, int courseNum, String front, String back,
                      int onlineId, long userId){
         this.subject = subject;
         this.courseNum = courseNum;
@@ -42,12 +45,21 @@ public class FlashCard {
         this.isModified = false;
         this.accuracy = 100.00;
         this.numAttempts = 0;
+        this.numRatings = 0;
+        this.localRating = DBConstants.Cards.NO_RATING;
+        this.rating = DBConstants.Cards.NO_RATING;
         this.onlineId = onlineId;
         //TODO return user id from login
         this.id =  -1;
     }
 
-    public FlashCard( String subject, int courseNum, String front, String back, String date_created,  int onlineId, int userId){
+    /**
+     * This is the constructor used for cards pulled from the server.
+     *
+     */
+    public FlashCard( String subject, int courseNum, String front, String back,  String date_created,
+                      double rating, int localRating, int numRatings,
+                       int onlineId, int userId){
         this.subject = subject;
         this.courseNum = courseNum;
         this.front = front;
@@ -55,15 +67,22 @@ public class FlashCard {
         this.onlineId = onlineId;
         this.date_created = date_created;
         this.userId = userId;
+        this.rating = rating;
+        this.localRating = localRating;
+        this.numRatings = numRatings;
         this.accuracy = 100.00;
         this.numAttempts = 0;
         this.isNew = true;
 
     }
 
-
+    /**
+     *
+     * This is the constructor used to create flashcard model objects from the local database.
+     */
     protected FlashCard(String subject, int courseNum, String front, String back,
                         int userId, String date_created, double accuracy, int numAttempts,
+                        double rating, int localRating, int numRatings,
                         int onlineId, long id){
 
         this.subject = subject;
@@ -77,6 +96,9 @@ public class FlashCard {
         this.accuracy = accuracy;
         this.onlineId = onlineId;
         this.numAttempts = numAttempts;
+        this.rating = rating;
+        this.localRating = localRating;
+        this.numRatings = numRatings;
         this.id = id;
     }
 
@@ -163,6 +185,30 @@ public class FlashCard {
 
         if (!isModified)
             isModified = true;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getNumRatings() {
+        return numRatings;
+    }
+
+    public void setNumRatings(int numRatings) {
+        this.numRatings = numRatings;
+    }
+
+    public int getLocalRating() {
+        return localRating;
+    }
+
+    public void setLocalRating(int localRating) {
+        this.localRating = localRating;
     }
 
     public long getId(){

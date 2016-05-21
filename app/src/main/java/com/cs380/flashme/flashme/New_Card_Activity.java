@@ -126,19 +126,24 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
         courseNum = (int) courseNumSpinner.getSelectedItem();
         courseId = (int) dbHelper.getCourseId(subject,courseNum);
 
+        //Card is from server or being edited
         if (card != null) {
             card.setFront(frontText);
             card.setBack(backText);
             card.setCourseNum(courseNum);
             card.setSubject(subject);
+            if (ratingChanged)
+                updateCardA
             dbHelper.save(card);
-        }
+        }//Card is New
         else {
             card = new FlashCard(this,
                     subject,
                     courseNum,
                     frontText,
                     backText,
+                    localRating,
+
                     DBConstants.NO_USER,
                     Session.userId
             );
@@ -152,8 +157,7 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
                     backText,
                     card.getDateCreated(),
                     courseId, card.getUserId(),
-                    card.getAccuracy(),
-                    card.getNumAttempts(),
+                    card.getLocalRating(),
                     this);
 
             RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
