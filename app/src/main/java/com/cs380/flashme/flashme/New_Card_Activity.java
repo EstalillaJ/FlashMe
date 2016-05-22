@@ -155,20 +155,32 @@ RatingBar.OnRatingBarChangeListener {
             && card.getBack().equals(backText)
             && card.getCourseNum() == courseNum
             && card.getSubject().equals(subject)) ){
-                if (card != null)
-                    dbHelper.removeCard(card);
-                card = new FlashCard(
-                    subject,
-                    courseNum,
-                    frontText,
-                    backText,
-                    (int) ratingBar.getRating(),
-                    DBConstants.Cards.NO_ONLINE_ID,
-                    Session.userId
+            if (card != null)
+                dbHelper.removeCard(card);
+            card = new FlashCard(
+                        subject,
+                        courseNum,
+                        frontText,
+                        backText,
+                        (int) ratingBar.getRating(),
+                        DBConstants.Cards.NO_ONLINE_ID,
+                        Session.userId
                 );
-            }
+
+            CreateFlashCardRequest createFlashCardRequest = new CreateFlashCardRequest(frontText,
+                    backText,
+                    card.getDateCreated(),
+                    courseId, card.getUserId(),
+                    card.getLocalRating(),
+                    this);
+
+            RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
+            queue.add(createFlashCardRequest);
+
+        }
         else if (ratingChanged){
             card.setLocalRating((int) ratingBar.getRating());
+
             //We only update if the card has already been pushed.
             //By the time we get here this only won't be true if
             //They made a card but decided not to push it, or they
@@ -182,6 +194,7 @@ RatingBar.OnRatingBarChangeListener {
                                         if (json.getBoolean("success")) {
                                             card.setRating(json.getDouble("rating"));
                                             card.setNumRatings(json.getInt("numRatings"));
+                                            dbHelper.save(card);
                                         }
                                         else{
                                             Toast.makeText(getApplicationContext(), "Error sending rating. Are you online?", Toast.LENGTH_SHORT).show();
@@ -190,29 +203,17 @@ RatingBar.OnRatingBarChangeListener {
                                     catch (JSONException e){
                                         e.printStackTrace();
                                     }
+                                    finally {
+                                        dbHelper.save(card);
+                                    }
                                 }});
-                RequestQueue queue = Volley.newRequestQueue(this);
+                RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
                 queue.add(ratingChangeRequest);
-                dbHelper.save(card);
                 //We can exit early here
                 onBackPressed();
             }
         }
-        dbHelper.save(card);
 
-
-        if (!cardFromOnlineDatabase && card.getOnlineId() == DBConstants.Cards.NO_ONLINE_ID) {
-            //TODO define a modify card request too
-            CreateFlashCardRequest createFlashCardRequest = new CreateFlashCardRequest(frontText,
-                    backText,
-                    card.getDateCreated(),
-                    courseId, card.getUserId(),
-                    card.getLocalRating(),
-                    this);
-
-            RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
-            queue.add(createFlashCardRequest);
-        }
 
         // This is required so we don't remove it when we call onBackPressed.
         // The user has chosen to keep this card.

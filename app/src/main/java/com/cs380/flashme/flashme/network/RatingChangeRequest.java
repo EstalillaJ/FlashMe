@@ -12,13 +12,13 @@ import java.util.Map;
 public class RatingChangeRequest extends StringRequest {
 
     private HashMap<String,String> params = new HashMap<>();
-    private static final String URL = "http://flashmedatabase.netnet.net/changeRating.php";
+    private static final String URL = "http://flashmedatabase.netne.net/changeRating.php";
 
     public RatingChangeRequest(int localRating, int cardOnlineId, long userId, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         params.put("localRating", ""+localRating);
         params.put("cardId", ""+ cardOnlineId);
-        params.put("userId", ""+userId);
+        params.put("userID", ""+userId);
 
     }
 
