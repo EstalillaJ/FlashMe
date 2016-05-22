@@ -9,10 +9,12 @@ public class DBConstants {
     public static final int NO_USER = -1;
     public static final int USER_ID = 1;
 
+
     public static final class Cards {
         // Used for posting ratings of cards to server
         public static final String OLD_RATING = "oldRating";
         public static final int NO_RATING = -1;
+        public static final int NO_ONLINE_ID = -1;
         public static final String TABLE_NAME = "Cards";
         public static final String ID = "id";
         public static final String COLUMN_FRONT = "front";

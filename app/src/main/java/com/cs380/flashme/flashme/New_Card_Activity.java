@@ -1,12 +1,15 @@
 package com.cs380.flashme.flashme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,6 +20,7 @@ import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
 import com.cs380.flashme.flashme.network.CreateFlashCardRequest;
+import com.cs380.flashme.flashme.network.RatingChangeRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +33,8 @@ import java.util.ArrayList;
 
 
 
-public class New_Card_Activity extends AppCompatActivity implements  Response.Listener<String> {
+public class New_Card_Activity extends AppCompatActivity implements  Response.Listener<String>, AdapterView.OnItemSelectedListener,
+RatingBar.OnRatingBarChangeListener {
 
     private String frontText;
     private String backText;
@@ -37,39 +42,61 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
     private int courseNum;
     private int courseId;
 
-    private Spinner subjectSpinner;
-    private Spinner courseNumSpinner;
-    private EditText frontDescription;
-    private EditText backDescription;
+
+    private Spinner subjectSpinner, courseNumSpinner;
+    private EditText frontDescription,backDescription;
+    private RatingBar ratingBar;
     private DBHelper dbHelper;
     private ArrayList<Integer> courseNums;
     private ArrayAdapter<Integer> courseNumAdapter;
     private FlashCard card;
     private int onlineId;
     private boolean cardFromOnlineDatabase = false;
+    private boolean ratingChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_card);
 
-        if (getIntent().getBooleanExtra(IntentConstants.ONLINE_CARD, false)){
-            cardFromOnlineDatabase = true;
-        }
-
-
-        String subjectFromIntent = getIntent().getStringExtra(IntentConstants.SUBJECT_KEY);
-        String courseNumFromIntent = getIntent().getStringExtra(IntentConstants.COURSE_NUM_KEY);
-
+        //Get Data from Intent
+        Intent intent = getIntent();
         dbHelper = DBHelper.getInstance(this);
+        String subjectFromIntent = intent.getStringExtra(IntentConstants.SUBJECT_KEY);
+        String courseNumFromIntent = intent.getStringExtra(IntentConstants.COURSE_NUM_KEY);
+        if (intent.getBooleanExtra(IntentConstants.ONLINE_CARD, false))
+            cardFromOnlineDatabase = true;
 
+        //Get UI Elements
         subjectSpinner = (Spinner) findViewById(R.id.subjectSpinner);
         courseNumSpinner = (Spinner) findViewById(R.id.courseNumberSpinner);
         frontDescription = (EditText) findViewById(R.id.Side_Front_Text);
         backDescription = (EditText) findViewById(R.id.Side_Back_Text);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        //No Rating if your are not logged in
+        if (!Session.loggedIn)
+            ratingBar.setVisibility(View.INVISIBLE);
 
-        if (getIntent().getBooleanExtra(IntentConstants.EXISTING_CARD_KEY, false)
-                ) {
+        //Set up Subject Spinner
+        ArrayList<String> subjectList = dbHelper.getSubjects();
+        ArrayAdapter<String> subjectAdapter = new ArrayAdapter<String>(this, R.layout.plaintext_layout, subjectList);
+        subjectAdapter.setDropDownViewResource(R.layout.plaintext_layout);
+        subjectSpinner.setAdapter(subjectAdapter);
+        if (!subjectFromIntent.equals(""))
+            subjectSpinner.setSelection(subjectList.indexOf(subjectFromIntent));
+        subjectSpinner.setOnItemSelectedListener(this);
+
+
+        //Set up coursenum Spinner
+        courseNums = dbHelper.getCoursesNumbersInSubject((String) subjectSpinner.getSelectedItem());
+        courseNumAdapter = new ArrayAdapter<>(this, R.layout.plaintext_layout, courseNums);
+        courseNumAdapter.setDropDownViewResource(R.layout.plaintext_layout);
+        courseNumSpinner.setAdapter(courseNumAdapter);
+        if (!courseNumFromIntent.equals(""))
+            courseNumSpinner.setSelection(courseNums.indexOf(Integer.parseInt(courseNumFromIntent)));
+
+        //If we are not making a new card, but editing one
+        if (intent.getBooleanExtra(IntentConstants.EXISTING_CARD_KEY, false)) {
             card = dbHelper.getCard(
                     getIntent().getLongExtra(IntentConstants.CARD_ID_KEY, 0L),
                     subjectFromIntent,
@@ -77,42 +104,37 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
             );
             frontDescription.setText(card.getFront());
             backDescription.setText(card.getBack());
+            ratingBar.setRating(card.getLocalRating());
+        }
+        ratingBar.setOnRatingBarChangeListener(this);
+    }
+
+
+    public void onRatingChanged(RatingBar bar, float rating, boolean byUser){
+        if (byUser && card != null){
+            ratingChanged = true;
         }
 
-        ArrayList<String> subjectList = dbHelper.getSubjects();
-        ArrayAdapter<String> subjectAdapter = new ArrayAdapter<String>(this, R.layout.plaintext_layout, subjectList);
+    }
+    /**
+     * Changes the course numbers available when the subject is changed.
+     *
+     */
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String subject = (String) parent.getItemAtPosition(position);
+        courseNumAdapter.clear();
+        courseNumAdapter.addAll(dbHelper.getCoursesNumbersInSubject(subject));
+    }
 
-        subjectAdapter.setDropDownViewResource(R.layout.plaintext_layout);
-        subjectSpinner.setAdapter(subjectAdapter);
-
-        if (!subjectFromIntent.equals(""))
-            subjectSpinner.setSelection(subjectList.indexOf(subjectFromIntent));
-
-
-        courseNums = dbHelper.getCoursesNumbersInSubject((String) subjectSpinner.getSelectedItem());
-        courseNumAdapter = new ArrayAdapter<>(this, R.layout.plaintext_layout, courseNums);
-        courseNumAdapter.setDropDownViewResource(R.layout.plaintext_layout);
-        courseNumSpinner.setAdapter(courseNumAdapter);
-
-        if (!courseNumFromIntent.equals(""))
-            courseNumSpinner.setSelection(courseNums.indexOf(Integer.parseInt(courseNumFromIntent)));
-
-        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String subject = (String) parent.getItemAtPosition(position);
-                courseNumAdapter.clear();
-                courseNumAdapter.addAll(dbHelper.getCoursesNumbersInSubject(subject));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent){
-
-            }
-        });
+    @Override
+    public void onNothingSelected(AdapterView<?> parent){
 
     }
 
+    /**
+     * If the card comes from the online database, we need to delete it if they pressed
+     * back without pressing create.
+     */
     public void onBackPressed () {
         if (cardFromOnlineDatabase)
             dbHelper.removeCard(card);
@@ -126,32 +148,59 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
         courseNum = (int) courseNumSpinner.getSelectedItem();
         courseId = (int) dbHelper.getCourseId(subject,courseNum);
 
-        //Card is from server or being edited
-        if (card != null) {
-            card.setFront(frontText);
-            card.setBack(backText);
-            card.setCourseNum(courseNum);
-            card.setSubject(subject);
-            if (ratingChanged)
-                updateCardA
-            dbHelper.save(card);
-        }//Card is New
-        else {
-            card = new FlashCard(this,
+
+        //Checks if the card is new or has been changed.
+        //Note that the right side of the conditional will not be checked if the card is null.
+        if (card == null || !( card.getFront().equals(frontText)
+            && card.getBack().equals(backText)
+            && card.getCourseNum() == courseNum
+            && card.getSubject().equals(subject)) ){
+                dbHelper.removeCard(card);
+                card = new FlashCard(
                     subject,
                     courseNum,
                     frontText,
                     backText,
-                    localRating,
-
-                    DBConstants.NO_USER,
+                    (int) ratingBar.getRating(),
+                    DBConstants.Cards.NO_ONLINE_ID,
                     Session.userId
-            );
+                );
+            }
+        else if (ratingChanged){
+            card.setLocalRating((int) ratingBar.getRating());
+            //We only update if the card has already been pushed.
+            //By the time we get here this only won't be true if
+            //They made a card but decided not to push it, or they
+            //didn't have internet connection when they first made it.
+            if (card.getOnlineId() != DBConstants.Cards.NO_ONLINE_ID){
+                RatingChangeRequest ratingChangeRequest =
+                        new RatingChangeRequest(card.getLocalRating(), card.getOnlineId(), Session.userId,
+                                new Response.Listener<String>(){ public void onResponse(String response){
+                                    try{
+                                        JSONObject json = new JSONObject(response);
+                                        if (json.getBoolean("success")) {
+                                            card.setRating(json.getDouble("rating"));
+                                            card.setRating(json.getInt("numRatings"));
+                                        }
+                                        else{
+                                            Toast.makeText(getApplicationContext(), "Error sending rating. Are you online?", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    catch (JSONException e){
+                                        e.printStackTrace();
+                                    }
+                                }});
+                RequestQueue queue = Volley.newRequestQueue(this);
+                queue.add(ratingChangeRequest);
+                dbHelper.save(card);
+                //We can exit early here
+                onBackPressed();
+            }
         }
         dbHelper.save(card);
 
 
-        if (!cardFromOnlineDatabase) {
+        if (!cardFromOnlineDatabase && card.getOnlineId() == DBConstants.Cards.NO_ONLINE_ID) {
             //TODO define a modify card request too
             CreateFlashCardRequest createFlashCardRequest = new CreateFlashCardRequest(frontText,
                     backText,
@@ -163,6 +212,10 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
             RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
             queue.add(createFlashCardRequest);
         }
+
+        // This is required so we don't remove it when we call onBackPressed.
+        // The user has chosen to keep this card.
+        cardFromOnlineDatabase = false;
         onBackPressed();
     }
 

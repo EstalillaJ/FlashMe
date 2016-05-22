@@ -33,7 +33,7 @@ public class FlashCard {
     /**
      * This is the constructor used for new local cards.
      */
-    public FlashCard(String subject, int courseNum, String front, String back,
+    public FlashCard(String subject, int courseNum, String front, String back, int localRating,
                      int onlineId, long userId){
         this.subject = subject;
         this.courseNum = courseNum;
@@ -46,7 +46,7 @@ public class FlashCard {
         this.accuracy = 100.00;
         this.numAttempts = 0;
         this.numRatings = 0;
-        this.localRating = DBConstants.Cards.NO_RATING;
+        this.localRating = localRating;
         this.rating = DBConstants.Cards.NO_RATING;
         this.onlineId = onlineId;
         //TODO return user id from login
@@ -193,22 +193,32 @@ public class FlashCard {
 
     public void setRating(double rating) {
         this.rating = rating;
+        isModified = true;
+    }
+
+    public void setNumRatings(int numRatings){
+        this.numRatings = numRatings;
+        isModified = true;
     }
 
     public int getNumRatings() {
         return numRatings;
     }
 
-    public void setNumRatings(int numRatings) {
-        this.numRatings = numRatings;
-    }
-
     public int getLocalRating() {
         return localRating;
     }
 
-    public void setLocalRating(int localRating) {
-        this.localRating = localRating;
+    public void setLocalRating(int newRating) {
+        //updates the average rating. Note that this will be overwritten later
+        //when we make a call to the server. We implement it here incase they are not connected
+        if (this.localRating == DBConstants.Cards.NO_RATING && rating != DBConstants.Cards.NO_RATING)
+            this.rating = ((this.rating*numRatings)+newRating)/(++numRatings);
+        else
+            this.rating = ((this.rating*numRatings)+newRating)/(numRatings);
+
+        this.localRating = newRating;
+        isModified = true;
     }
 
     public long getId(){
