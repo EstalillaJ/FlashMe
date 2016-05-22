@@ -58,8 +58,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                         RegisterActivity.this.startActivity(intent);
                     } else {
+                        String error = jsonResponse.getString("Error");
                         AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                        builder.setMessage("You failed to register")
+                        builder.setMessage(error)
                                 .setNegativeButton("Try again", null)
                                 .create()
                                 .show();
