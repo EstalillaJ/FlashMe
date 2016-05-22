@@ -57,6 +57,12 @@ public class New_Card_Activity extends AppCompatActivity implements  Response.Li
 
         if (getIntent().getBooleanExtra(IntentConstants.ONLINE_CARD, false)){
             cardFromOnlineDatabase = true;
+            // these alterations to the onCreate should make it so cards pulled from online database
+            // are read-only. - B.B.
+            frontDescription.setEnabled(false);
+            backDescription.setEnabled(false);
+
+
         }
 
 
