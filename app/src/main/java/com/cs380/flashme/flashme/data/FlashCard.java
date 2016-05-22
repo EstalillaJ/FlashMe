@@ -172,13 +172,16 @@ public class FlashCard {
 
 
     public void setAccuracy(boolean guessWasCorrect) {
-
+        double oldAccuracy = this.accuracy;
         numAttempts++;
+        if (numAttempts == 0){
+
+        }
         if (guessWasCorrect){
-            this.accuracy = (this.accuracy*(numAttempts-1))/(numAttempts);
+            this.accuracy = (oldAccuracy*(numAttempts-1)+100)/(numAttempts);
         }
         else{
-            this.accuracy = (this.accuracy*numAttempts)/(numAttempts);
+            this.accuracy = (oldAccuracy*(numAttempts-1))/(numAttempts);
         }
 
         this.isNew = false;

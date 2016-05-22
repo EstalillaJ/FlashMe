@@ -32,21 +32,22 @@ public class Course {
     public void removeCard(FlashCard card){
         if (cards.contains(card)) {
             cards.remove(card);
-            updateAccuracy(card);
+            updateAccuracy();
             DBHelper dbHelper = DBHelper.getInstance(context);
             dbHelper.removeCard(card);
             dbHelper.updateCourse(this);
         }
     }
 
-    private void updateAccuracy(FlashCard card){
+    public void updateAccuracy(){
         if (cards.size() == 0){
             accuracy = 100.00;
         }
         else {
-            accuracy *= (cards.size() + 1);
-            accuracy -= card.getAccuracy();
-            accuracy /= cards.size();
+            double total = 0;
+            for (FlashCard card: cards)
+                total += card.getAccuracy();
+            accuracy = total/cards.size();
         }
     }
 

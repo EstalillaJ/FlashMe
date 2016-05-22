@@ -155,7 +155,8 @@ RatingBar.OnRatingBarChangeListener {
             && card.getBack().equals(backText)
             && card.getCourseNum() == courseNum
             && card.getSubject().equals(subject)) ){
-                dbHelper.removeCard(card);
+                if (card != null)
+                    dbHelper.removeCard(card);
                 card = new FlashCard(
                     subject,
                     courseNum,
@@ -180,7 +181,7 @@ RatingBar.OnRatingBarChangeListener {
                                         JSONObject json = new JSONObject(response);
                                         if (json.getBoolean("success")) {
                                             card.setRating(json.getDouble("rating"));
-                                            card.setRating(json.getInt("numRatings"));
+                                            card.setNumRatings(json.getInt("numRatings"));
                                         }
                                         else{
                                             Toast.makeText(getApplicationContext(), "Error sending rating. Are you online?", Toast.LENGTH_SHORT).show();

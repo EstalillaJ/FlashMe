@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper{
 
     //Database Versions correspond to schema changes
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION =11 ;
     private static DBHelper sInstance;
     private Context mContext;
 
@@ -261,7 +261,10 @@ public class DBHelper extends SQLiteOpenHelper{
             int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
             int attemptsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
             int idIndex = cardCursor.getColumnIndex(Cards.ID);
-
+            int numRatingsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
+            int ratingIndex = cardCursor.getColumnIndex(Cards.COLUMN_RATING);
+            int localRatingIndex = cardCursor.getColumnIndex(Cards.COLUMN_LOCAL_RATING);
+            int onlineIndex = cardCursor.getColumnIndex(Cards.ONLINE_ID);
             while (cardCursor.moveToNext()) {
                 cards.add(
                         new FlashCard(
@@ -273,7 +276,10 @@ public class DBHelper extends SQLiteOpenHelper{
                                 cardCursor.getString(dateCreatedIndex),
                                 cardCursor.getDouble(accuracyIndex),
                                 cardCursor.getInt(attemptsIndex),
-                                DBConstants.NO_USER,
+                                cardCursor.getDouble(ratingIndex),
+                                cardCursor.getInt(localRatingIndex),
+                                cardCursor.getInt(numRatingsIndex),
+                                cardCursor.getInt(onlineIndex),
                                 cardCursor.getInt(idIndex)
                         )
                 );
@@ -411,7 +417,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
 
-        Cursor cursor = db.query(true,
+        Cursor cardCursor = db.query(true,
                 Cards.TABLE_NAME,
                 null,
                 cardSelection,
@@ -423,25 +429,35 @@ public class DBHelper extends SQLiteOpenHelper{
             );
 
 
-        int frontIndex = cursor.getColumnIndex(Cards.COLUMN_FRONT);
-        int backIndex = cursor.getColumnIndex(Cards.COLUMN_BACK);
-        int dateCreatedIndex = cursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
-        int userMadeIndex = cursor.getColumnIndex(Cards.COLUMN_USER_ID);
-        int accuracyIndex = cursor.getColumnIndex(Cards.COLUMN_ACCURACY);
-        int numAttemptsIndex = cursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
-        int onlineId = cursor.getColumnIndex(Cards.ONLINE_ID);
-        cursor.moveToNext();
+        int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
+        int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
+        int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_ID);
+        int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
+        int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
+        int attemptsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
+        int idIndex = cardCursor.getColumnIndex(Cards.ID);
+        int numRatingsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
+        int ratingIndex = cardCursor.getColumnIndex(Cards.COLUMN_RATING);
+        int localRatingIndex = cardCursor.getColumnIndex(Cards.COLUMN_LOCAL_RATING);
+        int onlineIndex = cardCursor.getColumnIndex(Cards.ONLINE_ID);
+
+
+        cardCursor.moveToNext();
         FlashCard card = new FlashCard(
                 subject,
                 courseNum,
-                cursor.getString(frontIndex),
-                cursor.getString(backIndex),
-                Integer.parseInt(cursor.getString(userMadeIndex)),
-                cursor.getString(dateCreatedIndex),
-                Double.parseDouble(cursor.getString(accuracyIndex)),
-                Integer.parseInt(cursor.getString(numAttemptsIndex)),
-                Integer.parseInt(cursor.getString(onlineId))
-                ,id);
+                cardCursor.getString(frontIndex),
+                cardCursor.getString(backIndex),
+                cardCursor.getInt(userCreatedIndex),
+                cardCursor.getString(dateCreatedIndex),
+                cardCursor.getDouble(accuracyIndex),
+                cardCursor.getInt(attemptsIndex),
+                cardCursor.getDouble(ratingIndex),
+                cardCursor.getInt(localRatingIndex),
+                cardCursor.getInt(numRatingsIndex),
+                cardCursor.getInt(onlineIndex),
+                cardCursor.getInt(idIndex)
+        );
 
         return card;
     }

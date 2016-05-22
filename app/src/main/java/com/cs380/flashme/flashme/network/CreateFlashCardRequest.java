@@ -22,7 +22,7 @@ public class CreateFlashCardRequest extends StringRequest{
         params.put("date_created", date_created);
         params.put("course_id", course_id + "");
         params.put("user_id", user_id + "");
-        params.put("rating", localRating+"");
+        params.put("localRating", localRating+"");
 
     }
 
