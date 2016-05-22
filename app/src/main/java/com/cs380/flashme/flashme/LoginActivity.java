@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,8 +23,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Timer;
 
 /**
  * Created by Christian on 4/23/16.
@@ -87,10 +84,10 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
         final ProgressGenerator PROGRESS_GENERATOR = new ProgressGenerator(this);
         BUTTON_LOGIN.setMode(ActionProcessButton.Mode.ENDLESS);
 
-        PROGRESS_GENERATOR.start(BUTTON_LOGIN);
-
         final String username = EDIT_USERNAME.getText().toString();
         final String password = EDIT_PASSWORD.getText().toString();
+
+        PROGRESS_GENERATOR.start(BUTTON_LOGIN);
 
         // Response received from the server
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -102,6 +99,7 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
 
                     if (success) {
                         PROGRESS_GENERATOR.success();
+                        BUTTON_LOGIN.setProgress(100);
                         String name = jsonResponse.getString("name");
                         Session.logIn(jsonResponse.getLong("userid"));
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -109,6 +107,7 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
                         intent.putExtra("username", username);
                         LoginActivity.this.startActivity(intent);
                     } else {
+                        BUTTON_LOGIN.setProgress(-1);
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                         builder.setMessage("Failed to login")
                                 .setNegativeButton("Try again", null)

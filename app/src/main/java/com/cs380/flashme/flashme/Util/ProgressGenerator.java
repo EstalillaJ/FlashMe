@@ -3,9 +3,9 @@ package com.cs380.flashme.flashme.Util;
 /**
  * Created by josh on 5/1/16.
  */
-import com.dd.processbutton.ProcessButton;
-
 import android.os.Handler;
+
+import com.dd.processbutton.ProcessButton;
 
 import java.util.Random;
 
@@ -29,12 +29,15 @@ public class ProgressGenerator {
             @Override
             public void run() {
                 mProgress += 10;
-                button.setProgress(mProgress);
+                if(mProgress < 90 ){
+                    button.setProgress(mProgress);
+                }
                 if (mProgress < 100) {
                     handler.postDelayed(this, generateDelay());
                 } else {
                     mListener.onComplete();
                 }
+                button.setProgress(-1);
             }
         }, generateDelay());
     }
@@ -42,6 +45,7 @@ public class ProgressGenerator {
     public void success(){
         mListener.onComplete();
     }
+
     private Random random = new Random();
 
     private int generateDelay() {
