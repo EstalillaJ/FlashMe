@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.cs380.flashme.flashme.Util.Session;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CardsFromDatabase extends AppCompatActivity implements AdapterView.OnItemSelectedListener, Response.Listener<String>, View.OnClickListener,
-AdapterView.OnItemClickListener, OnDismissCallback {
+AdapterView.OnItemClickListener {
     private DBHelper dbHelper;
     private Spinner subjectSpinner, courseNumSpinner;
     private ArrayList<Integer> courseNums;
@@ -69,7 +70,6 @@ AdapterView.OnItemClickListener, OnDismissCallback {
         courseNumSpinner.setAdapter(courseNumAdapter);
 
 
-
         subjectSpinner.setOnItemSelectedListener(this);
 
 
@@ -81,7 +81,6 @@ AdapterView.OnItemClickListener, OnDismissCallback {
         cardListView = (DynamicListView) findViewById(R.id.cardsFromDB);
         cardListView.setVisibility(View.INVISIBLE);
         cardListView.setOnItemClickListener(this);
-        cardListView.enableSwipeToDismiss(this);
 
 
     }
@@ -91,6 +90,8 @@ AdapterView.OnItemClickListener, OnDismissCallback {
         String subject = (String) parent.getItemAtPosition(position);
         courseNumAdapter.clear();
         courseNumAdapter.addAll(dbHelper.getCoursesNumbersInSubject(subject));
+        pulledCards = new ArrayList<>();
+        resetCardListView();
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
@@ -104,7 +105,7 @@ AdapterView.OnItemClickListener, OnDismissCallback {
                 mostRecentSubject,
                 mostRecentCourseNum
         );
-        PullCardRequest pullCardRequest = new PullCardRequest(mostRecentCourseId, this);
+        PullCardRequest pullCardRequest = new PullCardRequest(mostRecentCourseId, Session.userId, this);
         RequestQueue queue = Volley.newRequestQueue(CardsFromDatabase.this);
         queue.add(pullCardRequest);
     }
@@ -122,8 +123,7 @@ AdapterView.OnItemClickListener, OnDismissCallback {
         try {
             JSONObject jsonResponse = new JSONObject(response);
             int numCards = jsonResponse.getInt("numCards");
-            if (pulledCards == null)
-                pulledCards = new ArrayList<>();
+            pulledCards = new ArrayList<>();
             if (numCards > 0) {
                 for (int i = 0; i < numCards; i++) {
                     JSONObject cardJson = jsonResponse.getJSONObject(Integer.toString(i));
@@ -132,7 +132,9 @@ AdapterView.OnItemClickListener, OnDismissCallback {
                     String back = cardJson.getString("back");
                     String date_created = cardJson.getString("date_created");
                     int made_by = cardJson.getInt("user_id");
-
+                    int localRating = cardJson.getInt("localRating");
+                    int numRatings = cardJson.getInt("numRatings");
+                    double rating = cardJson.getDouble("rating");
                     pulledCards.add(
                             new FlashCard(
                                     mostRecentSubject,
@@ -140,10 +142,12 @@ AdapterView.OnItemClickListener, OnDismissCallback {
                                     front,
                                     back,
                                     date_created,
+                                    rating,
+                                    localRating,
+                                    numRatings,
                                     onlineId,
                                     made_by)
                     );
-
                     resetCardListView();
 
 
@@ -184,11 +188,6 @@ AdapterView.OnItemClickListener, OnDismissCallback {
         intent.putExtra(IntentConstants.CARD_ID_KEY, dbHelper.save(card));
         intent.putExtra(IntentConstants.ONLINE_CARD, true);
         startActivity(intent);
-
-    }
-
-    public void onDismiss(@NonNull ViewGroup listView, @NonNull int[] reverseSortedPositions) {
-
 
     }
 

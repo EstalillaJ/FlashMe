@@ -26,6 +26,12 @@
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword" />
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/password"
+        android:text="Stay Logged In"
+        android:id="@+id/stayLoggedInBox"/>
 
     <com.dd.processbutton.iml.ActionProcessButton
         android:id="@+id/loginButton"
@@ -38,7 +44,7 @@
         custom:pb_textComplete="Success"
         custom:pb_textProgress="Loading"
         custom:pb_textError="Error"
-        android:layout_below="@+id/password"
+        android:layout_below="@+id/stayLoggedInBox"
         android:text="Log In" />
 
     <Button
