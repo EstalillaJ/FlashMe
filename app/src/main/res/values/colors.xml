@@ -5,4 +5,7 @@
     <color name="colorPrimaryDark">#2f343f</color>
     <color name="colorAccent">#FF4081</color>
     <color name="crimson">#B11E3A</color>
+    <color name="gradient1">#8A4444</color>
+    <color name="gradient2">#A84444</color>
+    <color name="gradient3">#7A4444</color>
 </resources>
