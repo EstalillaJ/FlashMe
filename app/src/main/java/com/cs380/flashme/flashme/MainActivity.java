@@ -2,6 +2,7 @@ package com.cs380.flashme.flashme;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.media.Image;
 import android.os.Bundle;
@@ -74,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         switch (id){
             case R.id.action_logout:
                 Session.logout();
+                SharedPreferences.Editor editor = getSharedPreferences(LoginActivity.PREFS, 0).edit();
+                editor.putBoolean("stayLoggedIn", false);
+                editor.putLong("userID", Session.userId);
+                editor.commit();
                 startActivity(new Intent(this, LoginActivity.class));
                 break;
         }

@@ -173,7 +173,7 @@ RatingBar.OnRatingBarChangeListener {
                     courseId, card.getUserId(),
                     card.getLocalRating(),
                     this);
-
+            dbHelper.save(card);
             RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
             queue.add(createFlashCardRequest);
 
@@ -232,6 +232,7 @@ RatingBar.OnRatingBarChangeListener {
             e.printStackTrace();
         }
         card.setOnlineId(onlineId);
+
         dbHelper.save(card);
     }
 

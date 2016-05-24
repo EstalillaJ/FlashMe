@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.cs380.flashme.flashme.Util.Session;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
@@ -69,7 +70,6 @@ AdapterView.OnItemClickListener {
         courseNumSpinner.setAdapter(courseNumAdapter);
 
 
-        courseNumSpinner.setOnItemSelectedListener(this);
         subjectSpinner.setOnItemSelectedListener(this);
 
 
@@ -87,12 +87,9 @@ AdapterView.OnItemClickListener {
 
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (view.getId()){
-            case R.id.subjectSpinner:
-                String subject = (String) parent.getItemAtPosition(position);
-                courseNumAdapter.clear();
-                courseNumAdapter.addAll(dbHelper.getCoursesNumbersInSubject(subject));
-        }
+        String subject = (String) parent.getItemAtPosition(position);
+        courseNumAdapter.clear();
+        courseNumAdapter.addAll(dbHelper.getCoursesNumbersInSubject(subject));
         pulledCards = new ArrayList<>();
         resetCardListView();
     }
@@ -108,7 +105,7 @@ AdapterView.OnItemClickListener {
                 mostRecentSubject,
                 mostRecentCourseNum
         );
-        PullCardRequest pullCardRequest = new PullCardRequest(mostRecentCourseId, this);
+        PullCardRequest pullCardRequest = new PullCardRequest(mostRecentCourseId, Session.userId, this);
         RequestQueue queue = Volley.newRequestQueue(CardsFromDatabase.this);
         queue.add(pullCardRequest);
     }
@@ -137,7 +134,7 @@ AdapterView.OnItemClickListener {
                     int made_by = cardJson.getInt("user_id");
                     int localRating = cardJson.getInt("localRating");
                     int numRatings = cardJson.getInt("numRatings");
-                    double rating = cardJson.getDouble("ratings");
+                    double rating = cardJson.getDouble("rating");
                     pulledCards.add(
                             new FlashCard(
                                     mostRecentSubject,

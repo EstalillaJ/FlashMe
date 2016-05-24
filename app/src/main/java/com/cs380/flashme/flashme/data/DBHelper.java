@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper{
 
     //Database Versions correspond to schema changes
-    private static final int DATABASE_VERSION =11 ;
+    private static final int DATABASE_VERSION =12 ;
     private static DBHelper sInstance;
     private Context mContext;
 

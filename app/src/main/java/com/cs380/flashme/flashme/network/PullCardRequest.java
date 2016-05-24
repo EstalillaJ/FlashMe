@@ -20,11 +20,11 @@ public class PullCardRequest extends StringRequest{
      * @param courseId
      * @param listener
      */
-    public PullCardRequest(long courseId, Response.Listener<String> listener){
+    public PullCardRequest(long courseId, long userId, Response.Listener<String> listener){
         super(Method.POST, PULLCARDS_REQUEST_URL, listener, null);
         params = new HashMap<>();
         params.put("courseid", ""+courseId);
-
+        params.put("userid", ""+userId);
 
 
         //TODO We need to find a way to let the POST method know which card id's we've already seen
