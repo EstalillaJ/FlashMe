@@ -1,6 +1,7 @@
 package com.cs380.flashme.flashme;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,10 +31,11 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
     private DBHelper dbHelper;
     private ArrayList<String> cardFronts;
     private ArrayAdapter<String> cardListAdapter;
-
+    private Typeface fontAwesome;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fontAwesome = Typeface.createFromAsset(getAssets(),"fontawesome-webfont.ttf");
         //set main layout
         setContentView(R.layout.activity_course);
 
@@ -96,14 +98,57 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
 
     public void setUpCardList(){
         //create a list containing the fronts of all cards in course
-        cardFronts = new ArrayList<>();
-        for (FlashCard card: cards)
-            cardFronts.add(card.getFront());
+        String fullStar = getString(R.string.star_icon);
+        String halfStar = getString(R.string.half_star_icon);
+        String emptyStar = getString(R.string.empty_star_icon);
 
+
+        cardFronts = new ArrayList<>();
+        boolean halfStarNum = false;
+        boolean roundUp = false;
+        for (FlashCard card: cards) {
+            String displayString = "";
+            double rating = card.getRating();
+
+            if (rating - (int) rating > .25){
+                if (rating - (int) rating<.75){
+                    halfStarNum = true;
+                }
+                else{
+                    roundUp = true;
+                }
+            }
+
+            for (int i = 0; i < (int) rating; i++){
+                displayString += fullStar;
+            }
+            if (halfStarNum)
+                displayString += halfStar;
+            else if (roundUp)
+                displayString += fullStar;
+            else if (((int) rating - rating) != 0)
+                displayString += emptyStar;
+
+            for (int i = 5-(int)rating; i >0; i--)
+                displayString+= emptyStar;
+
+            displayString += "    " + card.getFront();
+
+
+            cardFronts.add(displayString);
+        }
         //use the cardFronts list to populate our listview in the ui
         DynamicListView cardListView = (DynamicListView)   findViewById(R.id.cardList);
-        cardListAdapter = new ArrayAdapter<>(this, R.layout.plaintext_layout, cardFronts);
+        cardListAdapter = new ArrayAdapter<String>(this, R.layout.plaintext_layout, cardFronts){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                textView.setTypeface(fontAwesome);
+                return textView;
 
+            }
+        };
         //set on click listener for cardList
         cardListView.setOnItemClickListener(this);
 

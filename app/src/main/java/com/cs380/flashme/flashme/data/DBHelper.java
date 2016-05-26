@@ -246,7 +246,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 new String[]{Long.toString(courseId)},
                 null,
                 null,
-                null,
+                Cards.COLUMN_RATING+ " DESC",
                 null
         );
 

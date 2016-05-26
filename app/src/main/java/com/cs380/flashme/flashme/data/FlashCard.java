@@ -45,9 +45,9 @@ public class FlashCard {
         this.isModified = false;
         this.accuracy = 100.00;
         this.numAttempts = 0;
-        this.numRatings = 0;
+        this.numRatings = 1;
         this.localRating = localRating;
-        this.rating = DBConstants.Cards.NO_RATING;
+        this.rating = localRating;
         this.onlineId = onlineId;
         //TODO return user id from login
         this.id =  -1;
