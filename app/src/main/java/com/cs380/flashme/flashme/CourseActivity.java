@@ -57,6 +57,7 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
     public void onResume(){
         super.onResume();
         //Cards my have been removed while the activity was paused
+        Toast.makeText(this, "one Resume", Toast.LENGTH_SHORT).show();
         retrieveCourse();
         cardListAdapter.clear();
         setUpCardList();
@@ -106,6 +107,9 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
         cardFronts = new ArrayList<>();
         boolean halfStarNum = false;
         boolean roundUp = false;
+        /*for (FlashCard card: cards){
+            cardFronts.add(card.getFront());
+        }*/
         for (FlashCard card: cards) {
             String displayString = "";
             double rating = card.getRating();

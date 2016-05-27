@@ -96,7 +96,11 @@ public class FlashCard {
         this.accuracy = accuracy;
         this.onlineId = onlineId;
         this.numAttempts = numAttempts;
-        this.rating = rating;
+        if (rating == DBConstants.Cards.NO_RATING)
+            this.rating = localRating;
+        else{
+            this.rating = rating;
+        }
         this.localRating = localRating;
         this.numRatings = numRatings;
         this.id = id;

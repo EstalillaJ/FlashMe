@@ -180,7 +180,6 @@ RatingBar.OnRatingBarChangeListener {
         }
         else if (ratingChanged){
             card.setLocalRating((int) ratingBar.getRating());
-
             //We only update if the card has already been pushed.
             //By the time we get here this only won't be true if
             //They made a card but decided not to push it, or they
@@ -192,20 +191,18 @@ RatingBar.OnRatingBarChangeListener {
                                     try{
                                         JSONObject json = new JSONObject(response);
                                         if (json.getBoolean("success")) {
-                                            card.setRating(json.getDouble("rating"));
                                             card.setNumRatings(json.getInt("numRatings"));
                                             dbHelper.save(card);
+                                            Toast.makeText(getApplicationContext(), "saved", Toast.LENGTH_SHORT).show();
                                         }
                                         else{
                                             Toast.makeText(getApplicationContext(), "Error sending rating. Are you online?", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     catch (JSONException e){
-                                        e.printStackTrace();
+                                        Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                                     }
-                                    finally {
-                                        dbHelper.save(card);
-                                    }
+
                                 }});
                 RequestQueue queue = Volley.newRequestQueue(New_Card_Activity.this);
                 queue.add(ratingChangeRequest);
