@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,23 +11,58 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/subjectTitle"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/subjects"
+            android:id="@+id/subjectText"
+            android:layout_weight=".5"
+            android:background="@color/gradient1"
+            android:gravity="center"
+            android:textColor="@color/white"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/courses"
+            android:id="@+id/coursesText"
+            android:layout_weight=".5"
+            android:background="@color/gradient1"
+            android:gravity="center"
+            android:textColor="@color/white"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/subjectTitle"
         >
 
         <ListView
             android:id="@+id/subjectListView"
             android:layout_width="wrap_content"
             android:choiceMode="singleChoice"
-            android:listSelector="@color/colorPrimary"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+            android:listSelector="@color/gradient2"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            />
 
         <ListView
             android:id="@+id/courseListView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:listSelector="@color/gradient3"
             android:layout_weight="0.5"
             />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
