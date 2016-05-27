@@ -13,6 +13,9 @@ public class StatsActivity extends AppCompatActivity {
     private String courseNum;
     private String courseTitle;
     private String courseAccuracy;
+    private String bestCard;
+    private String worstCard;
+    private String numCards;
     private Course course;
 
     @Override
@@ -27,13 +30,22 @@ public class StatsActivity extends AppCompatActivity {
 
         // Sets course title
         courseTitle = subject + " " + courseNum + " Statistics:";
-        TextView textView = (TextView) findViewById(R.id.MyStats);
+        TextView textView = (TextView) findViewById(R.id.ClassIDTitle);
         textView.setText(courseTitle);
 
         // Sets accuracy
         courseAccuracy = "Accuracy: " +course.getAccuracy() +"%";
-        TextView textView2 =(TextView) findViewById(R.id.GlobalAccuracy);
+        TextView textView2 =(TextView) findViewById(R.id.CourseAccuracy);
         textView.setText(courseAccuracy);
+
+        // Sets best card textview
+
+        // Sets worst card textview
+
+        // Sets numCards textview
+        numCards = "Cards in Course: " +course.getNumCards();
+        TextView textView3 = (TextView) findViewById(R.id.NumCards);
+
 
 
 

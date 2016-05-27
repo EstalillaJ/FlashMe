@@ -62,6 +62,10 @@ public class Course {
         return accuracy;
     }
 
+    public int getNumCards() {
+        return cards.size();
+    }
+
     public void setAccuracy(double accuracy) {
         this.accuracy = accuracy;
     }
