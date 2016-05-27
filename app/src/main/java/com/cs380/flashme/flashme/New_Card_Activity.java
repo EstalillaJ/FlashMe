@@ -136,9 +136,11 @@ RatingBar.OnRatingBarChangeListener {
      * back without pressing create.
      */
     public void onBackPressed () {
+       // Toast.makeText(this, "numR: "+card.getNumRatings()+"\nlocalR: "+card.getLocalRating(), Toast.LENGTH_SHORT).show();
         if (cardFromOnlineDatabase)
             dbHelper.removeCard(card);
-        super.onBackPressed();
+        if (card.getNumRatings() != 0)
+            super.onBackPressed();
     }
 
     public void CardSubmitButton(View v){
@@ -180,6 +182,7 @@ RatingBar.OnRatingBarChangeListener {
         }
         else if (ratingChanged){
             card.setLocalRating((int) ratingBar.getRating());
+            dbHelper.save(card);
             //We only update if the card has already been pushed.
             //By the time we get here this only won't be true if
             //They made a card but decided not to push it, or they
@@ -193,7 +196,6 @@ RatingBar.OnRatingBarChangeListener {
                                         if (json.getBoolean("success")) {
                                             card.setNumRatings(json.getInt("numRatings"));
                                             dbHelper.save(card);
-                                            Toast.makeText(getApplicationContext(), "saved", Toast.LENGTH_SHORT).show();
                                         }
                                         else{
                                             Toast.makeText(getApplicationContext(), "Error sending rating. Are you online?", Toast.LENGTH_SHORT).show();

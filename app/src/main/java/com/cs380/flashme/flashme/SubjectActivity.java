@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.IntentConstants;
@@ -25,7 +24,6 @@ public class SubjectActivity extends Activity implements AdapterView.OnItemClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subject);
         database = DBHelper.getInstance(this);
-
         // This is the method that makes all of the populating work
         populateSubjectListView();
     }
@@ -84,11 +82,9 @@ public class SubjectActivity extends Activity implements AdapterView.OnItemClick
     public void onCourseClick(int courseNum){
         Intent intent = new Intent(this, CourseActivity.class);
         String courseString = Integer.toString(courseNum);
-        DBHelper dbHelper = DBHelper.getInstance(this);
-        Toast.makeText(this, ""+dbHelper.getCourse(sub, courseNum).getCards().get(0).getRating(), Toast.LENGTH_SHORT).show();
-/*        intent.putExtra(IntentConstants.SUBJECT_KEY, sub);
+        intent.putExtra(IntentConstants.SUBJECT_KEY, sub);
         intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseString);
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

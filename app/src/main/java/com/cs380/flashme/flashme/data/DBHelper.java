@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper{
 
     //Database Versions correspond to schema changes
-    private static final int DATABASE_VERSION =13;
+    private static final int DATABASE_VERSION =15 ;
     private static DBHelper sInstance;
     private Context mContext;
 
@@ -55,7 +55,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 Cards.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 Cards.COLUMN_LOCAL_RATING + " INTEGER NOT NULL DEFAULT " + Cards.NO_RATING + ", " +
                 Cards.COLUMN_RATING + " REAL NOT NULL DEFAULT " + Cards.NO_RATING  + ", "  +
-                Cards.COLUMN_NUM_RATINGS + " INTEGER NOT NULL DEFAULT " + Cards.NO_RATING + ", " +
+                Cards.COLUMN_NUM_RATINGS + " INTEGER NOT NULL DEFAULT 1 "+  ", " +
                 Cards.COLUMN_DATE_CREATED + " TEXT NOT NULL, " +
                 Cards.COLUMN_FRONT + " TEXT NOT NULL, " +
                 Cards.COLUMN_BACK + " TEXT NOT NULL, " +
@@ -261,13 +261,15 @@ public class DBHelper extends SQLiteOpenHelper{
             int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
             int attemptsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
             int idIndex = cardCursor.getColumnIndex(Cards.ID);
-            int numRatingsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
+            int numRatingsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUM_RATINGS);
             int ratingIndex = cardCursor.getColumnIndex(Cards.COLUMN_RATING);
             int localRatingIndex = cardCursor.getColumnIndex(Cards.COLUMN_LOCAL_RATING);
             int onlineIndex = cardCursor.getColumnIndex(Cards.ONLINE_ID);
+
             while (cardCursor.moveToNext()) {
-                cards.add(
-                        new FlashCard(
+
+
+                FlashCard card = new FlashCard(
                                 subject,
                                 courseNum,
                                 cardCursor.getString(frontIndex),
@@ -281,8 +283,9 @@ public class DBHelper extends SQLiteOpenHelper{
                                 cardCursor.getInt(numRatingsIndex),
                                 cardCursor.getInt(onlineIndex),
                                 cardCursor.getInt(idIndex)
-                        )
-                );
+                        );
+                cards.add(card);
+
             }
 
         }
@@ -347,7 +350,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_RATING, card.getRating());
 
         int rowsAffected = db.update(Cards.TABLE_NAME, values, whereClause, whereArgs);
-        if (rowsAffected > 1)
+        if (rowsAffected > 1 || rowsAffected==0)
             throw new RuntimeException("Multiple cards modified by one call to modifyCard()");
         return rowsAffected;
     }
@@ -436,7 +439,7 @@ public class DBHelper extends SQLiteOpenHelper{
         int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
         int attemptsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
         int idIndex = cardCursor.getColumnIndex(Cards.ID);
-        int numRatingsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
+        int numRatingsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUM_RATINGS);
         int ratingIndex = cardCursor.getColumnIndex(Cards.COLUMN_RATING);
         int localRatingIndex = cardCursor.getColumnIndex(Cards.COLUMN_LOCAL_RATING);
         int onlineIndex = cardCursor.getColumnIndex(Cards.ONLINE_ID);
@@ -458,6 +461,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 cardCursor.getInt(onlineIndex),
                 cardCursor.getInt(idIndex)
         );
+
 
         return card;
     }
