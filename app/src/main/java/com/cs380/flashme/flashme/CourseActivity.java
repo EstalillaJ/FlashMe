@@ -111,6 +111,7 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
             public View getView(int position, View convertView, ViewGroup parent){
                 View view = super.getView(position, convertView, parent);
                 TextView textView = (TextView) view;
+
                 textView.setTypeface(fontAwesome);
                 return textView;
 
