@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,7 +23,6 @@ import com.cs380.flashme.flashme.data.Course;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
-import com.cs380.flashme.flashme.network.LoginRequest;
 import com.cs380.flashme.flashme.network.PushHighScore;
 
 import java.util.List;
@@ -96,9 +94,11 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.incorrectButton:
                 incorrectButtonClick();
+                displayNextCard();
                 break;
             case R.id.correctButton:
                 correctButtonClick();
+                displayNextCard();
                 break;
         }
     }

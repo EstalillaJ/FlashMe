@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="My Statistics: ClassID"
-        android:id="@+id/MyStats"
+        android:id="@+id/ClassIDTitle"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textColor="#040404"
@@ -26,8 +26,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Accuracy"
-        android:id="@+id/GlobalAccuracy"
-        android:layout_below="@+id/MyStats"
+        android:id="@+id/CourseAccuracy"
+        android:layout_below="@+id/ClassIDTitle"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:paddingBottom="8dp"
@@ -38,56 +38,11 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="BestCard"
-        android:id="@+id/BestSubject"
-        android:layout_below="@+id/MyStats"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:id="@+id/BestCard"
         android:paddingBottom="8dp"
-        android:paddingTop="24dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="MostLearned"
-        android:id="@+id/MostLearned"
-        android:paddingBottom="8dp"
-        android:layout_below="@+id/GlobalAccuracy"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="WorstCard"
-        android:id="@+id/WorstCard"
-        android:paddingBottom="8dp"
-        android:layout_below="@+id/BestSubject"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="LeastLearned"
-        android:id="@+id/LeastLearned"
-        android:layout_below="@+id/MostLearned"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingBottom="8dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="LastTest"
-        android:id="@+id/LastTest"
-        android:layout_below="@+id/WorstCard"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:paddingBottom="8dp" />
+        android:paddingTop="24dp"
+        android:layout_below="@+id/CourseAccuracy"
+        android:layout_alignEnd="@+id/WorstCard" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -99,10 +54,9 @@
         android:textSize="24dp"
         android:textColor="#000000"
         android:paddingBottom="16dp"
-        android:layout_below="@+id/LeastLearned"
-        android:layout_toRightOf="@+id/LeastLearned"
-        android:layout_toEndOf="@+id/LeastLearned"
-        android:paddingTop="16dp" />
+        android:paddingTop="16dp"
+        android:layout_below="@+id/BestCard"
+        android:layout_centerHorizontal="true" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -111,5 +65,27 @@
         android:layout_below="@+id/HighScores"
         android:layout_centerHorizontal="true"
         android:background="#eaeaea" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="WorstCard"
+        android:id="@+id/WorstCard"
+        android:paddingBottom="8dp"
+        android:paddingTop="24dp"
+        android:layout_above="@+id/BestCard"
+        android:layout_toRightOf="@+id/HighScores" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="NumCards"
+        android:id="@+id/NumCards"
+        android:paddingBottom="8dp"
+        android:paddingTop="24dp"
+        android:layout_above="@+id/HighScores"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
