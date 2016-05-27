@@ -136,11 +136,9 @@ RatingBar.OnRatingBarChangeListener {
      * back without pressing create.
      */
     public void onBackPressed () {
-       // Toast.makeText(this, "numR: "+card.getNumRatings()+"\nlocalR: "+card.getLocalRating(), Toast.LENGTH_SHORT).show();
         if (cardFromOnlineDatabase)
             dbHelper.removeCard(card);
-        if (card.getNumRatings() != 0)
-            super.onBackPressed();
+        super.onBackPressed();
     }
 
     public void CardSubmitButton(View v){
