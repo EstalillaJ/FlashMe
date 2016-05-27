@@ -9,14 +9,13 @@ import android.util.Log;
 
 import com.cs380.flashme.flashme.data.DBConstants.Cards;
 import com.cs380.flashme.flashme.data.DBConstants.Courses;
+import com.cs380.flashme.flashme.data.DBConstants.Tutorial;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import com.cs380.flashme.flashme.data.DBConstants.Tutorial;
 /**
  * Created by josh on 4/5/16.
  * A class to handle the creation and upgrade of our database.
@@ -24,7 +23,7 @@ import com.cs380.flashme.flashme.data.DBConstants.Tutorial;
 public class DBHelper extends SQLiteOpenHelper{
 
     //Database Versions correspond to schema changes
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION =15 ;
     private static DBHelper sInstance;
     private Context mContext;
 
@@ -54,12 +53,15 @@ public class DBHelper extends SQLiteOpenHelper{
 
         final String SQL_CREATE_CARDS_TABLE = "CREATE TABLE " + Cards.TABLE_NAME + " (" +
                 Cards.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                Cards.COLUMN_LOCAL_RATING + " INTEGER NOT NULL DEFAULT " + Cards.NO_RATING + ", " +
+                Cards.COLUMN_RATING + " REAL NOT NULL DEFAULT " + Cards.NO_RATING  + ", "  +
+                Cards.COLUMN_NUM_RATINGS + " INTEGER NOT NULL DEFAULT 1 "+  ", " +
                 Cards.COLUMN_DATE_CREATED + " TEXT NOT NULL, " +
                 Cards.COLUMN_FRONT + " TEXT NOT NULL, " +
                 Cards.COLUMN_BACK + " TEXT NOT NULL, " +
                 Cards.COLUMN_ACCURACY + " REAL NOT NULL DEFAULT 100.00, " +
                 Cards.COLUMN_NUMBER_OF_ATTEMPTS + " INTEGER NOT NULL DEFAULT 0, " +
-                Cards.USER_ID + " INTEGER NOT NULL DEFAULT " + DBConstants.NO_USER + ", " +
+                Cards.COLUMN_USER_ID + " INTEGER NOT NULL DEFAULT " + DBConstants.NO_USER + ", " +
                 Cards.ONLINE_ID + " INTEGER NOT NULL DEFAULT " + DBConstants.NO_USER + ", " +
                 Cards.COLUMN_COURSE_ID + " INTEGER NOT NULL, " +
                 "  FOREIGN KEY (" + Cards.COLUMN_COURSE_ID + ") REFERENCES " + Courses.TABLE_NAME +
@@ -127,10 +129,13 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(Cards.COLUMN_FRONT, card.getFront());
         values.put(Cards.COLUMN_BACK, card.getBack());
         values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
-        values.put(Cards.USER_ID, card.getUserId());
+        values.put(Cards.COLUMN_USER_ID, card.getUserId());
         values.put(Cards.COLUMN_ACCURACY, card.getAccuracy());
         values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, card.getNumAttempts());
         values.put(Cards.ONLINE_ID, card.getOnlineId());
+        values.put(Cards.COLUMN_NUM_RATINGS, card.getNumRatings());
+        values.put(Cards.COLUMN_LOCAL_RATING, card.getLocalRating());
+        values.put(Cards.COLUMN_RATING, card.getRating());
 
         card.setId(db.insert(Cards.TABLE_NAME, null, values));
         return card.getId();
@@ -241,7 +246,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 new String[]{Long.toString(courseId)},
                 null,
                 null,
-                null,
+                Cards.COLUMN_RATING+ " DESC",
                 null
         );
 
@@ -251,15 +256,20 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cardCursor.getCount() != 0) {
             int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
             int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
-            int userCreatedIndex = cardCursor.getColumnIndex(Cards.USER_ID);
+            int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_ID);
             int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
             int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
             int attemptsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
             int idIndex = cardCursor.getColumnIndex(Cards.ID);
+            int numRatingsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUM_RATINGS);
+            int ratingIndex = cardCursor.getColumnIndex(Cards.COLUMN_RATING);
+            int localRatingIndex = cardCursor.getColumnIndex(Cards.COLUMN_LOCAL_RATING);
+            int onlineIndex = cardCursor.getColumnIndex(Cards.ONLINE_ID);
 
             while (cardCursor.moveToNext()) {
-                cards.add(
-                        new FlashCard(
+
+
+                FlashCard card = new FlashCard(
                                 subject,
                                 courseNum,
                                 cardCursor.getString(frontIndex),
@@ -268,10 +278,14 @@ public class DBHelper extends SQLiteOpenHelper{
                                 cardCursor.getString(dateCreatedIndex),
                                 cardCursor.getDouble(accuracyIndex),
                                 cardCursor.getInt(attemptsIndex),
-                                DBConstants.NO_USER,
+                                cardCursor.getDouble(ratingIndex),
+                                cardCursor.getInt(localRatingIndex),
+                                cardCursor.getInt(numRatingsIndex),
+                                cardCursor.getInt(onlineIndex),
                                 cardCursor.getInt(idIndex)
-                        )
-                );
+                        );
+                cards.add(card);
+
             }
 
         }
@@ -324,16 +338,19 @@ public class DBHelper extends SQLiteOpenHelper{
         String[] whereArgs = {Long.toString(card.id)};
 
         values.put(Cards.COLUMN_ACCURACY, card.getAccuracy());
-        values.put(Cards.USER_ID, card.getUserId());
+        values.put(Cards.COLUMN_USER_ID, card.getUserId());
         values.put(Cards.COLUMN_BACK, card.getBack());
         values.put(Cards.COLUMN_COURSE_ID, courseId);
         values.put(Cards.COLUMN_DATE_CREATED, card.getDateCreated());
         values.put(Cards.COLUMN_FRONT, card.getFront());
         values.put(Cards.COLUMN_NUMBER_OF_ATTEMPTS, card.getNumAttempts());
         values.put(Cards.ONLINE_ID, card.getOnlineId());
+        values.put(Cards.COLUMN_NUM_RATINGS, card.getNumRatings());
+        values.put(Cards.COLUMN_LOCAL_RATING, card.getLocalRating());
+        values.put(Cards.COLUMN_RATING, card.getRating());
 
         int rowsAffected = db.update(Cards.TABLE_NAME, values, whereClause, whereArgs);
-        if (rowsAffected > 1)
+        if (rowsAffected > 1 || rowsAffected==0)
             throw new RuntimeException("Multiple cards modified by one call to modifyCard()");
         return rowsAffected;
     }
@@ -403,7 +420,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
 
-        Cursor cursor = db.query(true,
+        Cursor cardCursor = db.query(true,
                 Cards.TABLE_NAME,
                 null,
                 cardSelection,
@@ -415,25 +432,36 @@ public class DBHelper extends SQLiteOpenHelper{
             );
 
 
-        int frontIndex = cursor.getColumnIndex(Cards.COLUMN_FRONT);
-        int backIndex = cursor.getColumnIndex(Cards.COLUMN_BACK);
-        int dateCreatedIndex = cursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
-        int userMadeIndex = cursor.getColumnIndex(Cards.USER_ID);
-        int accuracyIndex = cursor.getColumnIndex(Cards.COLUMN_ACCURACY);
-        int numAttemptsIndex = cursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
-        int onlineId = cursor.getColumnIndex(Cards.ONLINE_ID);
-        cursor.moveToNext();
+        int frontIndex = cardCursor.getColumnIndex(Cards.COLUMN_FRONT);
+        int backIndex = cardCursor.getColumnIndex(Cards.COLUMN_BACK);
+        int userCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_USER_ID);
+        int dateCreatedIndex = cardCursor.getColumnIndex(Cards.COLUMN_DATE_CREATED);
+        int accuracyIndex = cardCursor.getColumnIndex(Cards.COLUMN_ACCURACY);
+        int attemptsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUMBER_OF_ATTEMPTS);
+        int idIndex = cardCursor.getColumnIndex(Cards.ID);
+        int numRatingsIndex = cardCursor.getColumnIndex(Cards.COLUMN_NUM_RATINGS);
+        int ratingIndex = cardCursor.getColumnIndex(Cards.COLUMN_RATING);
+        int localRatingIndex = cardCursor.getColumnIndex(Cards.COLUMN_LOCAL_RATING);
+        int onlineIndex = cardCursor.getColumnIndex(Cards.ONLINE_ID);
+
+
+        cardCursor.moveToNext();
         FlashCard card = new FlashCard(
                 subject,
                 courseNum,
-                cursor.getString(frontIndex),
-                cursor.getString(backIndex),
-                Integer.parseInt(cursor.getString(userMadeIndex)),
-                cursor.getString(dateCreatedIndex),
-                Double.parseDouble(cursor.getString(accuracyIndex)),
-                Integer.parseInt(cursor.getString(numAttemptsIndex)),
-                Integer.parseInt(cursor.getString(onlineId))
-                ,id);
+                cardCursor.getString(frontIndex),
+                cardCursor.getString(backIndex),
+                cardCursor.getInt(userCreatedIndex),
+                cardCursor.getString(dateCreatedIndex),
+                cardCursor.getDouble(accuracyIndex),
+                cardCursor.getInt(attemptsIndex),
+                cardCursor.getDouble(ratingIndex),
+                cardCursor.getInt(localRatingIndex),
+                cardCursor.getInt(numRatingsIndex),
+                cardCursor.getInt(onlineIndex),
+                cardCursor.getInt(idIndex)
+        );
+
 
         return card;
     }

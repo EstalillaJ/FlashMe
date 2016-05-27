@@ -2,19 +2,22 @@ package com.cs380.flashme.flashme;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.cs380.flashme.flashme.Util.ProgressGenerator;
 import com.cs380.flashme.flashme.Util.Session;
+import com.cs380.flashme.flashme.data.DBConstants;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.network.LoginRequest;
 import com.dd.processbutton.iml.ActionProcessButton;
@@ -24,8 +27,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Timer;
 
 /**
  * Created by Christian on 4/23/16.
@@ -38,6 +39,9 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
     private ActionProcessButton BUTTON_LOGIN;
     private TextView REGISTER_LINK;
     private TextView SKIP_LOGIN_BUTTON;
+    public static String PREFS = "LoginPrefs";
+    private CheckBox CHECKBOX;
+    private SharedPreferences settings;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -54,12 +58,16 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if ((settings = getSharedPreferences(PREFS, 0)).getBoolean("stayLoggedIn", false)){
+            Session.logIn(settings.getLong("userID", DBConstants.NO_USER));
+            startActivity(new Intent(this, MainActivity.class));
+        }
         EDIT_USERNAME = (EditText) findViewById(R.id.username);
         EDIT_PASSWORD = (EditText) findViewById(R.id.password);
         BUTTON_LOGIN = (ActionProcessButton) findViewById(R.id.loginButton);
         REGISTER_LINK = (TextView) findViewById(R.id.registerLink);
         SKIP_LOGIN_BUTTON = (TextView) findViewById(R.id.skipLogin);
-
+        CHECKBOX = (CheckBox) findViewById(R.id.stayLoggedInBox);
         BUTTON_LOGIN.setOnClickListener(this);
         REGISTER_LINK.setOnClickListener(this);
         SKIP_LOGIN_BUTTON.setOnClickListener(this);
@@ -87,10 +95,10 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
         final ProgressGenerator PROGRESS_GENERATOR = new ProgressGenerator(this);
         BUTTON_LOGIN.setMode(ActionProcessButton.Mode.ENDLESS);
 
-        PROGRESS_GENERATOR.start(BUTTON_LOGIN);
-
         final String username = EDIT_USERNAME.getText().toString();
         final String password = EDIT_PASSWORD.getText().toString();
+
+        PROGRESS_GENERATOR.start(BUTTON_LOGIN);
 
         // Response received from the server
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -102,13 +110,17 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
 
                     if (success) {
                         PROGRESS_GENERATOR.success();
+                        BUTTON_LOGIN.setProgress(100);
                         String name = jsonResponse.getString("name");
                         Session.logIn(jsonResponse.getLong("userid"));
+                        if (CHECKBOX.isChecked())
+                            stayLoggedIn();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra("name", name);
                         intent.putExtra("username", username);
                         LoginActivity.this.startActivity(intent);
                     } else {
+                        BUTTON_LOGIN.setProgress(-1);
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                         builder.setMessage("Failed to login")
                                 .setNegativeButton("Try again", null)
@@ -136,6 +148,14 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
     public void skipLogin() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+    }
+
+    public void stayLoggedIn(){
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putBoolean("stayLoggedIn", true);
+        editor.putLong("userID", Session.userId);
+        editor.commit();
     }
 
 

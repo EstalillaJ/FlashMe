@@ -40,7 +40,9 @@
         android:onClick="viewCourseStatistics"
         android:layout_above="@+id/createCardFromCourse"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@color/gradient1"
+        android:textColor="@color/white" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +51,9 @@
         android:onClick="createCardFromCourse"
         android:layout_above="@+id/flashMeButton"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@color/gradient2"
+        android:textColor="@color/white" />
 
     <Button
         android:layout_width="match_parent"
@@ -59,7 +63,9 @@
         android:onClick="FlashMeClicked"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@color/gradient3"
+        android:textColor="@color/white" />
 
 
 </RelativeLayout>

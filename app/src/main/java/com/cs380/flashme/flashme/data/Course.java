@@ -16,7 +16,7 @@ public class Course {
     private int userMade;
     private Context context;
     protected long id;
-
+    private DBHelper dbHelper;
 
     protected Course(List<FlashCard> cards, double accuracy, String subject, int courseNum,
                   int userMade, long id, Context context) {
@@ -27,26 +27,27 @@ public class Course {
         this.userMade = userMade;
         this.id = id;
         this.context = context;
+        DBHelper dbHelper = DBHelper.getInstance(context);
     }
 
     public void removeCard(FlashCard card){
         if (cards.contains(card)) {
             cards.remove(card);
-            updateAccuracy(card);
-            DBHelper dbHelper = DBHelper.getInstance(context);
+            updateAccuracy();
             dbHelper.removeCard(card);
             dbHelper.updateCourse(this);
         }
     }
 
-    private void updateAccuracy(FlashCard card){
+    public void updateAccuracy(){
         if (cards.size() == 0){
             accuracy = 100.00;
         }
         else {
-            accuracy *= (cards.size() + 1);
-            accuracy -= card.getAccuracy();
-            accuracy /= cards.size();
+            double total = 0;
+            for (FlashCard card: cards)
+                total += card.getAccuracy();
+            accuracy = total/cards.size();
         }
     }
 

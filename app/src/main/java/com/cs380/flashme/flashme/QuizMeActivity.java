@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -105,12 +106,17 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
 
     public void correctButtonClick(){
         cards.get(currentCardIndex).setAccuracy(true);
+        dbHelper.save(cards.get(currentCardIndex));
+
+        course.updateAccuracy();
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
         accuracyChanged = true;
     }
     public void incorrectButtonClick(){
         cards.get(currentCardIndex).setAccuracy(false);
+        dbHelper.save(cards.get(currentCardIndex));
+        course.updateAccuracy();
         correctButton.setVisibility(View.INVISIBLE);
         incorrectButton.setVisibility(View.INVISIBLE);
         accuracyChanged = true;
@@ -181,6 +187,7 @@ public class QuizMeActivity extends AppCompatActivity implements View.OnClickLis
             RequestQueue queue = Volley.newRequestQueue(QuizMeActivity.this);
             queue.add(highScore);
         }
+        dbHelper.updateCourse(course);
         super.onBackPressed();
     }
 

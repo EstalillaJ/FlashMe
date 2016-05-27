@@ -24,7 +24,6 @@ public class SubjectActivity extends Activity implements AdapterView.OnItemClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subject);
         database = DBHelper.getInstance(this);
-
         // This is the method that makes all of the populating work
         populateSubjectListView();
     }
@@ -81,7 +80,7 @@ public class SubjectActivity extends Activity implements AdapterView.OnItemClick
     }
 
     public void onCourseClick(int courseNum){
-        Intent intent = new Intent(getApplicationContext(), CourseActivity.class);
+        Intent intent = new Intent(this, CourseActivity.class);
         String courseString = Integer.toString(courseNum);
         intent.putExtra(IntentConstants.SUBJECT_KEY, sub);
         intent.putExtra(IntentConstants.COURSE_NUM_KEY, courseString);

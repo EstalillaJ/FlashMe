@@ -1,6 +1,7 @@
 package com.cs380.flashme.flashme;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,10 +31,11 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
     private DBHelper dbHelper;
     private ArrayList<String> cardFronts;
     private ArrayAdapter<String> cardListAdapter;
-
+    private Typeface fontAwesome;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fontAwesome = Typeface.createFromAsset(getAssets(),"fontawesome-webfont.ttf");
         //set main layout
         setContentView(R.layout.activity_course);
 
@@ -96,14 +98,25 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
 
     public void setUpCardList(){
         //create a list containing the fronts of all cards in course
-        cardFronts = new ArrayList<>();
-        for (FlashCard card: cards)
-            cardFronts.add(card.getFront());
 
+        cardFronts = new ArrayList<>();
+
+        for (FlashCard card: cards) {
+            cardFronts.add(card.displayString(this));
+        }
         //use the cardFronts list to populate our listview in the ui
         DynamicListView cardListView = (DynamicListView)   findViewById(R.id.cardList);
-        cardListAdapter = new ArrayAdapter<>(this, R.layout.plaintext_layout, cardFronts);
+        cardListAdapter = new ArrayAdapter<String>(this, R.layout.plaintext_layout, cardFronts){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view;
 
+                textView.setTypeface(fontAwesome);
+                return textView;
+
+            }
+        };
         //set on click listener for cardList
         cardListView.setOnItemClickListener(this);
 
@@ -146,6 +159,7 @@ public class CourseActivity extends AppCompatActivity implements AdapterView.OnI
     public void retrieveCourse(){
         course = dbHelper.getCourse(subject, Integer.parseInt(courseNum));
         cards = course.getCards();
+
     }
 
 }
