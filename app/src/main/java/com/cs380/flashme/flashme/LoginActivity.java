@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -110,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements ProgressGenerato
 
                     if (success) {
                         PROGRESS_GENERATOR.success();
-                        BUTTON_LOGIN.setProgress(100);
+                        BUTTON_LOGIN.setProgress(90);
                         String name = jsonResponse.getString("name");
                         Session.logIn(jsonResponse.getLong("userid"));
                         if (CHECKBOX.isChecked())
