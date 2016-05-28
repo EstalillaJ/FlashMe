@@ -18,7 +18,7 @@ import com.cs380.flashme.flashme.Util.Session;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
-import com.cs380.flashme.flashme.network.CustomAdapter;
+import com.cs380.flashme.flashme.Util.CustomAdapter;
 import com.cs380.flashme.flashme.network.PullCardRequest;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 

@@ -1,4 +1,4 @@
-package com.cs380.flashme.flashme.network;
+package com.cs380.flashme.flashme.Util;
 
 import android.app.Activity;
 import android.content.Context;

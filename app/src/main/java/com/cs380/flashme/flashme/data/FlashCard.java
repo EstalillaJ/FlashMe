@@ -223,6 +223,8 @@ public class FlashCard {
     public void setLocalRating(int newRating) {
         //updates the average rating. Note that this will be overwritten later
         //when we make a call to the server. We implement it here incase they are not connected
+        if (localRating == DBConstants.Cards.NO_RATING)
+                numRatings++;
         if (this.localRating == DBConstants.Cards.NO_RATING && rating != DBConstants.Cards.NO_RATING)
             this.rating = ((this.rating*numRatings)+newRating)/(numRatings);
         else
@@ -265,6 +267,9 @@ public class FlashCard {
         String halfStar = context.getString(R.string.half_star_icon);; //half star
         String emptyStar = context.getString(R.string.empty_star_icon); //empty star
         double rating = getRating();
+        if (rating == -1){
+            return emptyStar+emptyStar+emptyStar+emptyStar+emptyStar;
+        }
         if (rating - (int) rating > .25){
             if (rating - (int) rating<.75){
                 halfStarNum = true;
@@ -287,7 +292,7 @@ public class FlashCard {
         for (int i = 5-(int)rating; i >0; i--)
             displayString+= emptyStar;
 
-        return displayString += "    " + getFront();
+        return displayString + "    " + getFront();
     }
     protected void setId(long id) {
         this.id = id;
