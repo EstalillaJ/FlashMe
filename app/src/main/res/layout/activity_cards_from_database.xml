@@ -62,11 +62,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/courseNumberSpinner"
         android:background="#eaeaea"
-        android:layout_above="@+id/pullCardsButton"
-        android:id = "@+id/cardsFromDB">
+        android:id = "@+id/cardsFromDB"
+        android:layout_above="@+id/addCards">
 
     </com.nhaarman.listviewanimations.itemmanipulation.DynamicListView>
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Cards"
+        android:id="@+id/addCards"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/Course"
+        android:layout_marginBottom="54dp"
+        android:enabled="false" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

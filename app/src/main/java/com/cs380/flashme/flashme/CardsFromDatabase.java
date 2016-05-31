@@ -1,16 +1,13 @@
 package com.cs380.flashme.flashme;
 
 import android.content.Intent;
-import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,9 +18,9 @@ import com.cs380.flashme.flashme.Util.Session;
 import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.FlashCard;
 import com.cs380.flashme.flashme.data.IntentConstants;
+import com.cs380.flashme.flashme.Util.CustomAdapter;
 import com.cs380.flashme.flashme.network.PullCardRequest;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +31,7 @@ import java.util.List;
 public class CardsFromDatabase extends AppCompatActivity implements AdapterView.OnItemSelectedListener, Response.Listener<String>, View.OnClickListener,
 AdapterView.OnItemClickListener {
     private DBHelper dbHelper;
+    private FlashCard Fcard;
     private Spinner subjectSpinner, courseNumSpinner;
     private ArrayList<Integer> courseNums;
     private ArrayAdapter<Integer> courseNumAdapter;
@@ -42,8 +40,10 @@ AdapterView.OnItemClickListener {
     private long mostRecentCourseId;
     private List<FlashCard> pulledCards;
     private DynamicListView cardListView;
-    private ArrayAdapter<String> cardListAdapter;
-
+    private CustomAdapter cardListAdapter;
+    private Typeface fontAwesome;
+    private Button addButton;
+    private ArrayList<Boolean> checked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +56,8 @@ AdapterView.OnItemClickListener {
         subjectSpinner = (Spinner) findViewById(R.id.subjectSpinner);
         courseNumSpinner = (Spinner) findViewById(R.id.courseNumberSpinner);
 
-
+        //get typeface for custom adapter
+        fontAwesome = Typeface.createFromAsset(getAssets(), "fontawesome-webfont.ttf");
         ArrayList<String> subjectList = dbHelper.getSubjects();
         ArrayAdapter<String> subjectAdapter = new ArrayAdapter<String>(this, R.layout.plaintext_layout, subjectList);
 
@@ -81,6 +82,22 @@ AdapterView.OnItemClickListener {
         cardListView = (DynamicListView) findViewById(R.id.cardsFromDB);
         cardListView.setVisibility(View.INVISIBLE);
         cardListView.setOnItemClickListener(this);
+
+        addButton = (Button) findViewById(R.id.addCards);
+        addButton.setEnabled(false);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (FlashCard card : pulledCards) {
+                    if(cardListAdapter.isChecked().get(pulledCards.indexOf(card))){
+
+                        dbHelper.save(card);
+                    }
+                }
+                onBackPressed();
+            }
+        });
+
 
 
     }
@@ -161,16 +178,22 @@ AdapterView.OnItemClickListener {
         }
 
     }
+    public void updateCard(){
+        addButton.setEnabled(true);
+    }
+    public void disableAddButton(){
+        addButton.setEnabled(false);
+    }
 
     public void resetCardListView() {
 
-
         ArrayList<String> cardFronts = new ArrayList<String>();
+        checked = new ArrayList<Boolean>();
         for (FlashCard card : pulledCards)
-            cardFronts.add(card.getFront());
+            cardFronts.add(card.displayString(this));
 
-        cardListAdapter = new ArrayAdapter<>(this, R.layout.plaintext_layout, cardFronts);
-
+        cardListAdapter = new CustomAdapter(this, R.layout.checkbox_list_item, cardFronts ,fontAwesome);
+            checked.addAll(cardListAdapter.isChecked());
         //set on click listener for cardList
 
         cardListView.setAdapter(cardListAdapter);

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.cs380.flashme.flashme.Util.Session;
+import com.cs380.flashme.flashme.data.DBHelper;
 import com.cs380.flashme.flashme.data.IntentConstants;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -33,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
-
         double percentImageView = .50;
         double percentButton = .10;
         ImageView imageView = (ImageView) findViewById(R.id.cardImage);
